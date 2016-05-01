@@ -1,6 +1,25 @@
 /*
- * Initialize variables
+ * The MIT License (MIT) Copyright (c) 2016-2016 Rindo Hinase
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/*
+ * Variable initialization
+ */
+// Variables for firefox addon sdk
 var { Frame } = require("sdk/ui/frame");
 var { Toolbar} = require("sdk/ui/toolbar");
 var prefs = require('sdk/simple-prefs');
@@ -13,47 +32,37 @@ var cm = require("sdk/context-menu");
 var tabs = require("sdk/tabs");
 var { getTabForId, getTabContentWindow } = require ("sdk/tabs/utils");
 var parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
+var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
 
+// Variables for indexed-db
 var database = {};
 var db_objstore_name = "histories";
 var db_name = "default";
 var db_version = "1";
 
+// Variable to manage opened tab. Once a tab is opened by this script,
+// the tab will be re-used to display information. So we need to track which tab is opened by this script.
 var opened_tab = null;
 
+// Variables for search service configurations.
+// This is not so important. Just used for placeholder and context menu label and so on.
 var service_name = prefs.prefs["servicename"];
-var service_url = prefs.prefs["serviceurl"];
+// This is a critical value. This is a url which enables to search something user wants. e.g. https://gXXgle.co.jp/search?q={0} or so.
+var service_url = prefs.prefs["serviceurl"]; 
+// This is a CSS selector string. When search result page is returned, we need to trim unnecessary contents.
+// This value specifies which html element should be treated as a search result content.
 var service_selector = prefs.prefs["serviceselector"];
+// Just a bunch of error messages.
 var service_error_msg = {
     parse_error: "DOMの解析に失敗しました。設定のサービスURLやサービスセレクタの内容をもう一度確認してください。サービスURLの例(あくまで例です。): http://eXw.alc.XX.jp/search?q={0}"
     , no_histories: "履歴がまだありません。"
 };
 
+// Where the search result content should be displayed. One of the ["tab", "sidebar", "panel"].
 var display_target = "tab";
 
+// Setting of frame which boards search input field and buttons.
 var frame_url = "./frame.html"
-
-var toolbar_name = "Search toolbar";
-var toolbar_title = prefs.prefs["servicename"] + "で検索";
-
-var panel_url = "./panel.html";
-var panel_content = "";
-var panel_position = null;
-set_panel_position();
-
-var sidebar_url = "./sidebar.html"
-var sidebar = null;
-var sidebar_latest_open_type = "search"; // "search" or "history"
-var sidebar_content = "";
-var sidebar_history_content = "";
-var sidebar_id = "eijirou-sidebar";
-var sidebar_title = prefs.prefs["servicename"];
-var sidebar_workers = [];
-var sidebar_show_latest_data = false;
-
-/*
- * Construct frame and toolbar
- */
 var frame = new Frame({
     url: frame_url,
     onMessage: (e) => {
@@ -62,13 +71,21 @@ var frame = new Frame({
     }
 });
 
-// Attach frame to toolbar
+// Setting of toolbar.
+var toolbar_name = "Search toolbar";
+var toolbar_title = prefs.prefs["servicename"] + "で検索";
 var toolbar =Toolbar({
     name: toolbar_name,
     title: toolbar_title,
     items: [frame]
 });
 
+// Setting for panel
+var panel_url = "./panel.html";
+// This `panel_content` holds html text to display on panel.
+var panel_content = "";
+var panel_position = null;
+set_panel_position();
 // Panel to display lookup result
 var panel = panels.Panel({
     contentURL: panel_url
@@ -76,6 +93,35 @@ var panel = panels.Panel({
 panel.on("show", function(){
     panel.port.emit("set", panel_content);
 });
+
+// Setting for sidebar
+var sidebar_url = "./sidebar.html"
+// var `sidebar` will be a value by `require('sdk/ui/sidebar').Sidebar({...})`
+var sidebar = null;
+// Sidebar will display single search result or search history list.
+// The variable below indicates which is the latest content on the sidebar.
+// The reason why this variable is used is that message, which is sent to sidebar script with sidebar contents,
+// is different based on the latest contents. ,,, Sorry I know this explanation won't make you understood any more.
+// I should have coded the script structure more carefully to make things clearer... 
+// The thing complicating is that the logic to prepare sidebar content and the method to send it to sidebar script
+// and the way to parse the data to show the content is separated and not be able to controll directly.
+var sidebar_latest_open_type = "search"; // "search" or "history"
+// The html text to be sent to sidebar content script.
+// When sidebar content script receives this content, it will directly set the html on the sidebar.
+var sidebar_content = "";
+// The 'Object' which has header data and search history data(a list of pair of search word and result).
+// When sidebar content script receives this content, it will parse the object to display list data appropriately.
+var sidebar_history_content = "";
+var sidebar_id = "eitaro-sidebar";
+var sidebar_title = prefs.prefs["servicename"];
+// I began to doubt whether this worker variable is necessary.
+var sidebar_workers = [];
+// If configured to display search result with past search history, the latest search result should not be collapsed
+// as other search history result. If the value below is false, all list data will be shown collapsed.
+// if it is true, then only the first row of search result data will be expanded while the others remain collapsed.
+var sidebar_show_latest_data = false;
+
+
 
 
 
@@ -86,7 +132,8 @@ database.onerror = function(e) {
     console.error(e.value);
 }
 
-// service url should be used for 'name'
+// Open database
+// Argument 'name' should be the same as configuration item "service-url".
 function db_open(name, version) {
     var request = indexedDB.open(name, version);
 
@@ -110,11 +157,14 @@ function db_open(name, version) {
     request.onerror = database.onerror;
 };
 
+// Close and reopen database
 function db_reopen(name, version){
     database.db.close();
     db_open(name, version);
 }
 
+// Add object to objectstore.
+// In order to overwrite timestamp, delete the object first before adding it.
 function db_addObject(word, result) {
     var db = database.db;
     var trans = db.transaction([db_objstore_name], "readwrite");
@@ -137,6 +187,28 @@ function db_addObject(word, result) {
     }
 };
 
+// Simply remove object from objectstore.
+function db_removeObject(word, callback) {
+    var db = database.db;
+    var trans = db.transaction([db_objstore_name], "readwrite");
+    var store = trans.objectStore(db_objstore_name);
+    var delete_request = store.index("word").openKeyCursor(word);
+    delete_request.onsuccess = function(){
+        var cursor = delete_request.result;
+        if(cursor){
+            store.delete(cursor.primaryKey);
+            cursor.continue();
+        }
+    }
+
+    if(callback){
+        trans.oncomplete = function(){
+            callback();
+        }
+    }
+}
+
+// Remove all objects from object store.
 function db_clearObject() {
     var db = database.db;
     var trans = db.transaction([db_objstore_name], "readwrite");
@@ -144,6 +216,7 @@ function db_clearObject() {
     store.clear();
 };
 
+// Get object by key
 function db_getObject(callback, key) {
     var cb = callback;
     var db = database.db;
@@ -158,6 +231,7 @@ function db_getObject(callback, key) {
     };
 };
 
+// Get object by 'word' index from objectstore.
 function db_getObjectByWord(key, callback) {
     var cb = callback;
     var db = database.db;
@@ -172,6 +246,7 @@ function db_getObjectByWord(key, callback) {
     };
 };
 
+// List all keys in the objectstore.
 function db_getAllKeys(key, callback){
     var cb = callback;
     var db = database.db;
@@ -186,6 +261,9 @@ function db_getAllKeys(key, callback){
     };
 }
 
+// Extract all objects in the objectstore.
+// sort_key: One of the [dtime, word]
+// direction: 'prev' or 'next'. 'prev' means descend order, 'next' means ascend order.
 function db_getAllObjects(sort_key, direction, callback) {
     var db = database.db;
     var trans = db.transaction([db_objstore_name], "readwrite");
@@ -251,6 +329,9 @@ function build_sidebar(){
         url: sidebar_url,
         onAttach: function(worker){
             sidebar_workers.push(worker);
+
+            // When "get" message comes from sidebar script,
+            // prepare the data to show on the sidebar and send it to the sidebar.
             worker.port.on("get", function(){
                 // Attach DOM element to the last element of workers array.
                 var msg = {};
@@ -263,7 +344,17 @@ function build_sidebar(){
                     msg.data = JSON.stringify(sidebar_history_content);
                 }
                 worker.port.emit(msg.type, msg.data);
-            })
+            });
+
+            // When "delete" message arrives from the sidebar script,
+            // remove the target object from database and refresh sidebar with the latest history data.
+            worker.port.on("delete", function(word){
+                if(word){
+                    db_removeObject(word, function(){
+                        history();
+                    });
+                }
+            });
         },
         onDetach: function(worker){
             var index = sidebar_workers.indexOf(worker);
@@ -305,7 +396,7 @@ function update_history_with_sidebar(){
 build_sidebar();
 
 // Preference setup
-function set_panel_position(prefName){
+function set_panel_position(){
     switch(prefs.prefs["panelposition"]){
         case "left":
             panel_position = {
@@ -339,12 +430,14 @@ function set_panel_position(prefName){
             panel_position = null;
             break;
     }
-    prefs.prefs["displaytarget"] = "panel";
 }
 prefs.on("preservehistory", function(){
     prefs.prefs["displaytarget"] = "sidebar";
 });
-prefs.on("panelposition", set_panel_position);
+prefs.on("panelposition", function(){
+    set_panel_position();
+    prefs.prefs["displaytarget"] = "panel";
+});
 prefs.on("alwaysopennewtab", function(){
     prefs.prefs["displaytarget"] = "tab";
 });
@@ -364,10 +457,6 @@ prefs.on("serviceselector", function(){
     service_selector = prefs.prefs["serviceselector"];
 });
 prefs.on("clearresult", function(){
-    let prompts =
-      Cc["@mozilla.org/embedcomp/prompt-service;1"].
-        getService(Ci.nsIPromptService);
-
     if (prompts.confirm(null, "警告", "全ての履歴が削除され、元に戻せませんがよろしいですか？")) {
         clear_result();
     }
@@ -382,6 +471,11 @@ prefs.on("dump", function(){
 /*
  * Definition of functions
  */
+// Romove extra spaces
+function trim_space(word) {
+    return word.replace(/\s+/g, ' ').trim();
+}
+
 // Store search result to global variable
 function store_result(word, result){
     db_addObject(word, result);
@@ -394,6 +488,13 @@ function clear_result(){
 
 // Search keyword from configured url
 function search(search_keyword){
+    // Trim extra space. If search_keyword is empty, stop processing.
+    search_keyword = trim_space(search_keyword);
+    if(!search_keyword || /^\s*$/.test(search_keyword)){
+        prompts.alert(null, "注意", "検索キーワードが空です。");
+        return;
+    }
+
     // Reopen indexeddb if service url has changed since last search()
     if(db_name != service_url){
         db_name = service_url;
@@ -738,9 +839,12 @@ context_menu_item = cm.Item({
 
 
 
-/*!
+/*
  * The code under this comment lines is modified based on Sizzle by jQuery Foundation.
  * Here is a description for license information.
+ */
+
+/*!
  * ============================================================
  * Sizzle CSS Selector Engine v2.3.1-pre
  * https://sizzlejs.com/

@@ -29,3 +29,15 @@ a.word {
 a.word:hover {
     font-weight: bold;
 }
+
+a.remove-item {
+    display: inline-block;
+    float: right;
+    color: red;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+a.remove-item:hover {
+    background-color: yellow;
+}
