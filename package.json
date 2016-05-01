@@ -1,0 +1,120 @@
+{
+  "title": "英太郎ONLINE",
+  "name": "eitaro-online",
+  "version": "0.0.1",
+  "description": "検索ボックスを追加し検索結果をサイドバーやタブ、ページ内パネルに整理して表示できるようになります。検索サービスのサービスURLや検索結果の表示箇所を自由に変更できます。Ctrl+Lで検索ボックスにフォーカスを移せます。サービスURLには検索サービスを提供しているWebサーバのURLを設定してください。検索を実行すると、サービスURLの{0}の部分の値が検索ボックスに入力した文字列で置換されます。またサービスセレクタには検索結果のHTMLのうち表示させたいHTML要素のパスをCSSセレクタ形式で設定してください。セレクタについては https://developer.mozilla.org/ja/docs/Web/Guide/CSS/Getting_started/Selectors など色々なサイトで説明されているので分からなければ調べて見てください。",
+  "main": "index.js",
+  "author": "Rindo Hinase",
+  "engines": {
+    "firefox": ">=38.0a1"
+  },
+  "license": "MIT",
+  "keywords": [
+    "jetpack"
+  ],
+  "preferences": [
+    {
+      "name": "preservehistory",
+      "type": "bool",
+      "title": "検索結果の履歴も合わせて表示する (表示先がサイドバーの場合のみ)",
+      "value": false
+    },
+    {
+      "name": "displaytarget",
+      "type": "radio",
+      "title": "検索結果の表示先",
+      "options": [
+        {
+          "value": "tab",
+          "label":  "タブ"
+        },
+        {
+          "value": "sidebar",
+          "label":  "サイドバー"
+        },
+        {
+          "value": "panel",
+          "label":  "ページ内パネル"
+        }
+      ],
+      "value": "panel"
+    },
+    {
+      "name": "alwaysopennewtab",
+      "type": "bool",
+      "title": "常に新しいタブに検索結果を表示する",
+      "value": false
+    },
+    {
+      "name": "panelposition",
+      "type": "radio",
+      "title": "パージ内パネルの表示位置",
+      "options": [
+        {
+          "value": "center",
+          "label": "中央"
+        },
+        {
+          "value": "left",
+          "label": "左"
+        },
+        {
+          "value": "top",
+          "label": "上"
+        },
+        {
+          "value": "right",
+          "label": "右"
+        },
+        {
+          "value": "bottom",
+          "label": "下"
+        }
+      ],
+      "value": "right"
+    },
+    {
+      "name": "servicename",
+      "title": "サービス名",
+      "type": "string",
+      "value": "英太郎 ONLINE",
+      "hidden":  true
+    },
+    {
+      "name": "serviceurl",
+      "title": "サービスURL",
+      "type": "string",
+      "value": "http://eow.エーエルシー.co.jp/search?q={0}"
+    },
+    {
+      "name": "serviceselector",
+      "title": "サービスセレクター",
+      "type": "string",
+      "value": "#resultsList > ul > li:first"
+    },
+    {
+      "name": "servicedeselector",
+      "title": "サービスデセレクター(検索結果から除外する子要素)",
+      "type": "string",
+      "value": ".fukidashi"
+    },
+    {
+      "type": "control",
+      "label": "削除",
+      "name": "clearresult",
+      "title": "履歴を全て削除する" 
+    },
+    {
+      "type": "control",
+      "label": "エクスポート",
+      "name": "export",
+      "title": "履歴をファイルにエクスポートする(HTMLフォーマット)" 
+    },
+    {
+      "type": "control",
+      "label": "ダンプ出力",
+      "name": "dump",
+      "title": "履歴データのダンプを取得する" 
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+﻿body {
+}
+
+.frame {
+}
+
+input#search-box {
+    border: 1px solid #999;
+    padding: 2px 7px;
+    font-size: 12px;
+    min-width: 180px;
+    resize: horizontal;
+}
+
+#config,
+#history {
+    box-sizing: border-box;
+    font-size: 12px;
+    padding: 2px;
+}
+
+#config:hover,
+#history:hover {
+    border-top: 1px solid #DDD;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+    border-left: 1px solid #DDD;
+    padding-right: 0px;
+    cursor: pointer;
+}
+
+#config.pressing,
+#history.pressing {
+    border-top: 1px solid #333;
+    border-right: 1px solid #DDD;
+    border-bottom: 1px solid #DDD;
+    border-left: 1px solid #333;
+    padding: 3px;
+}
+
+#config > img {
+    vertical-align: middle;
+}

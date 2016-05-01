@@ -1,0 +1,31 @@
+﻿body {}
+
+#content {
+    font-size: 12px;
+}
+
+div.history {
+    padding: 2px;
+}
+
+div.history + div.history {
+    margin-top: 3px;
+    padding-top: 3px;
+    border-top: 1px solid #DDD;
+}
+
+div.title {
+}
+
+div.hidden {
+    display: none;
+}
+
+a.word {
+    cursor: pointer;
+    color: #0094ff;
+}
+
+a.word:hover {
+    font-weight: bold;
+}
