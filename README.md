@@ -1,18 +1,17 @@
 # 英太郎 ONLINE  
-Firefoxの拡張アドオンです。
+## 概略
+英和、和英辞書検索やその他の検索サービスを利用しやすくするFirefoxアドオンです。特定のWebサイトのために開発したものではありません。  
 
-- 検索ボックスを追加し検索結果をサイドバーやタブ、ページ内パネルに整理して表示できるようになります。
-- 検索サービスのサービスURLや検索結果の表示箇所を自由に変更できます。
-- Ctrl+Lで検索ボックスにフォーカスを移せます。
-- サービスURLには検索サービスを提供しているWebサーバのURLを設定してください。
+設定方法や機能についてはこちらのページでも説明しています。  
+[https://github.com/Hinaser/eitaro-online/wiki](https://github.com/Hinaser/eitaro-online/wiki)
 
-検索を実行すると、サービスURLの{0}の部分の値が検索ボックスに入力した文字列で置換されます。  
-またサービスセレクタには検索結果のHTMLのうち表示させたいHTML要素のパスをCSSセレクタ形式で設定してください。  
-セレクタについては https://developer.mozilla.org/ja/docs/Web/Guide/CSS/Getting_started/Selectors など色々なサイトで説明されているので分からなければ調べて見てください。  
+## 注意点
+このアドオンを利用するためにはアドオンの設定画面からサービスURL等を設定する必要があります。(初回のみ)  
 
-# License
+## インストール
+[addons.mozilla.org](https://addons.mozilla.org/ja/firefox/addon/%E8%8B%B1%E5%A4%AA%E9%83%8Eonline/) からアドオンを直接Firefoxに追加してください。
+
+## License
 MITライセンスで公開しています。MITライセンスのコピーは下記から入手できます。
 
-    https://opensource.org/licenses/MIT
-
-
+[https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)
