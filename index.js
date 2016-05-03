@@ -126,6 +126,37 @@ var sidebar_show_latest_data = false;
 
 
 /*
+ * Utility functions
+ */
+// Sanitize html text
+function sanitizeHtml(html_text) {
+    var document = parser.parseFromString(html_text, "text/html");
+    // Sanitize html text here by using the function provided by mozilla
+    // https://developer.mozilla.org/en-US/Add-ons/Overlay_Extensions/XUL_School/DOM_Building_and_HTML_Insertion#Safely_Using_Remote_HTML
+    var html_flagment = parseHTML(document, html_text, true, null, false);
+
+    var div = document.createElement('div');
+    div.appendChild(html_flagment);
+    return div.innerHTML;
+}
+
+// Sanitize sidebar content.
+// Sidebar content has 2 type. The normal sidebar content and content with search history.
+// The former one contains only one search result and the latter contains history or search results.
+function sanitize_sidebar_content(with_history){
+    if(with_history){
+        if(sidebar_history_content && sidebar_history_content.data){
+            for(var i=0;i<sidebar_history_content.data.records.length;i++){
+                sidebar_history_content.data.records[i].result = sanitizeHtml(sidebar_history_content.data.records[i].result);
+            }
+        }
+    }
+    else{
+        sidebar_content = sanitizeHtml(sidebar_content);
+    }
+}
+
+/*
  * Setup indexeddb
  */
 database.onerror = function(e) {
@@ -336,10 +367,12 @@ function build_sidebar(){
                 // Attach DOM element to the last element of workers array.
                 var msg = {};
                 if(sidebar_latest_open_type == "search"){
+                    sanitize_sidebar_content(false); // Sanitize sidebar content
                     msg.type = "set";
                     msg.data = sidebar_content;
                 }
                 else {
+                    sanitize_sidebar_content(true); // Sanitize sidebar content with history
                     msg.type = "set-history";
                     msg.data = JSON.stringify(sidebar_history_content);
                 }
@@ -370,27 +403,26 @@ function build_sidebar(){
 };
 
 // Update content in sidebar
-function update_sidebar(){
+function update_sidebar(with_history){
     if(sidebar == null){
         build_sidebar();
     }
     if(sidebar_workers != null && sidebar_workers.length >= 1){
-        sidebar_workers[sidebar_workers.length - 1].port.emit("set", sidebar_content);
+        if(with_history){
+            // Sanitize html text to eliminate malicious code
+            sanitize_sidebar_content(true);
+            sidebar_workers[sidebar_workers.length - 1].port.emit("set-history", JSON.stringify(sidebar_history_content));
+        }
+        else{
+            // Sanitize html text to eliminate malicious code
+            sanitize_sidebar_content(false);
+            sidebar_workers[sidebar_workers.length - 1].port.emit("set", sidebar_content);
+        }
     }
 
     sidebar.show();
 }
 
-function update_history_with_sidebar(){
-    if(sidebar == null){
-        build_sidebar();
-    }
-    if(sidebar_workers != null && sidebar_workers.length >= 1){
-        sidebar_workers[sidebar_workers.length - 1].port.emit("set-history", JSON.stringify(sidebar_history_content));
-    }
-
-    sidebar.show();
-}
 
 // Initial sidebar setup
 build_sidebar();
@@ -530,7 +562,7 @@ function search(search_keyword){
                     store_result(search_keyword, sidebar_content);
                     if(!testAndShowResultHistory()){
                         // Activate sidebar
-                        update_sidebar();
+                        update_sidebar(false);
                     }
                 }
             });
@@ -627,12 +659,12 @@ function history() {
                 showFirstData: sidebar_show_latest_data,
                 data: records
             };
-            update_history_with_sidebar();
+            update_sidebar(true);
         }
         else{
             sidebar_latest_open_type = "search";
             sidebar_content = service_error_msg.no_histories;
-            update_sidebar();
+            update_sidebar(false);
         }
     });
 }
@@ -804,46 +836,49 @@ context_menu_item = cm.Item({
 
 
 
+/****************************
+ * EXTERNAL CODES/LIBRARIES *
+ ****************************/
 
+/*
+ * The code below is a copy from this page.
+ * https://developer.mozilla.org/en-US/Add-ons/Overlay_Extensions/XUL_School/DOM_Building_and_HTML_Insertion#Safely_Using_Remote_HTML
+ */
+/**
+ * Safely parse an HTML fragment, removing any executable
+ * JavaScript, and return a document fragment.
+ *
+ * @param {Document} doc The document in which to create the
+ *     returned DOM tree.
+ * @param {string} html The HTML fragment to parse.
+ * @param {boolean} allowStyle If true, allow <style> nodes and
+ *     style attributes in the parsed fragment. Gecko 14+ only.
+ * @param {nsIURI} baseURI The base URI relative to which resource
+ *     URLs should be processed. Note that this will not work for
+ *     XML fragments.
+ * @param {boolean} isXML If true, parse the fragment as XML.
+ */
+function parseHTML(doc, html, allowStyle, baseURI, isXML) {
+    let PARSER_UTILS = "@mozilla.org/parserutils;1";
 
+    // User the newer nsIParserUtils on versions that support it.
+    if (PARSER_UTILS in Cc) {
+        let parser = Cc[PARSER_UTILS]
+                               .getService(Ci.nsIParserUtils);
+        if ("parseFragment" in parser)
+            return parser.parseFragment(html, allowStyle ? parser.SanitizerAllowStyle : 0,
+                                        !!isXML, baseURI, doc.documentElement);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return Cc["@mozilla.org/feed-unescapehtml;1"]
+                     .getService(Ci.nsIScriptableUnescapeHTML)
+                     .parseFragment(html, !!isXML, baseURI, doc.documentElement);
+}
 
 /*
  * The code under this comment lines is modified based on Sizzle by jQuery Foundation.
  * Here is a description for license information.
  */
-
 /*!
  * ============================================================
  * Sizzle CSS Selector Engine v2.3.1-pre
