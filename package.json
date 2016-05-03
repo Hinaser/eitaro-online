@@ -1,10 +1,10 @@
 {
   "title": "英太郎ONLINE",
   "name": "eitaro_online",
-  "version": "0.0.2",
-  "description": "検索ボックスを追加し検索結果をサイドバーやタブ、ページ内パネルに整理して表示できるようになります。検索サービスのサービスURLや検索結果の表示箇所を自由に変更できます。Ctrl+Lで検索ボックスにフォーカスを移せます。サービスURLには検索サービスを提供しているWebサーバのURLを設定してください。検索を実行すると、サービスURLの{0}の部分の値が検索ボックスに入力した文字列で置換されます。またサービスセレクタには検索結果のHTMLのうち表示させたいHTML要素のパスをCSSセレクタ形式で設定してください。このアドオンはMITライセンスで次のサイトで公開しています。 https://github.com/Hinaser/eitaro-online ",
+  "version": "0.0.3",
+  "description": "詳しくは https://github.com/Hinaser/eitaro-online/wiki をご確認ください。【注意】アドオン使用前に本アドオンの設定画面より「サービスURL」にちゃんとしたURLを入力しなおす作業が必要です。",
   "main": "index.js",
-  "author": "Rindo Hinase",
+  "author": "Hinase",
   "engines": {
     "firefox": ">=38.0a1"
   },
