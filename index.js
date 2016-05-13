@@ -26,19 +26,12 @@ var prefs = require('sdk/simple-prefs');
 var { Hotkey } = require('sdk/hotkeys');
 var { Request } = require('sdk/request');
 var panels = require("sdk/panel");
-var { indexedDB, IDBKeyRange } = require('sdk/indexed-db');
 var { Cc, Ci } = require("chrome");
 var cm = require("sdk/context-menu");
 var tabs = require("sdk/tabs");
 var { getTabForId, getTabContentWindow } = require ("sdk/tabs/utils");
 var parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
 var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
-
-// Variables for indexed-db
-var database = {};
-var db_objstore_name = "histories";
-var db_name = "default";
-var db_version = "1";
 
 // Variable to manage opened tab. Once a tab is opened by this script,
 // the tab will be re-used to display information. So we need to track which tab is opened by this script.
@@ -156,197 +149,10 @@ function sanitize_sidebar_content(with_history){
     }
 }
 
-/*
- * Setup indexeddb
- */
-database.onerror = function(e) {
-    console.error(e.value);
-}
-
-// Open database
-// Argument 'name' should be the same as configuration item "service-url".
-function db_open(name, version) {
-    var request = indexedDB.open(name, version);
-
-    request.onupgradeneeded = function(e) {
-        var db = e.target.result;
-        e.target.transaction.onerror = database.onerror;
-
-        if(db.objectStoreNames.contains(db_objstore_name)) {
-            db.deleteObjectStore(db_objstore_name);
-        }
-
-        var store = db.createObjectStore(db_objstore_name, {keyPath: ["word"]});
-        store.createIndex("dtime", "dtime", {unique: false});
-        store.createIndex("word", "word", {unique: true});
-    };
-
-    request.onsuccess = function(e) {
-        database.db = e.target.result;
-    };
-
-    request.onerror = database.onerror;
-};
-
-// Close and reopen database
-function db_reopen(name, version){
-    database.db.close();
-    db_open(name, version);
-}
-
-// Add object to objectstore.
-// In order to overwrite timestamp, delete the object first before adding it.
-function db_addObject(word, result) {
-    var db = database.db;
-    var trans = db.transaction([db_objstore_name], "readwrite");
-    var store = trans.objectStore(db_objstore_name);
-    var delete_request = store.index("word").openKeyCursor(word);
-    delete_request.onsuccess = function(){
-        var cursor = delete_request.result;
-        if(cursor){
-            store.delete(cursor.primaryKey);
-            cursor.continue();
-        }
-
-        var put_request = store.put({
-            "dtime": new Date(),
-            "word": word,
-            "result": result
-        });
-
-        put_request.onerror = database.onerror;
-    }
-};
-
-// Simply remove object from objectstore.
-function db_removeObject(word, callback) {
-    var db = database.db;
-    var trans = db.transaction([db_objstore_name], "readwrite");
-    var store = trans.objectStore(db_objstore_name);
-    var delete_request = store.index("word").openKeyCursor(word);
-    delete_request.onsuccess = function(){
-        var cursor = delete_request.result;
-        if(cursor){
-            store.delete(cursor.primaryKey);
-            cursor.continue();
-        }
-    }
-
-    if(callback){
-        trans.oncomplete = function(){
-            callback();
-        }
-    }
-}
-
-// Remove all objects from object store.
-function db_clearObject() {
-    var db = database.db;
-    var trans = db.transaction([db_objstore_name], "readwrite");
-    var store = trans.objectStore(db_objstore_name);
-    store.clear();
-};
-
-// Get object by key
-function db_getObject(callback, key) {
-    var cb = callback;
-    var db = database.db;
-    var trans = db.transaction([db_objstore_name], "readwrite");
-    var store = trans.objectStore(db_objstore_name);
-
-    var request = store.get(key);
-
-    request.onerror = database.onerror;
-    request.onsuccess = function(e){
-        cb(request.result);
-    };
-};
-
-// Get object by 'word' index from objectstore.
-function db_getObjectByWord(key, callback) {
-    var cb = callback;
-    var db = database.db;
-    var trans = db.transaction([db_objstore_name], "readwrite");
-    var store = trans.objectStore(db_objstore_name);
-
-    var request = store.index('word').get(key);
-
-    request.onerror = database.onerror;
-    request.onsuccess = function(e){
-        cb(request.result);
-    };
-};
-
-// List all keys in the objectstore.
-function db_getAllKeys(key, callback){
-    var cb = callback;
-    var db = database.db;
-    var trans = db.transaction([db_objstore_name], "readwrite");
-    var store = trans.objectStore(db_objstore_name);
-
-    var request = store.index(key).getAllKeys()
-
-    request.onerror = database.onerror;
-    request.onsuccess = function(e){
-        cb(request.result);
-    };
-}
-
-// Extract all objects in the objectstore.
-// sort_key: One of the [dtime, word]
-// direction: 'prev' or 'next'. 'prev' means descend order, 'next' means ascend order.
-function db_getAllObjects(sort_key, direction, callback) {
-    var db = database.db;
-    var trans = db.transaction([db_objstore_name], "readwrite");
-    var store = trans.objectStore(db_objstore_name);
-    var items = new Array();
-
-    trans.oncomplete = function() {
-        callback(items);
-    }
-
-    var cursorRequest = null;
-
-    // Check if records exist
-    var count = store.count();
-    count.onsuccess = function(){
-        if(count.result < 1) {
-            cursorRequest = store.openCursor(null);
-        }
-        else if(sort_key == "dtime"){
-            if(direction == "prev"){
-                cursorRequest = store.index("dtime").openCursor(null, "prev");
-            }
-            else {
-                cursorRequest = store.index("dtime").openCursor(null, "next");
-            }
-        }
-        else{
-            if(direction == "prev"){
-                cursorRequest = store.index("word").openCursor(null, "prev");
-            }
-            else {
-                cursorRequest = store.index("word").openCursor(null, "next");
-            }
-        }
-
-        cursorRequest.onsuccess = function(e) {
-            var result = e.target.result;
-            if(!!result == false)
-                return;
-
-            items.push(result.value);
-            result.continue();
-        };
-
-        cursorRequest.onerror = database.onerror;
-    };
-};
-
-// Open db
-db_name = service_url;
-db_open(db_name, db_version);
-
+// Db setup
+var Database = require('lib/db');
+db = new Database();
+db.open(service_url, "1");
 
 
 /*
@@ -383,7 +189,7 @@ function build_sidebar(){
             // remove the target object from database and refresh sidebar with the latest history data.
             worker.port.on("delete", function(word){
                 if(word){
-                    db_removeObject(word, function(){
+                    db.remove(word, function(){
                         history();
                     });
                 }
@@ -510,12 +316,12 @@ function trim_space(word) {
 
 // Store search result to global variable
 function store_result(word, result){
-    db_addObject(word, result);
+    db.add(word, result);
 }
 
 // Clear search result history
 function clear_result(){
-    db_clearObject();
+    db.clear();
 }
 
 // Search keyword from configured url
@@ -528,9 +334,9 @@ function search(search_keyword){
     }
 
     // Reopen indexeddb if service url has changed since last search()
-    if(db_name != service_url){
-        db_name = service_url;
-        db_reopen(db_name, db_version);
+    if(db.name != service_url){
+        db.name = service_url;
+        db.reopen(db.name, db.version);
     }
 
     // Get search keyword from input field and construct url for dictionary service
@@ -643,7 +449,7 @@ function config() {
 
 // Open sidebar or panel to display search history
 function history() {
-    db_getAllObjects("dtime", "prev", function(objects){
+    db.getAll("dtime", "prev", function(objects){
         var records = new Array;
 
         objects.forEach(function(element, index, array){
@@ -680,7 +486,7 @@ function exportDumpToFile(){
     if(res != nsIFilePicker.returnCancel){
         var theFile = fp.file;
         var fileIO = require("sdk/io/file");
-        db_getAllObjects("dtime", "prev", function(item){
+        db_getAll("dtime", "prev", function(item){
             var TextWriter = fileIO.open(theFile.path, "w");
             if (!TextWriter.closed) {
                 TextWriter.write(JSON.stringify(item));
@@ -701,7 +507,7 @@ function exportFormattedDataToFile(){
     if(res != nsIFilePicker.returnCancel){
         var theFile = fp.file;
         var fileIO = require("sdk/io/file");
-        db_getAllObjects("dtime", "prev", function(item){
+        db_getAll("dtime", "prev", function(item){
             var TextWriter = fileIO.open(theFile.path, "w");
             if (!TextWriter.closed) {
                 var text_to_write = "<html>\n" +
@@ -787,36 +593,6 @@ var getFocus = Hotkey({
 });
 
 // Setup context menu
-/*
-cm.Item({
-    label: "test",
-    context: cm.SelectionContext(),
-    contentScript: 'self.on("context", function () {' +
-                   '  var selection = window.getSelection().toString();' +
-                   '  if(!!selection) {' +
-                   '    if(selection.length > 15) {' +
-                   '      selection = selection.substr(0, 15);' +
-                   '      selection += "..."' +
-                   '    }' +
-                   '    return "' + service_name + 'で \\"" + selection + "\\" を検索";' +
-                   '  }' +
-                   '});' +
-                   'self.on("click", function () {' +
-                   '  var msg = {};' +
-                   '  msg.type = "search";' +
-                   '  msg.data = window.getSelection().toString();' +
-                   '  self.postMessage(JSON.stringify(msg));' +
-                   '});',
-    onMessage: function (msg) {
-        obj = JSON.parse(msg);
-        switch(obj.type){
-            case "search":
-                search(obj.data);
-                break;
-        }
-    }
-});
-*/
 var context_menu_item = null;
 context_menu_item = cm.Item({
     label: "label",
