@@ -88,7 +88,7 @@ panel.on("show", function(){
 });
 
 // Setting for sidebar
-var sidebar_url = "./sidebar.html"
+var sidebar_url = "./sidebar.html";
 // var `sidebar` will be a value by `require('sdk/ui/sidebar').Sidebar({...})`
 var sidebar = null;
 // Sidebar will display single search result or search history list.
@@ -138,7 +138,7 @@ function sanitizeHtml(html_text) {
 // The former one contains only one search result and the latter contains history or search results.
 function sanitize_sidebar_content(with_history){
     if(with_history){
-        if(sidebar_history_content && sidebar_history_content.data){
+        if(sidebar_history_content && sidebar_history_content.data && sidebar_history_content.data.records){
             for(var i=0;i<sidebar_history_content.data.records.length;i++){
                 sidebar_history_content.data.records[i].result = sanitizeHtml(sidebar_history_content.data.records[i].result);
             }
@@ -152,7 +152,7 @@ function sanitize_sidebar_content(with_history){
 // Db setup
 var Database = require('lib/db');
 db = new Database();
-db.open(service_url, "1");
+db.open(service_url);
 
 
 /*
@@ -335,8 +335,7 @@ function search(search_keyword){
 
     // Reopen indexeddb if service url has changed since last search()
     if(db.name != service_url){
-        db.name = service_url;
-        db.reopen(db.name, db.version);
+        db.reopen(service_url);
     }
 
     // Get search keyword from input field and construct url for dictionary service
@@ -486,7 +485,7 @@ function exportDumpToFile(){
     if(res != nsIFilePicker.returnCancel){
         var theFile = fp.file;
         var fileIO = require("sdk/io/file");
-        db_getAll("dtime", "prev", function(item){
+        db.getAll("dtime", "prev", function(item){
             var TextWriter = fileIO.open(theFile.path, "w");
             if (!TextWriter.closed) {
                 TextWriter.write(JSON.stringify(item));
@@ -507,12 +506,13 @@ function exportFormattedDataToFile(){
     if(res != nsIFilePicker.returnCancel){
         var theFile = fp.file;
         var fileIO = require("sdk/io/file");
-        db_getAll("dtime", "prev", function(item){
+        db.getAll("dtime", "prev", function(item){
             var TextWriter = fileIO.open(theFile.path, "w");
             if (!TextWriter.closed) {
                 var text_to_write = "<html>\n" +
-                                    "<head>\n" + 
-                                    "<style type='text/css'>\n" + 
+                                    "<head>\n" +
+                                    "<meta charset='utf-8'>\n" +
+                                    "<style type='text/css'>\n" +
                                     "  table {\n" +
                                     "    font-size: 12px;\n" +
                                     "    border-collapse: collapse;\n" +
