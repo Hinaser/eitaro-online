@@ -30,7 +30,6 @@ var { Cc, Ci } = require("chrome");
 var cm = require("sdk/context-menu");
 var tabs = require("sdk/tabs");
 var { getTabForId, getTabContentWindow } = require ("sdk/tabs/utils");
-var parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
 var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
 
 // Variable to manage opened tab. Once a tab is opened by this script,
@@ -45,17 +44,12 @@ var service_url = prefs.prefs["serviceurl"];
 // This is a CSS selector string. When search result page is returned, we need to trim unnecessary contents.
 // This value specifies which html element should be treated as a search result content.
 var service_selector = prefs.prefs["serviceselector"];
-// Just a bunch of error messages.
-var service_error_msg = {
-    parse_error: "DOMの解析に失敗しました。設定のサービスURLやサービスセレクタの内容をもう一度確認してください。サービスURLの例(あくまで例です。): http://eXw.alc.XX.jp/search?q={0}"
-    , no_histories: "履歴がまだありません。"
-};
 
 // Where the search result content should be displayed. One of the ["tab", "sidebar", "panel"].
 var display_target = "tab";
 
 // Setting of frame which boards search input field and buttons.
-var frame_url = "./frame.html"
+var frame_url = "./frame.html";
 var frame = new Frame({
     url: frame_url,
     onMessage: (e) => {
@@ -87,20 +81,8 @@ panel.on("show", function(){
     panel.port.emit("set", panel_content);
 });
 
-/*
- * Utility functions
- */
-// Sanitize html text
-function sanitizeHtml(html_text) {
-    var document = parser.parseFromString(html_text, "text/html");
-    // Sanitize html text here by using the function provided by mozilla
-    // https://developer.mozilla.org/en-US/Add-ons/Overlay_Extensions/XUL_School/DOM_Building_and_HTML_Insertion#Safely_Using_Remote_HTML
-    var html_flagment = parseHTML(document, html_text, true, null, false);
-
-    var div = document.createElement('div');
-    div.appendChild(html_flagment);
-    return div.innerHTML;
-}
+// Utility
+var util = require('lib/util');
 
 // Db setup
 var Database = require('lib/db');
@@ -110,7 +92,7 @@ db.open(service_url);
 
 // Initial sidebar setup
 var Sidebar = require('lib/sidebar');
-var sidebar = new Sidebar("英太郎 ONLINE", db, sanitizeHtml);
+var sidebar = new Sidebar("英太郎 ONLINE", db, util.sanitizeHtml);
 
 // Preference setup
 function set_panel_position(){
@@ -179,24 +161,20 @@ prefs.on("clearresult", function(){
     }
 });
 prefs.on("export", function(){
-    exportFormattedDataToFile();
+    util.exportFormattedDataToFile(db);
 });
 prefs.on("dump", function(){
-    exportDumpToFile();
+    util.exportDumpToFile(db);
 });
 
 /*
  * Definition of functions
  */
-// Romove extra spaces
-function trim_space(word) {
-    return word.replace(/\s+/g, ' ').trim();
-}
 
 // Search keyword from configured url
 function search(search_keyword){
     // Trim extra space. If search_keyword is empty, stop processing.
-    search_keyword = trim_space(search_keyword);
+    search_keyword = util.trim_space(search_keyword);
     if(!search_keyword || /^\s*$/.test(search_keyword)){
         prompts.alert(null, "注意", "検索キーワードが空です。");
         return;
@@ -209,13 +187,14 @@ function search(search_keyword){
 
     // Get search keyword from input field and construct url for dictionary service
     var request_url = service_url.replace("{0}", search_keyword);
+    var result = util.parseSearchResult(response.text, service_selector, prefs.prefs['servicedeselector']);
 
     if(prefs.prefs['displaytarget'] == "panel"){
         +function(url){
             var xhr = Request({
                 url: url,
                 onComplete: function(response){
-                    panel_content = parseSearchResult(response.text);
+                    panel_content = result;
                     db.add(search_keyword, panel_content);
                     // Show panel
                     panel.show({
@@ -230,7 +209,6 @@ function search(search_keyword){
         var xhr = Request({
             url: request_url,
             onComplete: function(response){
-                let result = parseSearchResult(response.text);
                 db.add(search_keyword, result);
                 if(prefs.prefs["preservehistory"]){
                     sidebar.showHistory({show_first_data: true});
@@ -246,7 +224,7 @@ function search(search_keyword){
         var store_result_as_history = function(tab){
             var window = getTabContentWindow (getTabForId(tab.id));
             var html_as_string = window.document.documentElement.outerHTML;
-            db.add(search_keyword, parseSearchResult(html_as_string));
+            db.add(search_keyword, result);
         };
 
         // Open tab for translation page if there are no tabs already opened by this extension.
@@ -274,125 +252,12 @@ function search(search_keyword){
     }
 }
 
-// Analyze search result and return
-function parseSearchResult(html_as_string){
-    var content_to_return = null;
-    var document = parser.parseFromString(html_as_string, "text/html");
-
-    try {
-        content_to_return = document.querySelector(service_selector);
-
-        // Remove child nodes which jeopardizes page content.
-        try {
-            if(!/^\s*$/.test(prefs.prefs["servicedeselector"])){
-                let node_list = document.querySelectorAll(service_selector + " " + prefs.prefs["servicedeselector"]);
-                let node_array = Array.from(node_list); // Converts nodeList into Array of nodes
-                node_array.forEach(function(ele){
-                    ele.parentNode.removeChild(ele);
-                });
-            }
-        }
-        catch(e){
-            console.error(e);
-        }
-
-        content_to_return = content_to_return.innerHTML;
-    } catch(e) {
-        console.error(e);
-        content_to_return = service_error_msg.parse_error;
-    }
-
-    return content_to_return;
-}
 
 // Open configuration tab
 function config() {
     tabs.open("about:addons");
 }
 
-// Export search result history data without readable format into a file
-function exportDumpToFile(){
-    const nsIFilePicker = Ci.nsIFilePicker;
-    var fp = Cc["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-    fp.init(require('sdk/window/utils').getMostRecentBrowserWindow().content, "保存先のファイル名を入力・選択してください", nsIFilePicker.modeSave);
-    fp.appendFilter("JSON(JavaScript Object Notation) file", "*.json");
-    fp.defaultExtension = "json";
-    var res = fp.show();
-    if(res != nsIFilePicker.returnCancel){
-        var theFile = fp.file;
-        var fileIO = require("sdk/io/file");
-        db.getAll("dtime", "prev", function(item){
-            var TextWriter = fileIO.open(theFile.path, "w");
-            if (!TextWriter.closed) {
-                TextWriter.write(JSON.stringify(item));
-                TextWriter.close();
-            }
-        });
-    }
-}
-
-// Export search result history data with readable format into a file
-function exportFormattedDataToFile(){
-    const nsIFilePicker = Ci.nsIFilePicker;
-    var fp = Cc["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-    fp.init(require('sdk/window/utils').getMostRecentBrowserWindow().content, "保存先のファイル名を入力・選択してください", nsIFilePicker.modeSave);
-    fp.appendFilters(nsIFilePicker.filterHTML);
-    fp.defaultExtension = "html";
-    var res = fp.show();
-    if(res != nsIFilePicker.returnCancel){
-        var theFile = fp.file;
-        var fileIO = require("sdk/io/file");
-        db.getAll("dtime", "prev", function(item){
-            var TextWriter = fileIO.open(theFile.path, "w");
-            if (!TextWriter.closed) {
-                var text_to_write = "<html>\n" +
-                                    "<head>\n" +
-                                    "<meta charset='utf-8'>\n" +
-                                    "<style type='text/css'>\n" +
-                                    "  table {\n" +
-                                    "    font-size: 12px;\n" +
-                                    "    border-collapse: collapse;\n" +
-                                    "  }\n" +
-                                    "  \n" +
-                                    "  td {\n" +
-                                    "    padding: 2px;\n" +
-                                    "    border: 1px solid #777;\n" +
-                                    "  }\n" +
-                                    "</style>\n" +
-                                    "<script>\n" +
-                                    "  var data = " + JSON.stringify(item) + ";\n" +
-                                    "  window.onload = function () {\n" +
-                                    "    var tr_inner_template = '<td>{0}</td><td>{1}</td><td>{2}</td>';\n" +
-                                    "    var tbody = document.getElementById('table-body');\n" +
-                                    "    for(var i=0;i<data.length;i++) {\n" +
-                                    "      var tr = document.createElement('tr');\n" +
-                                    "      td = tr_inner_template.replace('{0}', data[i].dtime).replace('{1}', data[i].word).replace('{2}', data[i].result);\n" +
-                                    "      tr.innerHTML = td;\n" +
-                                    "      tbody.appendChild(tr);\n" +
-                                    "    }\n" +
-                                    "  }\n" +
-                                    "</script>\n" +
-                                    "</head>\n" +
-                                    "<body>\n" +
-                                    "  <table>\n" +
-                                    "    <thead>\n" +
-                                    "      <tr>\n" +
-                                    "        <td>Date</td>\n" +
-                                    "        <td>Word</td>\n" +
-                                    "        <td>Result</td>\n" +
-                                    "      </tr>\n" +
-                                    "    </thead>\n" +
-                                    "    <tbody id='table-body'>\n" +
-                                    "    </tbody>\n" +
-                                    "  </table>\n" +
-                                    "</body>\n" +
-                                    "</html>\n";
-                TextWriter.write(text_to_write);
-                TextWriter.close();
-            }
-        });
-    }
-}
 
 // Route or Assign incoming message from sub component script to combined target operation
 function routeMsg(obj, event) {
@@ -447,41 +312,3 @@ context_menu_item = cm.Item({
 
 
 
-/****************************
- * EXTERNAL CODES/LIBRARIES *
- ****************************/
-
-/*
- * The code below is a copy from this page.
- * https://developer.mozilla.org/en-US/Add-ons/Overlay_Extensions/XUL_School/DOM_Building_and_HTML_Insertion#Safely_Using_Remote_HTML
- */
-/**
- * Safely parse an HTML fragment, removing any executable
- * JavaScript, and return a document fragment.
- *
- * @param {Document} doc The document in which to create the
- *     returned DOM tree.
- * @param {string} html The HTML fragment to parse.
- * @param {boolean} allowStyle If true, allow <style> nodes and
- *     style attributes in the parsed fragment. Gecko 14+ only.
- * @param {nsIURI} baseURI The base URI relative to which resource
- *     URLs should be processed. Note that this will not work for
- *     XML fragments.
- * @param {boolean} isXML If true, parse the fragment as XML.
- */
-function parseHTML(doc, html, allowStyle, baseURI, isXML) {
-    let PARSER_UTILS = "@mozilla.org/parserutils;1";
-
-    // User the newer nsIParserUtils on versions that support it.
-    if (PARSER_UTILS in Cc) {
-        let parser = Cc[PARSER_UTILS]
-                               .getService(Ci.nsIParserUtils);
-        if ("parseFragment" in parser)
-            return parser.parseFragment(html, allowStyle ? parser.SanitizerAllowStyle : 0,
-                                        !!isXML, baseURI, doc.documentElement);
-    }
-
-    return Cc["@mozilla.org/feed-unescapehtml;1"]
-                     .getService(Ci.nsIScriptableUnescapeHTML)
-                     .parseFragment(html, !!isXML, baseURI, doc.documentElement);
-}
