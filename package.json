@@ -90,7 +90,7 @@
       "name": "serviceselector",
       "title": "サービスセレクター",
       "type": "string",
-      "value": "#resultsList > ul > li:first"
+      "value": "#resultsList > ul > li"
     },
     {
       "name": "servicedeselector",

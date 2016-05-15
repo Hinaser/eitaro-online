@@ -87,37 +87,6 @@ panel.on("show", function(){
     panel.port.emit("set", panel_content);
 });
 
-// Setting for sidebar
-var sidebar_url = "./sidebar.html";
-// var `sidebar` will be a value by `require('sdk/ui/sidebar').Sidebar({...})`
-var sidebar = null;
-// Sidebar will display single search result or search history list.
-// The variable below indicates which is the latest content on the sidebar.
-// The reason why this variable is used is that message, which is sent to sidebar script with sidebar contents,
-// is different based on the latest contents. ,,, Sorry I know this explanation won't make you understood any more.
-// I should have coded the script structure more carefully to make things clearer... 
-// The thing complicating is that the logic to prepare sidebar content and the method to send it to sidebar script
-// and the way to parse the data to show the content is separated and not be able to controll directly.
-var sidebar_latest_open_type = "search"; // "search" or "history"
-// The html text to be sent to sidebar content script.
-// When sidebar content script receives this content, it will directly set the html on the sidebar.
-var sidebar_content = "";
-// The 'Object' which has header data and search history data(a list of pair of search word and result).
-// When sidebar content script receives this content, it will parse the object to display list data appropriately.
-var sidebar_history_content = "";
-var sidebar_id = "eitaro-sidebar";
-var sidebar_title = prefs.prefs["servicename"];
-// I began to doubt whether this worker variable is necessary.
-var sidebar_workers = [];
-// If configured to display search result with past search history, the latest search result should not be collapsed
-// as other search history result. If the value below is false, all list data will be shown collapsed.
-// if it is true, then only the first row of search result data will be expanded while the others remain collapsed.
-var sidebar_show_latest_data = false;
-
-
-
-
-
 /*
  * Utility functions
  */
@@ -133,105 +102,15 @@ function sanitizeHtml(html_text) {
     return div.innerHTML;
 }
 
-// Sanitize sidebar content.
-// Sidebar content has 2 type. The normal sidebar content and content with search history.
-// The former one contains only one search result and the latter contains history or search results.
-function sanitize_sidebar_content(with_history){
-    if(with_history){
-        if(sidebar_history_content && sidebar_history_content.data && sidebar_history_content.data.records){
-            for(var i=0;i<sidebar_history_content.data.records.length;i++){
-                sidebar_history_content.data.records[i].result = sanitizeHtml(sidebar_history_content.data.records[i].result);
-            }
-        }
-    }
-    else{
-        sidebar_content = sanitizeHtml(sidebar_content);
-    }
-}
-
 // Db setup
 var Database = require('lib/db');
-db = new Database();
+var db = new Database();
 db.open(service_url);
 
 
-/*
- * sidebar setup
- */
-// When sidebar instance is not set, setup sidebar
-function build_sidebar(){
-    sidebar = require('sdk/ui/sidebar').Sidebar({
-        id: sidebar_id,
-        title: sidebar_title,
-        url: sidebar_url,
-        onAttach: function(worker){
-            sidebar_workers.push(worker);
-
-            // When "get" message comes from sidebar script,
-            // prepare the data to show on the sidebar and send it to the sidebar.
-            worker.port.on("get", function(){
-                // Attach DOM element to the last element of workers array.
-                var msg = {};
-                if(sidebar_latest_open_type == "search"){
-                    sanitize_sidebar_content(false); // Sanitize sidebar content
-                    msg.type = "set";
-                    msg.data = sidebar_content;
-                }
-                else {
-                    sanitize_sidebar_content(true); // Sanitize sidebar content with history
-                    msg.type = "set-history";
-                    msg.data = JSON.stringify(sidebar_history_content);
-                }
-                worker.port.emit(msg.type, msg.data);
-            });
-
-            // When "delete" message arrives from the sidebar script,
-            // remove the target object from database and refresh sidebar with the latest history data.
-            worker.port.on("delete", function(word){
-                if(word){
-                    db.remove(word, function(){
-                        history();
-                    });
-                }
-            });
-        },
-        onDetach: function(worker){
-            var index = sidebar_workers.indexOf(worker);
-            if(index != -1){
-                sidebar_workers.splice(index,1);
-                if(sidebar_workers.length < 1){
-                    sidebar.dispose();
-                    sidebar = null;
-                }
-            }
-        }
-    });
-};
-
-// Update content in sidebar
-function update_sidebar(with_history){
-    if(sidebar == null){
-        build_sidebar();
-    }
-    if(sidebar_workers != null && sidebar_workers.length >= 1){
-        if(with_history){
-            // Sanitize html text to eliminate malicious code
-            sanitize_sidebar_content(true);
-            sidebar_workers[sidebar_workers.length - 1].port.emit("set-history", JSON.stringify(sidebar_history_content));
-        }
-        else{
-            // Sanitize html text to eliminate malicious code
-            sanitize_sidebar_content(false);
-            sidebar_workers[sidebar_workers.length - 1].port.emit("set", sidebar_content);
-        }
-    }
-
-    sidebar.show();
-}
-
-
 // Initial sidebar setup
-build_sidebar();
+var Sidebar = require('lib/sidebar');
+var sidebar = new Sidebar("英太郎 ONLINE", db, sanitizeHtml);
 
 // Preference setup
 function set_panel_position(){
@@ -296,7 +175,7 @@ prefs.on("serviceselector", function(){
 });
 prefs.on("clearresult", function(){
     if (prompts.confirm(null, "警告", "全ての履歴が削除され、元に戻せませんがよろしいですか？")) {
-        clear_result();
+        db.clear();
     }
 });
 prefs.on("export", function(){
@@ -312,16 +191,6 @@ prefs.on("dump", function(){
 // Romove extra spaces
 function trim_space(word) {
     return word.replace(/\s+/g, ' ').trim();
-}
-
-// Store search result to global variable
-function store_result(word, result){
-    db.add(word, result);
-}
-
-// Clear search result history
-function clear_result(){
-    db.clear();
 }
 
 // Search keyword from configured url
@@ -347,7 +216,7 @@ function search(search_keyword){
                 url: url,
                 onComplete: function(response){
                     panel_content = parseSearchResult(response.text);
-                    store_result(search_keyword, panel_content);
+                    db.add(search_keyword, panel_content);
                     // Show panel
                     panel.show({
                         position: panel_position
@@ -358,27 +227,26 @@ function search(search_keyword){
         }(request_url);
     }
     else if(prefs.prefs['displaytarget'] == "sidebar"){
-        +function(url){
-            var xhr = Request({
-                url: url,
-                onComplete: function(response){
-                    sidebar_latest_open_type = "search";
-                    sidebar_content = parseSearchResult(response.text);
-                    store_result(search_keyword, sidebar_content);
-                    if(!testAndShowResultHistory()){
-                        // Activate sidebar
-                        update_sidebar(false);
-                    }
+        var xhr = Request({
+            url: request_url,
+            onComplete: function(response){
+                let result = parseSearchResult(response.text);
+                db.add(search_keyword, result);
+                if(prefs.prefs["preservehistory"]){
+                    sidebar.showHistory({show_first_data: true});
                 }
-            });
-            xhr.get();
-        }(request_url);
+                else {
+                    sidebar.showSearchResult(result);
+                }
+            }
+        });
+        xhr.get();
     }
     else {
         var store_result_as_history = function(tab){
             var window = getTabContentWindow (getTabForId(tab.id));
             var html_as_string = window.document.documentElement.outerHTML;
-            store_result(search_keyword, parseSearchResult(html_as_string));
+            db.add(search_keyword, parseSearchResult(html_as_string));
         };
 
         // Open tab for translation page if there are no tabs already opened by this extension.
@@ -437,49 +305,9 @@ function parseSearchResult(html_as_string){
     return content_to_return;
 }
 
-// Set result history following to the latest search result if configured to do so.
-// If it is not configured, then return the original search result without editing anything.
-function testAndShowResultHistory(){
-    if(prefs.prefs["preservehistory"]){
-        sidebar_show_latest_data = true;
-        history();
-        return true;
-    }
-
-    return false;
-}
-
 // Open configuration tab
 function config() {
     tabs.open("about:addons");
-}
-
-// Open sidebar or panel to display search history
-function history() {
-    db.getAll("dtime", "prev", function(objects){
-        var records = new Array;
-
-        objects.forEach(function(element, index, array){
-            records.push({
-                word: array[index].word,
-                result: array[index].result
-            });
-        });
-
-        if(records != null && records.length > 0){
-            sidebar_latest_open_type = "history";
-            sidebar_history_content = {
-                showFirstData: sidebar_show_latest_data,
-                data: records
-            };
-            update_sidebar(true);
-        }
-        else{
-            sidebar_latest_open_type = "search";
-            sidebar_content = service_error_msg.no_histories;
-            update_sidebar(false);
-        }
-    });
 }
 
 // Export search result history data without readable format into a file
@@ -530,8 +358,8 @@ function exportFormattedDataToFile(){
                                     "    padding: 2px;\n" +
                                     "    border: 1px solid #777;\n" +
                                     "  }\n" +
-                                    "</style>\n" + 
-                                    "<script>\n" + 
+                                    "</style>\n" +
+                                    "<script>\n" +
                                     "  var data = " + JSON.stringify(item) + ";\n" +
                                     "  window.onload = function () {\n" +
                                     "    var tr_inner_template = '<td>{0}</td><td>{1}</td><td>{2}</td>';\n" +
@@ -543,21 +371,21 @@ function exportFormattedDataToFile(){
                                     "      tbody.appendChild(tr);\n" +
                                     "    }\n" +
                                     "  }\n" +
-                                    "</script>\n" + 
-                                    "</head>\n" + 
-                                    "<body>\n" + 
-                                    "  <table>\n" + 
-                                    "    <thead>\n" + 
-                                    "      <tr>\n" + 
-                                    "        <td>Date</td>\n" + 
-                                    "        <td>Word</td>\n" + 
-                                    "        <td>Result</td>\n" + 
-                                    "      </tr>\n" + 
-                                    "    </thead>\n" + 
-                                    "    <tbody id='table-body'>\n" + 
-                                    "    </tbody>\n" + 
-                                    "  </table>\n" + 
-                                    "</body>\n" + 
+                                    "</script>\n" +
+                                    "</head>\n" +
+                                    "<body>\n" +
+                                    "  <table>\n" +
+                                    "    <thead>\n" +
+                                    "      <tr>\n" +
+                                    "        <td>Date</td>\n" +
+                                    "        <td>Word</td>\n" +
+                                    "        <td>Result</td>\n" +
+                                    "      </tr>\n" +
+                                    "    </thead>\n" +
+                                    "    <tbody id='table-body'>\n" +
+                                    "    </tbody>\n" +
+                                    "  </table>\n" +
+                                    "</body>\n" +
                                     "</html>\n";
                 TextWriter.write(text_to_write);
                 TextWriter.close();
@@ -576,8 +404,7 @@ function routeMsg(obj, event) {
             config();
             break;
         case 'history':
-            sidebar_show_latest_data = false;
-            history();
+            sidebar.showHistory();
             break;
         case 'debug':
             try{
