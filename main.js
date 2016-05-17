@@ -219,6 +219,9 @@ function search_for_panel(search_keyword, request_url){
  * @param {string} request_url - Url of search service
  */
 function search_for_sidebar(search_keyword, request_url){
+    // Show loading gif on sidebar until ajax request completes
+    sidebar.prepare();
+
     var xhr = Request({
         url: request_url,
         onComplete: function(response){

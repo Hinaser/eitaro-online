@@ -1,17 +1,21 @@
 ﻿window.onload = function () {
-    // Send get message to main script when sidebar is ready
-    addon.port.emit("get");
+    // Show loading gif once sidebar is opened.
+    prepare();
+
+    addon.port.on("prepare", function () {
+        prepare();
+    });
+
+    addon.port.on("clear", function(){
+        clearContents();
+    })
 
     // Listen 'set' message from main script.
     // When the message arrives, set the html data in the message to sidebar.
     addon.port.on("set", function (json) {
         let data = JSON.parse(json);
 
-        // Clear current DOM
-        let content = document.getElementById("content");
-        while (content.firstChild) {
-            content.removeChild(content.firstChild);
-        }
+        clearContents();
 
         if(data.type == 'single'){
             setSingle(data);
@@ -23,18 +27,61 @@
             setError(data);
         }
     });
+
+    // Send get message to main script when sidebar is ready
+    addon.port.emit("get");
 };
 
+window.onunload = function(){
+    clearContents();
+};
+
+/**
+ * Clear current DOM
+ */
+function clearContents(){
+    let content = document.getElementById("content");
+    while (content.firstChild) {
+        content.removeChild(content.firstChild);
+    }
+}
+
+/**
+ * Show loading gif image until data to display arrives.
+ */
+function prepare(){
+    let content = document.getElementById("content");
+    while (content.firstChild) {
+        content.removeChild(content.firstChild);
+    }
+
+    let img = document.createElement('img');
+    img.setAttribute('src', './loader.gif');
+    content.appendChild(img);
+}
+
+/**
+ * Set error message to sidebar
+ * @param {Object} data - Object which contains html text data to display.
+ */
 function setError(data){
     var content = document.getElementById("content");
     content.innerHTML = data.single_data;
 }
 
+/**
+ * Set single search result to sidebar
+ * @param {Object} data - Object which contains html text data to display.
+ */
 function setSingle(data){
     var content = document.getElementById("content");
     content.innerHTML = data.single_data;
 }
 
+/**
+ * Set search history data to sidebar
+ * @param {Object} data - Object which contains html text data to display.
+ */
 function setHistory(data){
     var content = document.getElementById("content");
     // Setup display html
@@ -77,7 +124,7 @@ function setHistory(data){
         e.stopPropagation();
         var word = this.dataset.word;
 
-        if (!confirm(word + ' を本当に削除してよろしいですか？')) {
+        if (!confirm(word + ' を本当に削除してよろしいですか？')) { // 'Are you sure to delete ' + word
             return;
         }
 
