@@ -3,4 +3,4 @@
     addon.port.on("set", function (data) {
         content.innerHTML = data;
     });
-}
+};

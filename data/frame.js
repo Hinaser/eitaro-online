@@ -81,4 +81,4 @@
         msg.value = null;
         window.parent.postMessage(JSON.stringify(msg), "*");
     });
-}
+};
