@@ -105,7 +105,8 @@ var opened_tab = null;
 function routeMessage(obj, event) {
     switch(obj.type) {
         case 'search':
-            search(obj.value);
+            let keyword = obj.value;
+            search(keyword);
             break;
         case 'config':
             config();
