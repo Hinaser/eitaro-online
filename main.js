@@ -178,7 +178,7 @@ function config() {
  * Show search history on sidebar
  */
 function history() {
-    sidebar.showHistory();
+    sidebar.toggleHistory();
 }
 
 /**
