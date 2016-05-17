@@ -22,6 +22,7 @@
                 break;
             case "update-placeholder":
                 input_field.setAttribute("placeholder", inMsg.data);
+                break;
             default:
                 break;
         }
