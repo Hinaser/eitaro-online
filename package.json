@@ -88,7 +88,7 @@
     },
     {
       "name": "serviceselector",
-      "title": "サービスセレクター (検索結果としてみなしたいページ箇所をHTML5 Selector API形式で設定できます)",
+      "title": "サービスセレクター (詳しくはgithubのwikiを参照のこと)",
       "type": "string",
       "value": "#resultsList > ul > li"
     },
