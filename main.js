@@ -16,7 +16,9 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Load firefox addon sdk
+/*
+ LOAD FIREFOX SDK
+ */
 var { Frame } = require("sdk/ui/frame");
 var { Toolbar} = require("sdk/ui/toolbar");
 var { Hotkey } = require('sdk/hotkeys');
@@ -27,14 +29,18 @@ var tabs = require("sdk/tabs");
 var { getTabForId, getTabContentWindow } = require ("sdk/tabs/utils");
 var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
 
-// Load user library
+/*
+ LOAD USER LIBRARIES
+ */
 var Util = require('lib/util');
 var Sidebar = require('lib/sidebar');
 var Panel = require('lib/panel');
 var Prefs = require('lib/prefs');
 var Database = require('lib/db');
 
-// Parameters for user classes
+/*
+ SET PARAMETERS FOR USER DEFINED CLASSES
+ */
 var db_default_name = function(prefs){
     return prefs.get("serviceurl");
 };
@@ -83,7 +89,9 @@ var context_menu_option = {
     }
 };
 
-// Initialize user classes
+/*
+ INITIALIZE USER DEFINED CLASSES
+ */
 var prefs = new Prefs();
 var db = new Database();
 var sidebar = new Sidebar(sidebar_default_title, db, html_default_sanitizer);
@@ -93,7 +101,9 @@ var toolbar =Toolbar(toolbar_option(frame, prefs));
 var getFocus = Hotkey(hotkey_option(frame, frame_url));
 var context_menu_item = cm.Item(context_menu_option);
 
-// Initialize db and prefs
+/*
+ INITIALIZE DB AND PREFS
+ */
 db.open(db_default_name(prefs));
 prefs.init(frame, frame_url, panel, db);
 
@@ -101,7 +111,11 @@ prefs.init(frame, frame_url, panel, db);
 // the tab will be re-used to display information. So we need to track which tab is opened by this script.
 var opened_tab = null;
 
-// Route or Assign incoming message from sub component script to combined target operation
+/**
+ * Route or Assign incoming message from sub component script to combined target operation
+ * @param {Object} obj - Object sent from content script
+ * @param event
+ */
 function routeMessage(obj, event) {
     switch(obj.type) {
         case 'search':
@@ -120,7 +134,10 @@ function routeMessage(obj, event) {
     }
 }
 
-// Search keyword from configured url
+/**
+ * Search keyword from configured url
+ * @param {string} search_keyword - Keyword to search
+ */
 function search(search_keyword){
     // Trim extra space. If search_keyword is empty, stop processing.
     search_keyword = Util.trim_space(search_keyword);
@@ -150,17 +167,24 @@ function search(search_keyword){
     }
 }
 
-// Open configuration tab
+/**
+ * Open configuration tab
+ */
 function config() {
     tabs.open("about:addons");
 }
 
-// Show search history on sidebar
+/**
+ * Show search history on sidebar
+ */
 function history() {
     sidebar.showHistory();
 }
 
-// Debug message from content scripts
+/**
+ * Debug message from content scripts
+ * @param {Object} obj - Object sent from content script
+ */
 function debug(obj) {
     try{
         console.log(JSON.parse(obj.value));
@@ -170,6 +194,11 @@ function debug(obj) {
     }
 }
 
+/**
+ * Handle searching for panel
+ * @param {string} search_keyword - Keyword to search
+ * @param {string} request_url - Url of search service
+ */
 function search_for_panel(search_keyword, request_url){
     var xhr = Request({
         url: request_url,
@@ -184,6 +213,11 @@ function search_for_panel(search_keyword, request_url){
     xhr.get();
 }
 
+/**
+ * Handle searching for sidebar
+ * @param {string} search_keyword - Keyword to search
+ * @param {string} request_url - Url of search service
+ */
 function search_for_sidebar(search_keyword, request_url){
     var xhr = Request({
         url: request_url,
@@ -203,6 +237,11 @@ function search_for_sidebar(search_keyword, request_url){
     xhr.get();
 }
 
+/**
+ * Handle searching for tab
+ * @param {string} search_keyword - Keyword to search
+ * @param {string} request_url - Url of search service
+ */
 function search_for_tab(search_keyword, request_url){
     var save_contents = function(tab){
         var window = getTabContentWindow (getTabForId(tab.id));
