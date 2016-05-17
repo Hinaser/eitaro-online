@@ -8,7 +8,7 @@
 
     addon.port.on("clear", function(){
         clearContents();
-    })
+    });
 
     // Listen 'set' message from main script.
     // When the message arrives, set the html data in the message to sidebar.
@@ -75,6 +75,12 @@ function setError(data){
  */
 function setSingle(data){
     var content = document.getElementById("content");
+    /*
+     MEMO - data.single_data is always sanitized before `data` is passed to this function.
+     `data` is always passed through 'set' event, which is emitted from lib/sidebar.js.
+     In lib/sidebar.js, only `invalidate_sidebar()` emits `set` event.
+     Please see code of `invalidate_sidebar` to see that before emitting `set`, `data` is always sanitized.
+     */
     content.innerHTML = data.single_data;
 }
 
@@ -96,23 +102,10 @@ function setHistory(data){
             histories += "<div id='" + index + "' class='history'><div class='title'><a class='word' data-hidden='yes' data-href='" + index + "'>" + element.word + "</a><a class='remove-item' data-word='" + element.word + "'>削除</a></div><div class='data hidden'>" + element.result + "</div></div>";
         }
     });
-    content.innerHTML = histories;
+    content.innerHTML = histories; // MEMO - records[n].result(=data.history_data[n].result) is always sanitized before `data` is passed to this function.
 
     // Setup Onclick event on div.title
     // If wherever inside the div is clicked, then expand/hide search result area.
-    var onClick_title = function (e) {
-        var href = this.childNodes[0].dataset.href;
-        var children = document.getElementById(href).childNodes;
-
-        if (this.childNodes[0].dataset.hidden == 'yes') {
-            children[1].className = 'data';
-            this.childNodes[0].dataset.hidden = 'no';
-        }
-        else {
-            children[1].className = 'data hidden';
-            this.childNodes[0].dataset.hidden = 'yes';
-        }
-    };
     var div = document.getElementsByClassName('title');
     for (let i = 0; i < div.length; i++) {
         div[i].addEventListener("click", onClick_title);
@@ -120,18 +113,41 @@ function setHistory(data){
 
     // Setup onclick event for delete button.
     // When the button is clicked, send message to main script that the clicked word should be deleted from indexeddb.
-    var onClick_delete = function (e) {
-        e.stopPropagation();
-        var word = this.dataset.word;
-
-        if (!confirm(word + ' を本当に削除してよろしいですか？')) { // 'Are you sure to delete ' + word
-            return;
-        }
-
-        addon.port.emit("delete", word);
-    };
     var delete_btn = document.getElementsByClassName('remove-item');
     for (let i = 0; i < delete_btn.length; i++) {
         delete_btn[i].addEventListener("click", onClick_delete);
     }
+}
+
+/**
+ * EventHandler when .title is clicked.
+ * @param e
+ */
+function onClick_title(e) {
+    var href = this.childNodes[0].dataset.href;
+    var children = document.getElementById(href).childNodes;
+
+    if (this.childNodes[0].dataset.hidden == 'yes') {
+        children[1].className = 'data';
+        this.childNodes[0].dataset.hidden = 'no';
+    }
+    else {
+        children[1].className = 'data hidden';
+        this.childNodes[0].dataset.hidden = 'yes';
+    }
+}
+
+/**
+ * EventHandler when .remove-item is clicked.
+ * @param e
+ */
+function onClick_delete(e) {
+    e.stopPropagation();
+    var word = this.dataset.word;
+
+    if (!confirm(word + ' を本当に削除してよろしいですか？')) { // 'Are you sure to delete ' + word
+        return;
+    }
+
+    addon.port.emit("delete", word);
 }
