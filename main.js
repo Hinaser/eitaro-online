@@ -159,7 +159,7 @@ function search(search_keyword){
     if(prefs.get('displaytarget') == "panel"){
         search_for_panel(search_keyword, request_url);
     }
-    if(prefs.get('displaytarget') == "sidebar"){
+    else if(prefs.get('displaytarget') == "sidebar"){
         search_for_sidebar(search_keyword, request_url);
     }
     else {
