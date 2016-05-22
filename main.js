@@ -204,7 +204,9 @@ function search_for_panel(search_keyword, request_url){
         url: request_url,
         onComplete: function(response){
             var safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
-            db.add(search_keyword, safeHtmlTxt);
+            if(prefs.get("save_search_history")){
+                db.add(search_keyword, safeHtmlTxt);
+            }
 
             panel.show(safeHtmlTxt);
         }
@@ -226,9 +228,12 @@ function search_for_sidebar(search_keyword, request_url){
         url: request_url,
         onComplete: function(response){
             var safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
-            db.add(search_keyword, safeHtmlTxt);
 
-            if(prefs.get("show_result_with_history")){
+            if(prefs.get("save_search_history")) {
+                db.add(search_keyword, safeHtmlTxt);
+            }
+
+            if(prefs.get("show_result_with_history") && prefs.get("save_search_history")){
                 sidebar.showHistory({show_first_data: true});
             }
             else {
@@ -250,7 +255,9 @@ function search_for_tab(search_keyword, request_url){
         var window = getTabContentWindow (getTabForId(tab.id));
         var html_as_string = window.document.documentElement.outerHTML;
         var safeHtmlTxt = Util.parseSearchResult(html_as_string, prefs.get("service_selector"), prefs.get('service_deselector'));
-        db.add(search_keyword, safeHtmlTxt);
+        if(prefs.get("save_search_history")){
+            db.add(search_keyword, safeHtmlTxt);
+        }
     };
 
     // Open tab for translation page if there are no tabs already opened by this extension.

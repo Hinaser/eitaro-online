@@ -41,3 +41,7 @@ input#search-box {
 #config > img {
     vertical-align: middle;
 }
+
+.hide {
+    display: none;
+}

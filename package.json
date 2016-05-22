@@ -14,6 +14,12 @@
   ],
   "preferences": [
     {
+      "name": "save_search_history",
+      "type": "bool",
+      "title": "検索結果の履歴を保存する",
+      "value": true
+    },
+    {
       "name": "show_result_with_history",
       "type": "bool",
       "title": "検索結果の履歴も合わせて表示する (表示先がサイドバーの場合のみ)",

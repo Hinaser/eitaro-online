@@ -4,6 +4,7 @@
      */
     var ref_addon_script = null;
     var input_field = document.getElementById('search-box');
+    var history_btn = document.getElementById('history');
 
     /*
      * Messaging process
@@ -22,6 +23,12 @@
                 break;
             case "update-placeholder":
                 input_field.setAttribute("placeholder", inMsg.data);
+                break;
+            case "hide_history_button":
+                history_btn.className += ' hide'; // Add class 'hide'
+                break;
+            case "show_history_button":
+                history_btn.className = history_btn.className.replace( /(?:^|\s)hide(?!\S)/g , '');  // Remove class 'hide'
                 break;
             default:
                 break;
