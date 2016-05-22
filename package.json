@@ -80,6 +80,12 @@
       "value": "right"
     },
     {
+      "name": "show_panel_near_selection",
+      "title": "選択したテキストの右クリック検索結果をその選択テキスト付近に自動で表示する。",
+      "type": "bool",
+      "value": true
+    },
+    {
       "name": "service_name",
       "title": "サービス名",
       "type": "string",

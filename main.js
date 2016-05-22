@@ -35,6 +35,7 @@ var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPro
 var Util = require('lib/util');
 var Sidebar = require('lib/sidebar');
 var Panel = require('lib/panel');
+var Tooltip = require('lib/tooltip');
 var Prefs = require('lib/prefs');
 var Database = require('lib/db');
 
@@ -96,6 +97,7 @@ var prefs = new Prefs();
 var db = new Database();
 var sidebar = new Sidebar(sidebar_default_title, db, html_default_sanitizer);
 var panel = new Panel(panel_default_position(prefs));
+var tooltip = new Tooltip();
 var frame = new Frame(frame_option);
 var toolbar =Toolbar(toolbar_option(frame, prefs));
 var getFocus = Hotkey(hotkey_option(frame, frame_url));
@@ -208,7 +210,7 @@ function search_for_panel(search_keyword, request_url){
             // Assume that url is invalid.
             if(response.status == 0){
                 safeHtmlTxt = 'サービスURLが正しく設定されていない可能性があります'; // Service url might be invalid.
-                sidebar.showSearchResult(safeHtmlTxt);
+                panel.show(safeHtmlTxt);
                 return;
             }
 
@@ -223,7 +225,10 @@ function search_for_panel(search_keyword, request_url){
                 safeHtmlTxt = e.message;
             }
 
-            panel.show(safeHtmlTxt);
+            //panel.show(safeHtmlTxt);
+            tooltip.show(safeHtmlTxt, {
+                show_near_selection: prefs.get('show_panel_near_selection')
+            });
         }
     });
 
