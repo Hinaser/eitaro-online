@@ -203,9 +203,24 @@ function search_for_panel(search_keyword, request_url){
     var xhr = Request({
         url: request_url,
         onComplete: function(response){
-            var safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
-            if(prefs.get("save_search_history")){
-                db.add(search_keyword, safeHtmlTxt);
+            var safeHtmlTxt;
+
+            // Assume that url is invalid.
+            if(response.status == 0){
+                safeHtmlTxt = 'サービスURLが正しく設定されていない可能性があります'; // Service url might be invalid.
+                sidebar.showSearchResult(safeHtmlTxt);
+                return;
+            }
+
+            try{
+                safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
+
+                if(prefs.get("save_search_history")){
+                    db.add(search_keyword, safeHtmlTxt);
+                }
+            }
+            catch(e){
+                safeHtmlTxt = e.message;
             }
 
             panel.show(safeHtmlTxt);
@@ -227,16 +242,31 @@ function search_for_sidebar(search_keyword, request_url){
     var xhr = Request({
         url: request_url,
         onComplete: function(response){
-            var safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
+            var safeHtmlTxt;
 
-            if(prefs.get("save_search_history")) {
-                db.add(search_keyword, safeHtmlTxt);
+            // Assume that url is invalid.
+            if(response.status == 0){
+                safeHtmlTxt = 'サービスURLが正しく設定されていない可能性があります'; // Service url might be invalid.
+                sidebar.showSearchResult(safeHtmlTxt);
+                return;
             }
 
-            if(prefs.get("show_result_with_history") && prefs.get("save_search_history")){
-                sidebar.showHistory({show_first_data: true});
+            try{
+                safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
+
+                if(prefs.get("save_search_history")) {
+                    db.add(search_keyword, safeHtmlTxt);
+                }
+
+                if(prefs.get("show_result_with_history") && prefs.get("save_search_history")){
+                    sidebar.showHistory({show_first_data: true});
+                }
+                else {
+                    sidebar.showSearchResult(safeHtmlTxt);
+                }
             }
-            else {
+            catch(e){
+                safeHtmlTxt = e.message;
                 sidebar.showSearchResult(safeHtmlTxt);
             }
         }
@@ -252,12 +282,16 @@ function search_for_sidebar(search_keyword, request_url){
  */
 function search_for_tab(search_keyword, request_url){
     var save_contents = function(tab){
-        var window = getTabContentWindow (getTabForId(tab.id));
-        var html_as_string = window.document.documentElement.outerHTML;
-        var safeHtmlTxt = Util.parseSearchResult(html_as_string, prefs.get("service_selector"), prefs.get('service_deselector'));
-        if(prefs.get("save_search_history")){
-            db.add(search_keyword, safeHtmlTxt);
+        try{
+            var window = getTabContentWindow (getTabForId(tab.id));
+            var html_as_string = window.document.documentElement.outerHTML;
+            var safeHtmlTxt = Util.parseSearchResult(html_as_string, prefs.get("service_selector"), prefs.get('service_deselector'));
+
+            if(prefs.get("save_search_history")){
+                db.add(search_keyword, safeHtmlTxt);
+            }
         }
+        catch(e){}
     };
 
     // Open tab for translation page if there are no tabs already opened by this extension.
