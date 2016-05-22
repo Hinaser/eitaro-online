@@ -42,12 +42,12 @@ var Database = require('lib/db');
  SET PARAMETERS FOR USER DEFINED CLASSES
  */
 var db_default_name = function(prefs){
-    return prefs.get("serviceurl");
+    return prefs.get("service_url");
 };
 var sidebar_default_title = "英太郎 ONLINE";
 var html_default_sanitizer = Util.sanitizeHtml;
 var panel_default_position = function(prefs){
-    return prefs.get("panelposition");
+    return prefs.get("panel_position");
 };
 var frame_url = "./frame.html";
 var frame_option = {
@@ -60,7 +60,7 @@ var frame_option = {
 var toolbar_option = function(frame, prefs){
     return {
         name: "Search toolbar",
-        title: prefs.get("servicename") + "で検索",
+        title: prefs.get("service_name") + "で検索",
         items: [frame]
     };
 };
@@ -149,17 +149,17 @@ function search(search_keyword){
     }
 
     // Reopen indexeddb if service url has changed since last search()
-    if(db.name != prefs.get("serviceurl")){
-        db.reopen(prefs.get("serviceurl"));
+    if(db.name != prefs.get("service_url")){
+        db.reopen(prefs.get("service_url"));
     }
 
     // Get search keyword from input field and construct url for dictionary service
-    var request_url = prefs.get("serviceurl").replace("{0}", search_keyword);
+    var request_url = prefs.get("service_url").replace("{0}", search_keyword);
 
-    if(prefs.get('displaytarget') == "panel"){
+    if(prefs.get('display_target') == "panel"){
         search_for_panel(search_keyword, request_url);
     }
-    else if(prefs.get('displaytarget') == "sidebar"){
+    else if(prefs.get('display_target') == "sidebar"){
         search_for_sidebar(search_keyword, request_url);
     }
     else {
@@ -203,7 +203,7 @@ function search_for_panel(search_keyword, request_url){
     var xhr = Request({
         url: request_url,
         onComplete: function(response){
-            var safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("serviceselector"), prefs.get('servicedeselector'));
+            var safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
             db.add(search_keyword, safeHtmlTxt);
 
             panel.show(safeHtmlTxt);
@@ -225,10 +225,10 @@ function search_for_sidebar(search_keyword, request_url){
     var xhr = Request({
         url: request_url,
         onComplete: function(response){
-            var safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("serviceselector"), prefs.get('servicedeselector'));
+            var safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
             db.add(search_keyword, safeHtmlTxt);
 
-            if(prefs.get("preservehistory")){
+            if(prefs.get("show_result_with_history")){
                 sidebar.showHistory({show_first_data: true});
             }
             else {
@@ -249,13 +249,13 @@ function search_for_tab(search_keyword, request_url){
     var save_contents = function(tab){
         var window = getTabContentWindow (getTabForId(tab.id));
         var html_as_string = window.document.documentElement.outerHTML;
-        var safeHtmlTxt = Util.parseSearchResult(html_as_string, prefs.get("serviceselector"), prefs.get('servicedeselector'));
+        var safeHtmlTxt = Util.parseSearchResult(html_as_string, prefs.get("service_selector"), prefs.get('service_deselector'));
         db.add(search_keyword, safeHtmlTxt);
     };
 
     // Open tab for translation page if there are no tabs already opened by this extension.
     // If there is a tab opend by this script, then reuse the tab for displaying translation page.
-    if (prefs.get('alwaysopennewtab') || opened_tab === null) {
+    if (prefs.get('always_open_new_tab') || opened_tab === null) {
         tabs.open({
             url: request_url,
             onOpen: function onOpen(tab) {

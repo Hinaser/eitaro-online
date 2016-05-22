@@ -14,13 +14,13 @@
   ],
   "preferences": [
     {
-      "name": "preservehistory",
+      "name": "show_result_with_history",
       "type": "bool",
       "title": "検索結果の履歴も合わせて表示する (表示先がサイドバーの場合のみ)",
       "value": true
     },
     {
-      "name": "displaytarget",
+      "name": "display_target",
       "type": "radio",
       "title": "検索結果の表示先",
       "options": [
@@ -40,13 +40,13 @@
       "value": "sidebar"
     },
     {
-      "name": "alwaysopennewtab",
+      "name": "always_open_new_tab",
       "type": "bool",
       "title": "常に新しいタブに検索結果を表示する",
       "value": false
     },
     {
-      "name": "panelposition",
+      "name": "panel_position",
       "type": "radio",
       "title": "パージ内パネルの表示位置",
       "options": [
@@ -74,47 +74,47 @@
       "value": "right"
     },
     {
-      "name": "servicename",
+      "name": "service_name",
       "title": "サービス名",
       "type": "string",
       "value": "英太郎 ONLINE",
       "hidden":  true
     },
     {
-      "name": "serviceurl",
+      "name": "service_url",
       "title": "サービスURL",
       "type": "string",
       "value": "http://eow.エーエルシー.co.jp/search?q={0}"
     },
     {
-      "name": "serviceselector",
+      "name": "service_selector",
       "title": "サービスセレクター (詳しくはgithubのwikiを参照のこと)",
       "type": "string",
       "value": "#resultsList > ul > li"
     },
     {
-      "name": "servicedeselector",
+      "name": "service_deselector",
       "title": "サービスデセレクター (検索結果から除外する子要素)",
       "type": "string",
       "value": ".fukidashi"
     },
     {
+      "name": "clear_history",
       "type": "control",
       "label": "削除",
-      "name": "clearresult",
-      "title": "履歴を全て削除する" 
+      "title": "履歴を全て削除する"
     },
     {
+      "name": "export_history",
       "type": "control",
       "label": "エクスポート",
-      "name": "export",
-      "title": "履歴をファイルにエクスポートする(HTMLフォーマット)" 
+      "title": "履歴をファイルにエクスポートする(HTMLフォーマット)"
     },
     {
+      "name": "dump_history",
       "type": "control",
       "label": "ダンプ出力",
-      "name": "dump",
-      "title": "履歴データのダンプを取得する" 
+      "title": "履歴データのダンプを取得する"
     }
   ]
 }
