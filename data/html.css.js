@@ -1,8 +1,4 @@
 const firefox_default_css = function(content_tag_id) {
-    if(content_tag_id[0] !== "#"){
-        content_tag_id = "#" + content_tag_id;
-    }
-    
     return `
 ${content_tag_id} address,
 ${content_tag_id} article,

@@ -1,7 +1,8 @@
 // Configurations
 const wrapper_tag_id = 'eitaro-online-wrapper';
 const content_tag_id = 'eitaro-online';
-//const resizer_id = 'eitaro-panel-resizer';
+const style_id = 'eitaro-online-style';
+
 const tooltip_default_style = {
     top: 20,
     offsetY: 30,
@@ -67,21 +68,39 @@ function isTextSelected(){
     return !selection.isCollapsed;
 }
 
-function sanitizeStyle(){
-    var style = $('<style>');
-    style.append( "#" + wrapper_tag_id + "{all:initial} #" + wrapper_tag_id + " *{all:unset}");
-    style.append(firefox_default_css(wrapper_tag_id));
-    style.appendTo("head");
+function initStyle(){
+    let reset_style_to_default = `
+    #${wrapper_tag_id} {
+        all: initial;
+    }
+    #${wrapper_tag_id} * {
+        all: unset;
+    }
+    `;
+
+    setStyle(reset_style_to_default);
+    setStyle(firefox_default_css(`#${wrapper_tag_id}`));
+    setStyle(jquery_ui_css(`#${wrapper_tag_id}`));
+}
+
+function setStyle(style){
+    let style_tag = $(`#${style_id}`);
+    if(style_tag.length < 1){
+        style_tag = $("<style>", {id: style_id, rel: 'stylesheet', type: 'text/css'});
+        style_tag.appendTo("head");
+    }
+
+    style = "\n" + style;
+
+    style_tag.append(style);
 }
 
 function initWrapper(){
-    sanitizeStyle(wrapper);
+    initStyle(wrapper);
 
     var wrapper = $('<div>', {id: wrapper_tag_id});
     var container = $('<div>', {id: content_tag_id});
-    //var resizer = $('<div>', {id: resizer_id});
 
-    //resizer.appendTo(container);
     container.appendTo(wrapper);
     wrapper.appendTo('body');
 
@@ -94,5 +113,5 @@ function initWrapper(){
     });
 
     container.draggable();
-    //container.resizable({handleSelector: resizer});
+    container.resizable();
 }
