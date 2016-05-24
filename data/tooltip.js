@@ -7,6 +7,44 @@ const style_id = 'eitaro-online-style';
 const close_btn_id = 'close-btn';
 
 // Event handling
+self.port.on('ping', function(){});
+
+self.port.on('prepare', function(msg){
+    var data = JSON.parse(msg);
+
+    $(`#${style_id}`).remove();
+
+    var wrapper = $(`#${wrapper_tag_id}`);
+    if(wrapper.length > 0){
+        wrapper.empty();
+    }
+    else{
+        wrapper = $('<div>', {id: wrapper_tag_id});
+        wrapper.appendTo('body');
+    }
+
+    var container = $('<div>', {id: container_tag_id});
+
+    if(isTextSelected() && data.option.show_near_selection){
+        var location_of_selection = getSelectionLocation();
+        container.css({
+            position: 'absolute',
+            top: location_of_selection.top + 20 + window.scrollY,
+            left: location_of_selection.left + 20 + window.scrollX,
+            border: '1px solid gray',
+            borderRadius: 4,
+            width: '48px',
+            height: '48px',
+            zIndex: 100000
+        });
+    }
+
+    container.append(loading_gif());
+    wrapper.append(container);
+
+    container.draggable();
+});
+
 self.port.on('open', function(msg){
     var data = JSON.parse(msg);
 
@@ -71,11 +109,17 @@ function setStyle(style){
 }
 
 function initWrapper(){
-    $(`#${wrapper_tag_id}`).remove();
+    initStyle();
 
-    initStyle(wrapper);
+    var wrapper = $(`#${wrapper_tag_id}`);
+    if(wrapper.length > 0){
+        wrapper.empty();
+    }
+    else{
+        wrapper = $('<div>', {id: wrapper_tag_id});
+        wrapper.appendTo('body');
+    }
 
-    var wrapper = $('<div>', {id: wrapper_tag_id});
     var container = $('<div>', {id: container_tag_id});
     var content = $('<div>', {id: content_tag_id});
     var header = createHeader(container, content);
@@ -96,7 +140,6 @@ function initWrapper(){
     header.appendTo(container);
     content.appendTo(container);
     container.appendTo(wrapper);
-    wrapper.appendTo('body');
 }
 
 function createHeader(container, content){

@@ -202,6 +202,10 @@ function debug(obj) {
  * @param {string} request_url - Url of search service
  */
 function search_for_panel(search_keyword, request_url){
+    tooltip.prepare({
+        show_near_selection: prefs.get('show_panel_near_selection')
+    });
+
     var xhr = Request({
         url: request_url,
         onComplete: function(response){
@@ -210,7 +214,9 @@ function search_for_panel(search_keyword, request_url){
             // Assume that url is invalid.
             if(response.status == 0){
                 safeHtmlTxt = 'サービスURLが正しく設定されていない可能性があります'; // Service url might be invalid.
-                panel.show(safeHtmlTxt);
+                tooltip.show(safeHtmlTxt, {
+                    show_near_selection: prefs.get('show_panel_near_selection')
+                });
                 return;
             }
 
@@ -225,7 +231,6 @@ function search_for_panel(search_keyword, request_url){
                 safeHtmlTxt = e.message;
             }
 
-            //panel.show(safeHtmlTxt);
             tooltip.show(safeHtmlTxt, {
                 show_near_selection: prefs.get('show_panel_near_selection')
             });

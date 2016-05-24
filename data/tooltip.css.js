@@ -11,7 +11,7 @@ ${wrapper_id} > div {
     border: 2px solid gray;
     border-radius: 4px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-    padding: 5px 12px 12px 15px;
+    padding: 15px 12px 12px 15px;
     width: auto;
     height: auto;
     display: inline-block;
@@ -19,6 +19,7 @@ ${wrapper_id} > div {
 }
 
 ${wrapper_id} header {
+    margin-top: -10px;
     margin-bottom: 5px;
     padding-bottom: 5px;
     border-bottom: 1px solid gray;
