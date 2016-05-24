@@ -1,5 +1,6 @@
 // Configurations
 const wrapper_tag_id = 'eitaro-online-wrapper';
+const container_tag_id = 'eitaro-online-container';
 const content_tag_id = 'eitaro-online';
 const style_id = 'eitaro-online-style';
 
@@ -43,7 +44,8 @@ self.port.on('open', function(msg){
     }
 
     var wrapper = $('#' + wrapper_tag_id);
-    var container = $('#' + content_tag_id);
+    var container = $('#' + container_tag_id);
+    var content = $("#" + content_tag_id);
 
     if(isTextSelected() && data.option.show_near_selection){
         var location_of_selection = getSelectionLocation();
@@ -53,7 +55,9 @@ self.port.on('open', function(msg){
         }));
     }
 
-    container.html(data.html);
+    content.empty();
+    content.prepend(data.html);
+
     container.show();
 });
 
@@ -99,8 +103,26 @@ function initWrapper(){
     initStyle(wrapper);
 
     var wrapper = $('<div>', {id: wrapper_tag_id});
-    var container = $('<div>', {id: content_tag_id});
+    var container = $('<div>', {id: container_tag_id});
+    var content = $('<div>', {id: content_tag_id});
 
+    container.css({
+        display: 'inline-block',
+        overflow: 'hidden',
+        height: function(){ return content.height(); },
+        width: function(){ return content.width(); },
+        paddingBottom: '12px',
+        paddingRight: '12px'
+    });
+    container.draggable();
+    container.resizable();
+    content.css({
+        overflow: 'auto',
+        width: '100%',
+        height: '100%'
+    });
+
+    content.appendTo(container);
     container.appendTo(wrapper);
     wrapper.appendTo('body');
 
@@ -111,7 +133,4 @@ function initWrapper(){
             }
         }
     });
-
-    container.draggable();
-    container.resizable();
 }
