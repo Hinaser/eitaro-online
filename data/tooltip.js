@@ -1,47 +1,16 @@
 // Configurations
 const wrapper_tag_id = 'eitaro-online-wrapper';
 const container_tag_id = 'eitaro-online-container';
+const content_header_id = 'eitaro-online-header';
 const content_tag_id = 'eitaro-online';
 const style_id = 'eitaro-online-style';
-
-const tooltip_default_style = {
-    top: 20,
-    offsetY: 30,
-    left: 20,
-    offsetX: 30,
-    zIndex: 100,
-    bgColor: 'rgba(255,255,255,0.8)',
-    border: '2px solid red',
-    padding: 15,
-    borderRadius: 6,
-    width: 'auto',
-    height: 'auto'
-};
-
-const css_style_for_seletion_tooltip = function(option){
-    var setting = $.extend({}, tooltip_default_style, option);
-
-    return {
-        position: 'absolute',
-        top: setting.top + window.scrollY + setting.offsetY,
-        left: setting.left + window.scrollX + setting.offsetX,
-        zIndex: setting.zIndex,
-        backgroundColor: setting.bgColor,
-        border: setting.border,
-        padding: setting.padding,
-        borderRadius: setting.borderRadius,
-        width: setting.width,
-        height: setting.height
-    };
-};
+const close_btn_id = 'close-btn';
 
 // Event handling
 self.port.on('open', function(msg){
     var data = JSON.parse(msg);
 
-    if(!document.getElementById(wrapper_tag_id)){
-        initWrapper();
-    }
+    initWrapper();
 
     var wrapper = $('#' + wrapper_tag_id);
     var container = $('#' + container_tag_id);
@@ -49,10 +18,11 @@ self.port.on('open', function(msg){
 
     if(isTextSelected() && data.option.show_near_selection){
         var location_of_selection = getSelectionLocation();
-        container.css(css_style_for_seletion_tooltip({
-            top: location_of_selection.top,
-            left: location_of_selection.left
-        }));
+        container.css({
+            position: 'absolute',
+            top: location_of_selection.top + 20 + window.scrollY,
+            left: location_of_selection.left + 20 + window.scrollX
+        });
     }
 
     content.empty();
@@ -85,6 +55,7 @@ function initStyle(){
     setStyle(reset_style_to_default);
     setStyle(firefox_default_css(`#${wrapper_tag_id}`));
     setStyle(jquery_ui_css(`#${wrapper_tag_id}`));
+    setStyle(tooltip_css(`#${wrapper_tag_id}`));
 }
 
 function setStyle(style){
@@ -100,37 +71,55 @@ function setStyle(style){
 }
 
 function initWrapper(){
+    $(`#${wrapper_tag_id}`).remove();
+
     initStyle(wrapper);
 
     var wrapper = $('<div>', {id: wrapper_tag_id});
     var container = $('<div>', {id: container_tag_id});
     var content = $('<div>', {id: content_tag_id});
+    var header = createHeader(container, content);
 
-    container.css({
-        display: 'inline-block',
-        overflow: 'hidden',
-        height: function(){ return content.height(); },
-        width: function(){ return content.width(); },
-        paddingBottom: '12px',
-        paddingRight: '12px'
-    });
     container.draggable();
     container.resizable();
+
+    container.on('resize', function(){
+        content.height(container.height() - 45);
+    });
+
     content.css({
         overflow: 'auto',
         width: '100%',
         height: '100%'
     });
 
+    header.appendTo(container);
     content.appendTo(container);
     container.appendTo(wrapper);
     wrapper.appendTo('body');
+}
 
-    $(document).on('mouseup', function(e){
-        if(!container.is(e.target) && container.has(e.target).length === 0){
-            if(container.is(":visible")){
-                container.hide();
-            }
-        }
+function createHeader(container, content){
+    var header = $('<header>', {id: content_header_id});
+    var font_setting = $('<input>', {type: 'number', value: '12'});
+    //var search_box = $('<input>', {type: 'text', placeholder: '検索したいキーワード'});
+    //var search_btn = $('<button>検索</button>');
+    var close_btn = $(`<button id="${close_btn_id}">閉じる</button>`);
+
+    header.append("文字の大きさ ");
+    header.append(font_setting);
+    //header.append(search_box);
+    //header.append(search_btn);
+    header.append(close_btn);
+
+    font_setting.on("keyup input", function(){
+        let font_size = font_setting.val();
+        content.css('font-size', `${font_size}px`);
     });
+
+    close_btn.on('click', function(e){
+        container.hide();
+    });
+
+    return header;
 }

@@ -1,103 +1,103 @@
-const firefox_default_css = function(content_tag_id) {
+const firefox_default_css = function(wrapper_id) {
     return `
-${content_tag_id} address,
-${content_tag_id} article,
-${content_tag_id} aside,
-${content_tag_id} blockquote,
-${content_tag_id} body,
-${content_tag_id} caption,
-${content_tag_id} center,
-${content_tag_id} col,
-${content_tag_id} colgroup,
-${content_tag_id} dd,
-${content_tag_id} dir,
-${content_tag_id} div,
-${content_tag_id} dl,
-${content_tag_id} dt,
-${content_tag_id} fieldset,
-${content_tag_id} figcaption,
-${content_tag_id} figure,
-${content_tag_id} footer,
-${content_tag_id} form,
-${content_tag_id} h1,
-${content_tag_id} h2,
-${content_tag_id} h3,
-${content_tag_id} h4,
-${content_tag_id} h5,
-${content_tag_id} h6,
-${content_tag_id} header,
-${content_tag_id} hgroup,
-${content_tag_id} hr,
-${content_tag_id} html,
-${content_tag_id} legend,
-${content_tag_id} li,
-${content_tag_id} listing,
-${content_tag_id} main,
-${content_tag_id} marquee,
-${content_tag_id} menu,
-${content_tag_id} nav,
-${content_tag_id} noframes,
-${content_tag_id} ol,
-${content_tag_id} p,
-${content_tag_id} plaintext,
-${content_tag_id} pre,
-${content_tag_id} section,
-${content_tag_id} summary,
-${content_tag_id} table,
-${content_tag_id} tbody,
-${content_tag_id} td,
-${content_tag_id} tfoot,
-${content_tag_id} th,
-${content_tag_id} thead,
-${content_tag_id} tr,
-${content_tag_id} ul,
-${content_tag_id} xmp {
+${wrapper_id} address,
+${wrapper_id} article,
+${wrapper_id} aside,
+${wrapper_id} blockquote,
+${wrapper_id} body,
+${wrapper_id} caption,
+${wrapper_id} center,
+${wrapper_id} col,
+${wrapper_id} colgroup,
+${wrapper_id} dd,
+${wrapper_id} dir,
+${wrapper_id} div,
+${wrapper_id} dl,
+${wrapper_id} dt,
+${wrapper_id} fieldset,
+${wrapper_id} figcaption,
+${wrapper_id} figure,
+${wrapper_id} footer,
+${wrapper_id} form,
+${wrapper_id} h1,
+${wrapper_id} h2,
+${wrapper_id} h3,
+${wrapper_id} h4,
+${wrapper_id} h5,
+${wrapper_id} h6,
+${wrapper_id} header,
+${wrapper_id} hgroup,
+${wrapper_id} hr,
+${wrapper_id} html,
+${wrapper_id} legend,
+${wrapper_id} li,
+${wrapper_id} listing,
+${wrapper_id} main,
+${wrapper_id} marquee,
+${wrapper_id} menu,
+${wrapper_id} nav,
+${wrapper_id} noframes,
+${wrapper_id} ol,
+${wrapper_id} p,
+${wrapper_id} plaintext,
+${wrapper_id} pre,
+${wrapper_id} section,
+${wrapper_id} summary,
+${wrapper_id} table,
+${wrapper_id} tbody,
+${wrapper_id} td,
+${wrapper_id} tfoot,
+${wrapper_id} th,
+${wrapper_id} thead,
+${wrapper_id} tr,
+${wrapper_id} ul,
+${wrapper_id} xmp {
   unicode-bidi: -moz-isolate;
 }
 
-${content_tag_id} bdi, output {
+${wrapper_id} bdi, output {
   unicode-bidi: -moz-isolate;
 }
-${content_tag_id} bdo, bdo[dir] {
+${wrapper_id} bdo, bdo[dir] {
   unicode-bidi: bidi-override;
 }
-${content_tag_id} bdo[dir="auto"] {
+${wrapper_id} bdo[dir="auto"] {
   unicode-bidi: -moz-isolate-override;
 }
-${content_tag_id} textarea[dir="auto"], pre[dir="auto"] { unicode-bidi: -moz-plaintext; }
+${wrapper_id} textarea[dir="auto"], pre[dir="auto"] { unicode-bidi: -moz-plaintext; }
 
 /* blocks */
 
-${content_tag_id} article,
-${content_tag_id} aside,
-${content_tag_id} details,
-${content_tag_id} div,
-${content_tag_id} dt,
-${content_tag_id} figcaption,
-${content_tag_id} footer,
-${content_tag_id} form,
-${content_tag_id} header,
-${content_tag_id} hgroup,
-${content_tag_id} html,
-${content_tag_id} main,
-${content_tag_id} nav,
-${content_tag_id} section,
-${content_tag_id} summary {
+${wrapper_id} article,
+${wrapper_id} aside,
+${wrapper_id} details,
+${wrapper_id} div,
+${wrapper_id} dt,
+${wrapper_id} figcaption,
+${wrapper_id} footer,
+${wrapper_id} form,
+${wrapper_id} header,
+${wrapper_id} hgroup,
+${wrapper_id} html,
+${wrapper_id} main,
+${wrapper_id} nav,
+${wrapper_id} section,
+${wrapper_id} summary {
   display: block;
 }
 
-${content_tag_id} p, ${content_tag_id} dl, ${content_tag_id} multicol {
+${wrapper_id} p, ${wrapper_id} dl, ${wrapper_id} multicol {
   display: block;
   margin-block-start: 1em;
   margin-block-end: 1em;
 }
 
-${content_tag_id} dd {
+${wrapper_id} dd {
   display: block;
   margin-inline-start: 40px;
 }
 
-${content_tag_id} blockquote, ${content_tag_id} figure {
+${wrapper_id} blockquote, ${wrapper_id} figure {
   display: block;
   margin-block-start: 1em;
   margin-block-end: 1em;
@@ -105,17 +105,17 @@ ${content_tag_id} blockquote, ${content_tag_id} figure {
   margin-inline-end: 40px;
 }
 
-${content_tag_id} address {
+${wrapper_id} address {
   display: block;
   font-style: italic;
 }
 
-${content_tag_id} center {
+${wrapper_id} center {
   display: block;
   text-align: -moz-center;
 }
 
-${content_tag_id} blockquote[type=cite] {
+${wrapper_id} blockquote[type=cite] {
   display: block;
   margin-block-start: 1em;
   margin-block-end: 1em;
@@ -127,15 +127,15 @@ ${content_tag_id} blockquote[type=cite] {
   border-width: thin;
 }
 
-${content_tag_id} span[_moz_quote=true] {
+${wrapper_id} span[_moz_quote=true] {
   color: blue;
 }
 
-${content_tag_id} pre[_moz_quote=true] {
+${wrapper_id} pre[_moz_quote=true] {
   color: blue;
 }
 
-${content_tag_id} h1 {
+${wrapper_id} h1 {
   display: block;
   font-size: 2em;
   font-weight: bold;
@@ -143,7 +143,7 @@ ${content_tag_id} h1 {
   margin-block-end: .67em;
 }
 
-${content_tag_id} h2,
+${wrapper_id} h2,
 :-moz-any(article, aside, nav, section)
 h1 {
   display: block;
@@ -153,7 +153,7 @@ h1 {
   margin-block-end: .83em;
 }
 
-${content_tag_id} h3,
+${wrapper_id} h3,
 :-moz-any(article, aside, nav, section)
 :-moz-any(article, aside, nav, section)
 h1 {
@@ -164,7 +164,7 @@ h1 {
   margin-block-end: 1em;
 }
 
-${content_tag_id} h4,
+${wrapper_id} h4,
 :-moz-any(article, aside, nav, section)
 :-moz-any(article, aside, nav, section)
 :-moz-any(article, aside, nav, section)
@@ -176,7 +176,7 @@ h1 {
   margin-block-end: 1.33em;
 }
 
-${content_tag_id} h5,
+${wrapper_id} h5,
 :-moz-any(article, aside, nav, section)
 :-moz-any(article, aside, nav, section)
 :-moz-any(article, aside, nav, section)
@@ -189,7 +189,7 @@ h1 {
   margin-block-end: 1.67em;
 }
 
-${content_tag_id} h6,
+${wrapper_id} h6,
 :-moz-any(article, aside, nav, section)
 :-moz-any(article, aside, nav, section)
 :-moz-any(article, aside, nav, section)
@@ -203,7 +203,7 @@ h1 {
   margin-block-end: 2.33em;
 }
 
-${content_tag_id} listing {
+${wrapper_id} listing {
   display: block;
   font-family: -moz-fixed;
   font-size: medium;
@@ -212,7 +212,7 @@ ${content_tag_id} listing {
   margin-block-end: 1em;
 }
 
-${content_tag_id} xmp, ${content_tag_id} pre, ${content_tag_id} plaintext {
+${wrapper_id} xmp, ${wrapper_id} pre, ${wrapper_id} plaintext {
   display: block;
   font-family: -moz-fixed;
   white-space: pre;
@@ -222,7 +222,7 @@ ${content_tag_id} xmp, ${content_tag_id} pre, ${content_tag_id} plaintext {
 
 /* tables */
 
-${content_tag_id} table {
+${wrapper_id} table {
   display: table;
   border-spacing: 2px;
   border-collapse: separate;
@@ -231,11 +231,11 @@ ${content_tag_id} table {
   text-indent: 0;
 }
 
-${content_tag_id} table[align="left"] {
+${wrapper_id} table[align="left"] {
   float: left;
 }
 
-${content_tag_id} table[align="right"] {
+${wrapper_id} table[align="right"] {
   float: right;
   text-align: start;
 }
@@ -248,7 +248,7 @@ ${content_tag_id} table[align="right"] {
      in what authors should expect */
 
   /* Put this first so 'border' and 'frame' rules can override it. */
-${content_tag_id} table[rules] { 
+${wrapper_id} table[rules] { 
   border-width: thin;
   border-style: hidden;
 }
@@ -260,85 +260,85 @@ ${content_tag_id} table[rules] {
   /* :-moz-table-border-nonzero is like [border]:not([border="0"]) except it
      also checks for other zero-like values according to HTML attribute
      parsing rules */
-${content_tag_id} table:-moz-table-border-nonzero { 
+${wrapper_id} table:-moz-table-border-nonzero { 
   border-width: thin;
   border-style: outset;
 }
 
-${content_tag_id} table[frame] {
+${wrapper_id} table[frame] {
   border: thin hidden;
 }
 
 /* specificity must beat table:-moz-table-border-nonzero rule above */
-${content_tag_id} table[frame="void"]   { border-style: hidden; }
-${content_tag_id} table[frame="above"]  { border-style: outset hidden hidden hidden; }
-${content_tag_id} table[frame="below"]  { border-style: hidden hidden outset hidden; }
-${content_tag_id} table[frame="lhs"]    { border-style: hidden hidden hidden outset; }
-${content_tag_id} table[frame="rhs"]    { border-style: hidden outset hidden hidden; }
-${content_tag_id} table[frame="hsides"] { border-style: outset hidden; }
-${content_tag_id} table[frame="vsides"] { border-style: hidden outset; }
-${content_tag_id} table[frame="box"],
-${content_tag_id} table[frame="border"] { border-style: outset; }
+${wrapper_id} table[frame="void"]   { border-style: hidden; }
+${wrapper_id} table[frame="above"]  { border-style: outset hidden hidden hidden; }
+${wrapper_id} table[frame="below"]  { border-style: hidden hidden outset hidden; }
+${wrapper_id} table[frame="lhs"]    { border-style: hidden hidden hidden outset; }
+${wrapper_id} table[frame="rhs"]    { border-style: hidden outset hidden hidden; }
+${wrapper_id} table[frame="hsides"] { border-style: outset hidden; }
+${wrapper_id} table[frame="vsides"] { border-style: hidden outset; }
+${wrapper_id} table[frame="box"],
+${wrapper_id} table[frame="border"] { border-style: outset; }
 
  
 /* Internal Table Borders */
 
   /* 'border' cell borders first */
 
-${content_tag_id} table:-moz-table-border-nonzero > * > tr > td,
-${content_tag_id} table:-moz-table-border-nonzero > * > tr > th,
-${content_tag_id} table:-moz-table-border-nonzero > * > td,
-${content_tag_id} table:-moz-table-border-nonzero > * > th,
-${content_tag_id} table:-moz-table-border-nonzero > td,
-${content_tag_id} table:-moz-table-border-nonzero > th
+${wrapper_id} table:-moz-table-border-nonzero > * > tr > td,
+${wrapper_id} table:-moz-table-border-nonzero > * > tr > th,
+${wrapper_id} table:-moz-table-border-nonzero > * > td,
+${wrapper_id} table:-moz-table-border-nonzero > * > th,
+${wrapper_id} table:-moz-table-border-nonzero > td,
+${wrapper_id} table:-moz-table-border-nonzero > th
 {
   border-width: thin;
   border-style: inset;
 }
 
 /* collapse only if rules are really specified */
-${content_tag_id} table[rules]:not([rules="none"]):not([rules=""]) {
+${wrapper_id} table[rules]:not([rules="none"]):not([rules=""]) {
   border-collapse: collapse;
 }
 
 /* only specified rules override 'border' settings  
   (increased specificity to achieve this) */
-${content_tag_id} table[rules]:not([rules=""])> tr > td,
-${content_tag_id} table[rules]:not([rules=""])> * > tr > td,
-${content_tag_id} table[rules]:not([rules=""])> tr > th,
-${content_tag_id} table[rules]:not([rules=""])> * > tr > th,
-${content_tag_id} table[rules]:not([rules=""])> td,
-${content_tag_id} table[rules]:not([rules=""])> th
+${wrapper_id} table[rules]:not([rules=""])> tr > td,
+${wrapper_id} table[rules]:not([rules=""])> * > tr > td,
+${wrapper_id} table[rules]:not([rules=""])> tr > th,
+${wrapper_id} table[rules]:not([rules=""])> * > tr > th,
+${wrapper_id} table[rules]:not([rules=""])> td,
+${wrapper_id} table[rules]:not([rules=""])> th
 {
   border-width: thin;
   border-style: none;
 }
 
 
-${content_tag_id} table[rules][rules="none"]  > tr > td,
-${content_tag_id} table[rules][rules="none"] > * > tr > td,
-${content_tag_id} table[rules][rules="none"] > tr > th,
-${content_tag_id} table[rules][rules="none"] > * > tr > th,
-${content_tag_id} table[rules][rules="none"] > td,
-${content_tag_id} table[rules][rules="none"] > th
+${wrapper_id} table[rules][rules="none"]  > tr > td,
+${wrapper_id} table[rules][rules="none"] > * > tr > td,
+${wrapper_id} table[rules][rules="none"] > tr > th,
+${wrapper_id} table[rules][rules="none"] > * > tr > th,
+${wrapper_id} table[rules][rules="none"] > td,
+${wrapper_id} table[rules][rules="none"] > th
 {
   border-width: thin;
   border-style: none;
 }
 
-${content_tag_id} table[rules][rules="all"] > tr > td,
-${content_tag_id} table[rules][rules="all"] > * > tr > td,
-${content_tag_id} table[rules][rules="all"] > tr > th,
-${content_tag_id} table[rules][rules="all"] > * > tr > th,
-${content_tag_id} table[rules][rules="all"] > td,
-${content_tag_id} table[rules][rules="all"] > th 
+${wrapper_id} table[rules][rules="all"] > tr > td,
+${wrapper_id} table[rules][rules="all"] > * > tr > td,
+${wrapper_id} table[rules][rules="all"] > tr > th,
+${wrapper_id} table[rules][rules="all"] > * > tr > th,
+${wrapper_id} table[rules][rules="all"] > td,
+${wrapper_id} table[rules][rules="all"] > th 
 {
   border-width: thin;
   border-style: solid;
 }
 
-${content_tag_id} table[rules][rules="rows"] > tr,
-${content_tag_id} table[rules][rules="rows"] > * > tr {
+${wrapper_id} table[rules][rules="rows"] > tr,
+${wrapper_id} table[rules][rules="rows"] > * > tr {
   border-block-start-width: thin;
   border-block-end-width: thin;
   border-block-start-style: solid;
@@ -346,25 +346,25 @@ ${content_tag_id} table[rules][rules="rows"] > * > tr {
 }
 
 
-${content_tag_id} table[rules][rules="cols"] > tr > td,
-${content_tag_id} table[rules][rules="cols"] > * > tr > td,
-${content_tag_id} table[rules][rules="cols"] > tr > th,
-${content_tag_id} table[rules][rules="cols"] > * > tr > th {
+${wrapper_id} table[rules][rules="cols"] > tr > td,
+${wrapper_id} table[rules][rules="cols"] > * > tr > td,
+${wrapper_id} table[rules][rules="cols"] > tr > th,
+${wrapper_id} table[rules][rules="cols"] > * > tr > th {
   border-inline-start-width: thin;
   border-inline-end-width: thin;
   border-inline-start-style: solid;
   border-inline-end-style: solid;
 }
 
-${content_tag_id} table[rules][rules="groups"] > colgroup {
+${wrapper_id} table[rules][rules="groups"] > colgroup {
   border-inline-start-width: thin;
   border-inline-end-width: thin;
   border-inline-start-style: solid;
   border-inline-end-style: solid;
 }
-${content_tag_id} table[rules][rules="groups"] > tfoot,
-${content_tag_id} table[rules][rules="groups"] > thead,
-${content_tag_id} table[rules][rules="groups"] > tbody {
+${wrapper_id} table[rules][rules="groups"] > tfoot,
+${wrapper_id} table[rules][rules="groups"] > thead,
+${wrapper_id} table[rules][rules="groups"] > tbody {
   border-block-start-width: thin;
   border-block-end-width: thin;
   border-block-start-style: solid;
@@ -373,165 +373,165 @@ ${content_tag_id} table[rules][rules="groups"] > tbody {
   
   
 /* caption inherits from table not table-outer */  
-${content_tag_id} caption {
+${wrapper_id} caption {
   display: table-caption;
   text-align: center;
 }
 
-${content_tag_id} table[align="center"] > caption {
+${wrapper_id} table[align="center"] > caption {
   margin-inline-start: auto;
   margin-inline-end: auto;
 }
 
-${content_tag_id} table[align="center"] > caption[align="left"]:dir(ltr) {
+${wrapper_id} table[align="center"] > caption[align="left"]:dir(ltr) {
   margin-inline-end: 0;
 }
-${content_tag_id} table[align="center"] > caption[align="left"]:dir(rtl) {
+${wrapper_id} table[align="center"] > caption[align="left"]:dir(rtl) {
   margin-inline-start: 0;
 }
 
-${content_tag_id} table[align="center"] > caption[align="right"]:dir(ltr) {
+${wrapper_id} table[align="center"] > caption[align="right"]:dir(ltr) {
   margin-inline-start: 0;
 }
-${content_tag_id} table[align="center"] > caption[align="right"]:dir(rtl) {
+${wrapper_id} table[align="center"] > caption[align="right"]:dir(rtl) {
   margin-inline-end: 0;
 }
 
-${content_tag_id} tr {
+${wrapper_id} tr {
   display: table-row;
   vertical-align: inherit;
 }
 
-${content_tag_id} col {
+${wrapper_id} col {
   display: table-column;
 }
 
-${content_tag_id} colgroup {
+${wrapper_id} colgroup {
   display: table-column-group;
 }
 
-${content_tag_id} tbody {
+${wrapper_id} tbody {
   display: table-row-group;
   vertical-align: middle;
 }
 
-${content_tag_id} thead {
+${wrapper_id} thead {
   display: table-header-group;
   vertical-align: middle;
 }
 
-${content_tag_id} tfoot {
+${wrapper_id} tfoot {
   display: table-footer-group;
   vertical-align: middle;
 }
 
 /* for XHTML tables without tbody */
-${content_tag_id} table > tr {
+${wrapper_id} table > tr {
   vertical-align: middle;
 }
 
-${content_tag_id} td { 
+${wrapper_id} td { 
   display: table-cell;
   vertical-align: inherit;
   text-align: inherit; 
   padding: 1px;
 }
 
-${content_tag_id} th {
+${wrapper_id} th {
   display: table-cell;
   vertical-align: inherit;
   font-weight: bold;
   padding: 1px;
 }
 
-${content_tag_id} tr > form:-moz-is-html, tbody > form:-moz-is-html,
-${content_tag_id} thead > form:-moz-is-html, tfoot > form:-moz-is-html,
-${content_tag_id} table > form:-moz-is-html {
+${wrapper_id} tr > form:-moz-is-html, tbody > form:-moz-is-html,
+${wrapper_id} thead > form:-moz-is-html, tfoot > form:-moz-is-html,
+${wrapper_id} table > form:-moz-is-html {
   /* Important: don't show these forms in HTML */
   display: none !important;
 }
 
-${content_tag_id} table[bordercolor] > tbody,
-${content_tag_id} table[bordercolor] > thead,
-${content_tag_id} table[bordercolor] > tfoot,
-${content_tag_id} table[bordercolor] > col,
-${content_tag_id} table[bordercolor] > colgroup,
-${content_tag_id} table[bordercolor] > tr,
-${content_tag_id} table[bordercolor] > * > tr,
-${content_tag_id} table[bordercolor]  > tr > td,
-${content_tag_id} table[bordercolor] > * > tr > td,
-${content_tag_id} table[bordercolor]  > tr > th,
-${content_tag_id} table[bordercolor] > * > tr > th {
+${wrapper_id} table[bordercolor] > tbody,
+${wrapper_id} table[bordercolor] > thead,
+${wrapper_id} table[bordercolor] > tfoot,
+${wrapper_id} table[bordercolor] > col,
+${wrapper_id} table[bordercolor] > colgroup,
+${wrapper_id} table[bordercolor] > tr,
+${wrapper_id} table[bordercolor] > * > tr,
+${wrapper_id} table[bordercolor]  > tr > td,
+${wrapper_id} table[bordercolor] > * > tr > td,
+${wrapper_id} table[bordercolor]  > tr > th,
+${wrapper_id} table[bordercolor] > * > tr > th {
   border-color: inherit;
 }
 
 /* inlines */
 
-${content_tag_id} q:before {
+${wrapper_id} q:before {
   content: open-quote;
 }
 
-${content_tag_id} q:after {
+${wrapper_id} q:after {
   content: close-quote;
 }
 
-${content_tag_id} b, ${content_tag_id} strong {
+${wrapper_id} b, ${wrapper_id} strong {
   font-weight: bolder;
 }
 
-${content_tag_id} i, ${content_tag_id} cite, ${content_tag_id} em, ${content_tag_id} var, ${content_tag_id} dfn {
+${wrapper_id} i, ${wrapper_id} cite, ${wrapper_id} em, ${wrapper_id} var, ${wrapper_id} dfn {
   font-style: italic;
 }
 
-${content_tag_id} tt, ${content_tag_id} code, ${content_tag_id} kbd, ${content_tag_id} samp {
+${wrapper_id} tt, ${wrapper_id} code, ${wrapper_id} kbd, ${wrapper_id} samp {
   font-family: -moz-fixed;
 }
 
-${content_tag_id} u, ${content_tag_id} ins {
+${wrapper_id} u, ${wrapper_id} ins {
   text-decoration: underline;
 }
 
-${content_tag_id} s, ${content_tag_id} strike, ${content_tag_id} del {
+${wrapper_id} s, ${wrapper_id} strike, ${wrapper_id} del {
   text-decoration: line-through;
 }
 
-${content_tag_id} big {
+${wrapper_id} big {
   font-size: larger;
 }
 
-${content_tag_id} small {
+${wrapper_id} small {
   font-size: smaller;
 }
 
-${content_tag_id} sub {
+${wrapper_id} sub {
   vertical-align: sub;
   font-size: smaller;
   line-height: normal;
 }
 
-${content_tag_id} sup {
+${wrapper_id} sup {
   vertical-align: super;
   font-size: smaller;
   line-height: normal;
 }
 
-${content_tag_id} nobr {
+${wrapper_id} nobr {
   white-space: nowrap;
 }
 
-${content_tag_id} mark {
+${wrapper_id} mark {
   background: yellow;
   color: black;
 }
 
 /* titles */
-${content_tag_id} abbr[title], acronym[title] {
+${wrapper_id} abbr[title], acronym[title] {
   text-decoration: dotted underline;
 }
 
 /* lists */
 
-${content_tag_id} ul, ${content_tag_id} menu, ${content_tag_id} dir {
+${wrapper_id} ul, ${wrapper_id} menu, ${wrapper_id} dir {
   display: block;
   list-style-type: disc;
   margin-block-start: 1em;
@@ -539,11 +539,11 @@ ${content_tag_id} ul, ${content_tag_id} menu, ${content_tag_id} dir {
   padding-inline-start: 40px;
 }
 
-${content_tag_id} menu[type="context"] {
+${wrapper_id} menu[type="context"] {
   display: none !important;
 }
 
-${content_tag_id} ol {
+${wrapper_id} ol {
   display: block;
   list-style-type: decimal;
   margin-block-start: 1em;
@@ -551,7 +551,7 @@ ${content_tag_id} ol {
   padding-inline-start: 40px;
 }
 
-${content_tag_id} li {
+${wrapper_id} li {
   display: list-item;
   text-align: match-parent;
 }
@@ -586,7 +586,7 @@ ${content_tag_id} li {
 /* <hr> noshade and color attributes are handled completely by
  * the nsHTMLHRElement attribute mapping code
  */
-${content_tag_id} hr {
+${wrapper_id} hr {
   display: block;
   border: 1px inset;
   margin-block-start: 0.5em;
@@ -598,15 +598,15 @@ ${content_tag_id} hr {
   box-sizing: border-box;
 }
 
-${content_tag_id} hr[size="1"] {
+${wrapper_id} hr[size="1"] {
   border-style: solid none none none;
 }
 
-${content_tag_id} img:-moz-broken::before, input:-moz-broken::before,
-${content_tag_id} img:-moz-user-disabled::before, input:-moz-user-disabled::before,
-${content_tag_id} img:-moz-loading::before, input:-moz-loading::before,
-${content_tag_id} applet:-moz-empty-except-children-with-localname(param):-moz-broken::before,
-${content_tag_id} applet:-moz-empty-except-children-with-localname(param):-moz-user-disabled::before {
+${wrapper_id} img:-moz-broken::before, input:-moz-broken::before,
+${wrapper_id} img:-moz-user-disabled::before, input:-moz-user-disabled::before,
+${wrapper_id} img:-moz-loading::before, input:-moz-loading::before,
+${wrapper_id} applet:-moz-empty-except-children-with-localname(param):-moz-broken::before,
+${wrapper_id} applet:-moz-empty-except-children-with-localname(param):-moz-user-disabled::before {
   content: -moz-alt-content !important;
   unicode-bidi: -moz-isolate;
 }
@@ -620,8 +620,8 @@ ${content_tag_id} applet:-moz-empty-except-children-with-localname(param):-moz-u
   vertical-align: inherit;
 }
 
-${content_tag_id} img:-moz-suppressed, input:-moz-suppressed, object:-moz-suppressed,
-${content_tag_id} embed:-moz-suppressed, applet:-moz-suppressed {
+${wrapper_id} img:-moz-suppressed, input:-moz-suppressed, object:-moz-suppressed,
+${wrapper_id} embed:-moz-suppressed, applet:-moz-suppressed {
   /*
     Set visibility too in case the page changes display.  Note that we _may_
     want to just set visibility and not display, in general, if we find that
@@ -633,11 +633,11 @@ ${content_tag_id} embed:-moz-suppressed, applet:-moz-suppressed {
   visibility: hidden !important;
 }
 
-${content_tag_id} img[usemap], object[usemap] {
+${wrapper_id} img[usemap], object[usemap] {
   color: blue;
 }
 
-${content_tag_id} frameset {
+${wrapper_id} frameset {
   display: block ! important;
   overflow: -moz-hidden-unscrollable;
   position: static ! important;
@@ -645,28 +645,28 @@ ${content_tag_id} frameset {
   border: none ! important;
 }
 
-${content_tag_id} link { 
+${wrapper_id} link { 
   display: none;
 }
 
-${content_tag_id} frame {
+${wrapper_id} frame {
   border-radius: 0 ! important;
 }
 
-${content_tag_id} iframe {
+${wrapper_id} iframe {
   border: 2px inset;
 }
 
-${content_tag_id} noframes {
+${wrapper_id} noframes {
   display: none;
 }
 
-${content_tag_id} spacer {
+${wrapper_id} spacer {
   position: static ! important;
   float: none ! important;
 }
 
-${content_tag_id} canvas {
+${wrapper_id} canvas {
   -moz-user-select: none;
 }
 
@@ -679,47 +679,47 @@ ${content_tag_id} canvas {
 }
 
 /* hidden elements */
-${content_tag_id} base, ${content_tag_id} basefont, ${content_tag_id} datalist, ${content_tag_id} head, ${content_tag_id} meta, ${content_tag_id} script, ${content_tag_id} style, ${content_tag_id} title,
-${content_tag_id} noembed, ${content_tag_id} param, ${content_tag_id} template {
+${wrapper_id} base, ${wrapper_id} basefont, ${wrapper_id} datalist, ${wrapper_id} head, ${wrapper_id} meta, ${wrapper_id} script, ${wrapper_id} style, ${wrapper_id} title,
+${wrapper_id} noembed, ${wrapper_id} param, ${wrapper_id} template {
    display: none;
 }
 
-${content_tag_id} area {
+${wrapper_id} area {
   /* Don't give it frames other than its imageframe */
   display: none ! important;
 }
 
-${content_tag_id} iframe:fullscreen {
+${wrapper_id} iframe:fullscreen {
   /* iframes in full-screen mode don't show a border. */
   border: none !important;
   padding: 0 !important;
 }
 
 /* media elements */
-${content_tag_id} video > xul|videocontrols, audio > xul|videocontrols {
+${wrapper_id} video > xul|videocontrols, audio > xul|videocontrols {
   display: -moz-box;
   -moz-box-orient: vertical;
   -moz-binding: url("chrome://global/content/bindings/videocontrols.xml#videoControls");
 }
 
-${content_tag_id} video:not([controls]) > xul|videocontrols,
-${content_tag_id} audio:not([controls]) > xul|videocontrols {
+${wrapper_id} video:not([controls]) > xul|videocontrols,
+${wrapper_id} audio:not([controls]) > xul|videocontrols {
   visibility: hidden;
   -moz-binding: none;
 }
 
-${content_tag_id} video {
+${wrapper_id} video {
   object-fit: contain;
 }
 
-${content_tag_id} video > img:-moz-native-anonymous {
+${wrapper_id} video > img:-moz-native-anonymous {
   /* Video poster images should render with the video element's "object-fit" &
      "object-position" properties */
   object-fit: inherit !important;
   object-position: inherit !important;
 }
 
-${content_tag_id} audio:not([controls]) {
+${wrapper_id} audio:not([controls]) {
   display: none;
 }
 
@@ -729,7 +729,7 @@ ${content_tag_id} audio:not([controls]) {
   transform: translate(0) !important;
 }
 
-${content_tag_id} video > .caption-box {
+${wrapper_id} video > .caption-box {
   position: relative;
   overflow: hidden;
 }
@@ -737,25 +737,25 @@ ${content_tag_id} video > .caption-box {
 /* details & summary */
 /* Need to revert Bug 1259889 Part 2 when removing details preference. */
 @supports -moz-bool-pref("dom.details_element.enabled") {
-  ${content_tag_id} details > summary:first-of-type,
-  ${content_tag_id} details > summary:-moz-native-anonymous {
+  ${wrapper_id} details > summary:first-of-type,
+  ${wrapper_id} details > summary:-moz-native-anonymous {
     display: list-item;
     list-style: disclosure-closed inside;
   }
 
-  ${content_tag_id} details[open] > summary:first-of-type,
-  ${content_tag_id} details[open] > summary:-moz-native-anonymous {
+  ${wrapper_id} details[open] > summary:first-of-type,
+  ${wrapper_id} details[open] > summary:-moz-native-anonymous {
     list-style-type: disclosure-open;
   }
 
-  ${content_tag_id} details > summary:first-of-type > *|* {
+  ${wrapper_id} details > summary:first-of-type > *|* {
     /* Cancel "list-style-position: inside" inherited from summary. */
     list-style-position: initial;
   }
 }
 
 /* emulation of non-standard HTML <marquee> tag */
-${content_tag_id} marquee {
+${wrapper_id} marquee {
   inline-size: -moz-available;
   display: inline-block;
   vertical-align: text-bottom;
@@ -763,7 +763,7 @@ ${content_tag_id} marquee {
   -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-horizontal');
 }
 
-${content_tag_id} marquee[direction="up"], marquee[direction="down"] {
+${wrapper_id} marquee[direction="up"], marquee[direction="down"] {
   -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-vertical');
   block-size: 200px;
 }
@@ -771,29 +771,29 @@ ${content_tag_id} marquee[direction="up"], marquee[direction="down"] {
 /* PRINT ONLY rules follow */
 @media print {
 
-  ${content_tag_id} marquee { -moz-binding: none; }
+  ${wrapper_id} marquee { -moz-binding: none; }
 
 }
 
 /* Ruby */
 
-${content_tag_id} ruby {
+${wrapper_id} ruby {
   display: ruby;
 }
-${content_tag_id} rb {
+${wrapper_id} rb {
   display: ruby-base;
   white-space: nowrap;
 }
-${content_tag_id} rp {
+${wrapper_id} rp {
   display: none;
 }
-${content_tag_id} rt {
+${wrapper_id} rt {
   display: ruby-text;
 }
-${content_tag_id} rtc {
+${wrapper_id} rtc {
   display: ruby-text-container;
 }
-${content_tag_id} rtc, ${content_tag_id} rt {
+${wrapper_id} rtc, ${wrapper_id} rt {
   white-space: nowrap;
   font-size: 50%;
   -moz-min-font-size-ratio: 50%;
@@ -805,20 +805,20 @@ ${content_tag_id} rtc, ${content_tag_id} rt {
   font-variant-east-asian: ruby;
 %endif
 }
-${content_tag_id} rtc, ${content_tag_id} rt {
+${wrapper_id} rtc, ${wrapper_id} rt {
   text-emphasis: none;
 }
-${content_tag_id} rtc:lang(zh), ${content_tag_id} rt:lang(zh) {
+${wrapper_id} rtc:lang(zh), ${wrapper_id} rt:lang(zh) {
   ruby-align: center;
 }
-${content_tag_id} rtc:lang(zh-TW), ${content_tag_id} rt:lang(zh-TW) {
+${wrapper_id} rtc:lang(zh-TW), ${wrapper_id} rt:lang(zh-TW) {
   font-size: 30%; /* bopomofo */
   -moz-min-font-size-ratio: 30%;
 }
-${content_tag_id} rtc > rt {
+${wrapper_id} rtc > rt {
   font-size: inherit;
 }
-${content_tag_id} ruby, ${content_tag_id} rb, ${content_tag_id} rt, ${content_tag_id} rtc {
+${wrapper_id} ruby, ${wrapper_id} rb, ${wrapper_id} rt, ${wrapper_id} rtc {
   unicode-bidi: -moz-isolate;
 }
 `;
