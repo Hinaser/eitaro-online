@@ -35,7 +35,8 @@ self.port.on('prepare', function(msg){
             borderRadius: 4,
             width: '48px',
             height: '48px',
-            zIndex: 100000
+            zIndex: 100000,
+            backgroundColor: 'rgba(255,255,255,0.9)'
         });
     }
 
