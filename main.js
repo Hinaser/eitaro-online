@@ -34,7 +34,6 @@ var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPro
  */
 var Util = require('lib/util');
 var Sidebar = require('lib/sidebar');
-var Panel = require('lib/panel');
 var Tooltip = require('lib/tooltip');
 var Prefs = require('lib/prefs');
 var Database = require('lib/db');
@@ -47,9 +46,6 @@ var db_default_name = function(prefs){
 };
 var sidebar_default_title = "英太郎 ONLINE";
 var html_default_sanitizer = Util.sanitizeHtml;
-var panel_default_position = function(prefs){
-    return prefs.get("panel_position");
-};
 var frame_url = "./frame.html";
 var frame_option = {
     url: frame_url,
@@ -96,7 +92,6 @@ var context_menu_option = {
 var prefs = new Prefs();
 var db = new Database();
 var sidebar = new Sidebar(sidebar_default_title, db, html_default_sanitizer);
-var panel = new Panel(panel_default_position(prefs));
 var tooltip = new Tooltip();
 var frame = new Frame(frame_option);
 var toolbar =Toolbar(toolbar_option(frame, prefs));
@@ -107,7 +102,7 @@ var context_menu_item = cm.Item(context_menu_option);
  INITIALIZE DB AND PREFS
  */
 db.open(db_default_name(prefs));
-prefs.init(frame, frame_url, panel, db);
+prefs.init(frame, frame_url, db);
 
 // Variable to manage opened tab. Once a tab is opened by this script,
 // the tab will be re-used to display information. So we need to track which tab is opened by this script.
@@ -159,7 +154,7 @@ function search(search_keyword){
     var request_url = prefs.get("service_url").replace("{0}", search_keyword);
 
     if(prefs.get('display_target') == "panel"){
-        search_for_panel(search_keyword, request_url);
+        search_for_tooltip(search_keyword, request_url);
     }
     else if(prefs.get('display_target') == "sidebar"){
         search_for_sidebar(search_keyword, request_url);
@@ -197,11 +192,11 @@ function debug(obj) {
 }
 
 /**
- * Handle searching for panel
+ * Handle searching for toolbar
  * @param {string} search_keyword - Keyword to search
  * @param {string} request_url - Url of search service
  */
-function search_for_panel(search_keyword, request_url){
+function search_for_tooltip(search_keyword, request_url){
     tooltip.prepare({
         show_near_selection: prefs.get('show_panel_near_selection'),
         position: prefs.get('panel_position')
