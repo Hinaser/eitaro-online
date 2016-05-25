@@ -203,7 +203,8 @@ function debug(obj) {
  */
 function search_for_panel(search_keyword, request_url){
     tooltip.prepare({
-        show_near_selection: prefs.get('show_panel_near_selection')
+        show_near_selection: prefs.get('show_panel_near_selection'),
+        position: prefs.get('panel_position')
     });
 
     var xhr = Request({
@@ -232,7 +233,8 @@ function search_for_panel(search_keyword, request_url){
             }
 
             tooltip.show(safeHtmlTxt, {
-                show_near_selection: prefs.get('show_panel_near_selection')
+                show_near_selection: prefs.get('show_panel_near_selection'),
+                position: prefs.get('panel_position')
             });
         }
     });

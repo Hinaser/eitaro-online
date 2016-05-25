@@ -7,7 +7,7 @@ ${wrapper_id} {
 ${wrapper_id} > div {
     position: absolute;
     z-index: 1000000;
-    background-color: rgba(255,255,255,0.9);
+    background-color: rgba(255,255,255,1);
     border: 2px solid gray;
     border-radius: 4px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);

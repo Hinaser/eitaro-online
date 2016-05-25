@@ -11,6 +11,7 @@ self.port.on('ping', function(){});
 
 self.port.on('prepare', function(msg){
     var data = JSON.parse(msg);
+    var option = data.option;
 
     $(`#${style_id}`).remove();
 
@@ -25,29 +26,17 @@ self.port.on('prepare', function(msg){
 
     var container = $('<div>', {id: container_tag_id});
 
-    if(isTextSelected() && data.option.show_near_selection){
-        var location_of_selection = getSelectionLocation();
-        container.css({
-            position: 'absolute',
-            top: location_of_selection.top + 20 + window.scrollY,
-            left: location_of_selection.left + 20 + window.scrollX,
-            border: '1px solid gray',
-            borderRadius: 4,
-            width: '48px',
-            height: '48px',
-            zIndex: 100000,
-            backgroundColor: 'rgba(255,255,255,0.9)'
-        });
-    }
-
     container.append(loading_gif());
     wrapper.append(container);
+
+    setPosition(container, option, true);
 
     container.draggable();
 });
 
 self.port.on('open', function(msg){
     var data = JSON.parse(msg);
+    var option = data.option;
 
     initWrapper();
 
@@ -55,17 +44,10 @@ self.port.on('open', function(msg){
     var container = $('#' + container_tag_id);
     var content = $("#" + content_tag_id);
 
-    if(isTextSelected() && data.option.show_near_selection){
-        var location_of_selection = getSelectionLocation();
-        container.css({
-            position: 'absolute',
-            top: location_of_selection.top + 20 + window.scrollY,
-            left: location_of_selection.left + 20 + window.scrollX
-        });
-    }
-
     content.empty();
     content.prepend(data.html);
+
+    setPosition(container, option);
 
     container.show();
 });
@@ -166,4 +148,67 @@ function createHeader(container, content){
     });
 
     return header;
+}
+
+function setPosition(container, option, isPrepare){
+    var style;
+
+    if(isTextSelected() && option.show_near_selection){
+        var location_of_selection = getSelectionLocation();
+        style = {
+            position: 'absolute',
+            top: location_of_selection.top + 20 + window.scrollY,
+            left: location_of_selection.left + 20 + window.scrollX
+        };
+    }
+    else{
+        style = {
+            position: 'fixed'
+        };
+
+        if(!option.position || option.position == "center"){
+            style["top"] = $(window).height() / 2 - container.height() / 2;
+            style["left"] = $(window).width() / 2 - container.width() / 2;
+        }
+        else{
+            switch(option.position){
+                case "top-left":
+                    style["top"] = 0;
+                    style["left"] = 0;
+                    break;
+                case "top-right":
+                    style["top"] = 0;
+                    style["right"] = 0;
+                    break;
+                case "bottom-left":
+                    style["bottom"] = 0;
+                    style["left"] = 0;
+                    break;
+                case "bottom-right":
+                    style["bottom"] = 0;
+                    style["right"] = 0;
+                    break;
+            }
+        }
+    }
+
+    if(isPrepare){
+        var additional_style = {
+            border: '1px solid gray',
+            borderRadius: 4,
+            width: '48px',
+            height: '48px',
+            zIndex: 100000,
+            backgroundColor: 'rgba(255,255,255,0.9)'
+        };
+
+        if(!(isTextSelected() && option.show_near_selection)){
+            additional_style["top"] = ($(window).height() / 2 - 24) + "px";
+            additional_style["left"] = ($(window).width() / 2 - 24) + "px";
+        }
+
+        $.extend(style, additional_style);
+    }
+
+    container.css(style);
 }
