@@ -1,3 +1,11 @@
+/**
+ * This script is used when tooltip content script is activated.
+ * The tooltip uses jQuery UI's modules `draggable` and `resizable`.
+ * For `resizable` module to work properly, it requires jquery.ui.css.
+ * 
+ * @param {string} wrapper_id - Element ID which wraps search result html content.
+ * @returns {string} CSS for jquery.ui with specified Element ID.
+ */
 const jquery_ui_css = function (wrapper_id){
 	return `
 /*! jQuery UI - v1.11.4 - 2015-03-11

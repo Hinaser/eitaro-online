@@ -1,99 +1,92 @@
-﻿window.onload = function () {
-    // Show loading gif once sidebar is opened.
-    prepare();
+﻿/**
+ * Defining behaviour of a sidebar on Firefox Browser
+ * @file Manages sidebar on browser.
+ * DependsOn jQuery.
+ */
 
-    addon.port.on("prepare", function () {
-        prepare();
-    });
+/*
+ * NOTE FOR injecting dynamic html text to sidebar content.
+ *
+ * In this script, there are multiple codes that dynamic html text is injected to sidebar html.
+ * I'll explain what I did to remove security risks for malicious script to be injected with those dynamic html.
+ *
+ * A html text to be injected always arrives from addon script via `set` message.
+ * This sidebar content script listens to the `set` message after sidebar content is loaded.
+ * The origin where `set` message is emitted is always the same one source.
+ *
+ * It is from a method named `invalidate_sidebar()` in `lib/sidebar.js`.
+ *
+ * Every time just before `set` event is emitted via the `invalidate_sidebar()`, html sanitizing is always done.
+ * So html text from lib/sidebar.js is always sanitized and clean before being injected in this script.
+ *
+ * For additional sanitizing process, please see lib/sidebar.js.
+ */
 
-    addon.port.on("clear", function(){
-        clearContents();
-    });
-
-    // Listen 'set' message from main script.
-    // When the message arrives, set the html data in the message to sidebar.
-    addon.port.on("set", function (json) {
-        let data = JSON.parse(json);
-
-        clearContents();
-
-        if(data.type == 'single'){
-            setSingle(data);
-        }
-        else if(data.type == 'history'){
-            setHistory(data);
-        }
-        else if(data.type == 'error'){
-            setError(data);
-        }
-    });
-
-    // Send get message to main script when sidebar is ready
-    addon.port.emit("get");
+/**
+ * Representation of a sidebar on Firefox Browser.
+ * @constructor
+ */
+const Sidebar = function(){
+    this.content = null;
 };
 
-window.onunload = function(){
-    clearContents();
+/**
+ * Initialize sidebar. This must be called every time sidebar content html is loaded.
+ */
+Sidebar.prototype.initialize = function(){
+    this.content = $("#content");
+
+    // Show loading gif once sidebar is opened.
+    sidebar.prepare();
 };
 
 /**
  * Clear current DOM
  */
-function clearContents(){
-    let content = document.getElementById("content");
-    while (content.firstChild) {
-        content.removeChild(content.firstChild);
-    }
-}
+Sidebar.prototype.clearContents = function (){
+    this.content.empty();
+};
 
 /**
  * Show loading gif image until data to display arrives.
  */
-function prepare(){
-    let content = document.getElementById("content");
-    while (content.firstChild) {
-        content.removeChild(content.firstChild);
-    }
+Sidebar.prototype.prepare = function (){
+    this.content.empty();
 
-    let img = document.createElement('img');
-    img.setAttribute('src', './loader.gif');
-    content.appendChild(img);
-}
+    let loading_image = $("<img>", {src: "./loader.gif"});
+    this.content.append(loading_image);
+};
 
 /**
  * Set error message to sidebar
  * @param {Object} data - Object which contains html text data to display.
  */
-function setError(data){
-    var content = document.getElementById("content");
-    content.innerHTML = data.single_data;
-}
+Sidebar.prototype.setError = function (data){
+    this.content.empty();
+    // Please see the header comment of this file for security concern.
+    this.content.append(data.single_data);
+};
 
 /**
  * Set single search result to sidebar
  * @param {Object} data - Object which contains html text data to display.
  */
-function setSingle(data){
-    var content = document.getElementById("content");
-    /*
-     MEMO - data.single_data is always sanitized before `data` is passed to this function.
-     `data` is always passed through 'set' event, which is emitted from lib/sidebar.js.
-     In lib/sidebar.js, only `invalidate_sidebar()` emits `set` event.
-     Please see code of `invalidate_sidebar` to see that before emitting `set`, `data` is always sanitized.
-     */
-    content.innerHTML = data.single_data;
-}
+Sidebar.prototype.setSingle = function(data){
+    this.content.empty();
+    // Please see the header comment of this file for security concern.
+    this.content.append(data.single_data);
+};
 
 /**
  * Set search history data to sidebar
  * @param {Object} data - Object which contains html text data to display.
  */
-function setHistory(data){
-    var content = document.getElementById("content");
+Sidebar.prototype.setHistory = function (data){
     // Setup display html
-    var showFirstData = data.option.show_first_data;
-    var records = data.history_data;
-    var histories = "";
+    let showFirstData = data.option.show_first_data;
+    let records = data.history_data;
+    let histories = "";
+
     records.forEach(function (element, index, array) {
         if (index == 0 && showFirstData) {
             histories += "<div id='" + index + "' class='history'><div class='title'><a class='word' data-hidden='no' data-href='" + index + "'>" + element.word + "</a><a class='remove-item' data-word='" + element.word + "'>削除</a></div><div class='data'>" + element.result + "</div></div>";
@@ -102,22 +95,21 @@ function setHistory(data){
             histories += "<div id='" + index + "' class='history'><div class='title'><a class='word' data-hidden='yes' data-href='" + index + "'>" + element.word + "</a><a class='remove-item' data-word='" + element.word + "'>削除</a></div><div class='data hidden'>" + element.result + "</div></div>";
         }
     });
-    content.innerHTML = histories; // MEMO - records[n].result(=data.history_data[n].result) is always sanitized before `data` is passed to this function.
+
+    this.content.empty();
+    // Please see the header comment of this file for security concern.
+    this.content.append(histories);
 
     // Setup Onclick event on div.title
     // If wherever inside the div is clicked, then expand/hide search result area.
-    var div = document.getElementsByClassName('title');
-    for (let i = 0; i < div.length; i++) {
-        div[i].addEventListener("click", onClick_title);
-    }
+    let div = $(".title");
+    div.on("click", onClick_title);
 
     // Setup onclick event for delete button.
     // When the button is clicked, send message to main script that the clicked word should be deleted from indexeddb.
-    var delete_btn = document.getElementsByClassName('remove-item');
-    for (let i = 0; i < delete_btn.length; i++) {
-        delete_btn[i].addEventListener("click", onClick_delete);
-    }
-}
+    let delete_btn = $(".remove-item");
+    delete_btn.on("click", onClick_delete);
+};
 
 /**
  * EventHandler when .title is clicked.
@@ -151,3 +143,44 @@ function onClick_delete(e) {
 
     addon.port.emit("delete", word);
 }
+
+
+
+let sidebar = new Sidebar();
+
+$(document).ready(function(){
+    sidebar.initialize();
+
+    addon.port.on("prepare", function () {
+        sidebar.prepare();
+    });
+
+    addon.port.on("clear", function(){
+        sidebar.clearContents();
+    });
+
+    // Listen 'set' message from main script.
+    // When the message arrives, set the html data in the message to sidebar.
+    addon.port.on("set", function (json) {
+        let data = JSON.parse(json);
+
+        sidebar.clearContents();
+
+        if(data.type == 'single'){
+            sidebar.setSingle(data);
+        }
+        else if(data.type == 'history'){
+            sidebar.setHistory(data);
+        }
+        else if(data.type == 'error'){
+            sidebar.setError(data);
+        }
+    });
+
+    // Send get message to main script when sidebar is ready
+    addon.port.emit("get");
+});
+
+$(window).unload(function(){
+    sidebar.clearContents();
+});

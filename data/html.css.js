@@ -1,3 +1,13 @@
+/**
+ * This script is used when tooltip content script is activated.
+ * If search result is to be displayed on tooltip in a tab,
+ * the result html content is inserted to html DOM of any external web page displayed in the tab.
+ * In order to avoid for search result html content to be affected by original web page's stylesheet,
+ * external web page's styling is reset to firefox default with this css string.
+ *
+ * @param {string} wrapper_id - Element ID which wraps search result html content.
+ * @returns {string} User agent CSS for firefox with element id injected.
+ */
 const firefox_default_css = function(wrapper_id) {
     return `
 ${wrapper_id} address,

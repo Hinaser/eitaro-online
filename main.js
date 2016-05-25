@@ -17,65 +17,65 @@
  */
 
 /*
- LOAD FIREFOX SDK
+ LOAD FIREFOX SDKs
  */
-var { Frame } = require("sdk/ui/frame");
-var { Toolbar} = require("sdk/ui/toolbar");
-var { Hotkey } = require('sdk/hotkeys');
-var { Request } = require('sdk/request');
-var { Cc, Ci } = require("chrome");
-var cm = require("sdk/context-menu");
-var tabs = require("sdk/tabs");
-var { getTabForId, getTabContentWindow } = require ("sdk/tabs/utils");
-var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
+let { Frame } = require("sdk/ui/frame");
+let { Toolbar} = require("sdk/ui/toolbar");
+let { Hotkey } = require("sdk/hotkeys");
+let { Request } = require("sdk/request");
+let { Cc, Ci } = require("chrome");
+let cm = require("sdk/context-menu");
+let tabs = require("sdk/tabs");
+let { getTabForId, getTabContentWindow } = require ("sdk/tabs/utils");
+let prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
 
 /*
  LOAD USER LIBRARIES
  */
-var Util = require('lib/util');
-var Sidebar = require('lib/sidebar');
-var Tooltip = require('lib/tooltip');
-var Prefs = require('lib/prefs');
-var Database = require('lib/db');
+let Util = require("lib/util");
+let Sidebar = require("lib/sidebar");
+let Tooltip = require("lib/tooltip");
+let Prefs = require("lib/prefs");
+let Database = require("lib/db");
 
 /*
  SET PARAMETERS FOR USER DEFINED CLASSES
  */
-var db_default_name = function(prefs){
+let db_default_name = function(prefs){
     return prefs.get("service_url");
 };
-var sidebar_default_title = "英太郎 ONLINE";
-var html_default_sanitizer = Util.sanitizeHtml;
-var frame_url = "./frame.html";
-var frame_option = {
+let sidebar_default_title = "英太郎 ONLINE";
+let html_default_sanitizer = Util.sanitizeHtml;
+let frame_url = "./frame.html";
+let frame_option = {
     url: frame_url,
     onMessage: (e) => {
-        let obj = JSON.parse(e.data);
-        routeMessage(obj, e);
+        routeMessage(e);
     }
 };
-var toolbar_option = function(frame, prefs){
+let toolbar_option = function(frame, prefs){
     return {
         name: "Search toolbar",
         title: prefs.get("service_name") + "で検索",
         items: [frame]
     };
 };
-var hotkey_option = function(frame, frame_url){
+let hotkey_option = function(frame, frame_url){
     return {
         combo: "ctrl-L",
         onPress: function(){
-            var msg = {};
-            msg.type = "focus";
-            msg.data = "";
+            let msg = {
+                type: "focus",
+                data: null
+            };
             frame.postMessage(JSON.stringify(msg), frame_url);
         }
     };
 };
-var context_menu_option = {
+let context_menu_option = {
     label: "label",
     context: cm.SelectionContext(),
-    contentScriptFile: './context_menu.js',
+    contentScriptFile: "./context_menu.js",
     onMessage: function (msg) {
         let obj = JSON.parse(msg);
         switch (obj.type) {
@@ -89,14 +89,14 @@ var context_menu_option = {
 /*
  INITIALIZE USER DEFINED CLASSES
  */
-var prefs = new Prefs();
-var db = new Database();
-var sidebar = new Sidebar(sidebar_default_title, db, html_default_sanitizer);
-var tooltip = new Tooltip();
-var frame = new Frame(frame_option);
-var toolbar =Toolbar(toolbar_option(frame, prefs));
-var getFocus = Hotkey(hotkey_option(frame, frame_url));
-var context_menu_item = cm.Item(context_menu_option);
+let prefs = new Prefs();
+let db = new Database();
+let sidebar = new Sidebar(sidebar_default_title, db, html_default_sanitizer);
+let tooltip = new Tooltip(html_default_sanitizer);
+let frame = new Frame(frame_option);
+let toolbar =Toolbar(toolbar_option(frame, prefs));
+let getFocus = Hotkey(hotkey_option(frame, frame_url));
+let context_menu_item = cm.Item(context_menu_option);
 
 /*
  INITIALIZE DB AND PREFS
@@ -106,26 +106,27 @@ prefs.init(frame, frame_url, db);
 
 // Variable to manage opened tab. Once a tab is opened by this script,
 // the tab will be re-used to display information. So we need to track which tab is opened by this script.
-var opened_tab = null;
+let opened_tab = null;
 
 /**
  * Route or Assign incoming message from sub component script to combined target operation
- * @param {Object} obj - Object sent from content script
  * @param event
  */
-function routeMessage(obj, event) {
+function routeMessage(event) {
+    let obj = JSON.parse(event.data);
+
     switch(obj.type) {
-        case 'search':
+        case "search":
             let keyword = obj.value;
             search(keyword);
             break;
-        case 'config':
+        case "config":
             config();
             break;
-        case 'history':
+        case "history":
             history();
             break;
-        case 'debug':
+        case "debug":
             debug(obj);
             break;
     }
@@ -151,12 +152,12 @@ function search(search_keyword){
     }
 
     // Get search keyword from input field and construct url for dictionary service
-    var request_url = prefs.get("service_url").replace("{0}", search_keyword);
+    let request_url = prefs.get("service_url").replace("{0}", search_keyword);
 
-    if(prefs.get('display_target') == "panel"){
+    if(prefs.get("display_target") == "panel"){
         search_for_tooltip(search_keyword, request_url);
     }
-    else if(prefs.get('display_target') == "sidebar"){
+    else if(prefs.get("display_target") == "sidebar"){
         search_for_sidebar(search_keyword, request_url);
     }
     else {
@@ -198,26 +199,26 @@ function debug(obj) {
  */
 function search_for_tooltip(search_keyword, request_url){
     tooltip.prepare({
-        show_near_selection: prefs.get('show_panel_near_selection'),
-        position: prefs.get('panel_position')
+        show_near_selection: prefs.get("show_panel_near_selection"),
+        position: prefs.get("panel_position")
     });
 
-    var xhr = Request({
+    let xhr = Request({
         url: request_url,
         onComplete: function(response){
-            var safeHtmlTxt;
+            let safeHtmlTxt;
 
             // Assume that url is invalid.
             if(response.status == 0){
-                safeHtmlTxt = 'サービスURLが正しく設定されていない可能性があります'; // Service url might be invalid.
+                safeHtmlTxt = "サービスURLが正しく設定されていない可能性があります"; // Service url might be invalid.
                 tooltip.show(safeHtmlTxt, {
-                    show_near_selection: prefs.get('show_panel_near_selection')
+                    show_near_selection: prefs.get("show_panel_near_selection")
                 });
                 return;
             }
 
             try{
-                safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
+                safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get("service_deselector"));
 
                 if(prefs.get("save_search_history")){
                     db.add(search_keyword, safeHtmlTxt);
@@ -228,8 +229,8 @@ function search_for_tooltip(search_keyword, request_url){
             }
 
             tooltip.show(safeHtmlTxt, {
-                show_near_selection: prefs.get('show_panel_near_selection'),
-                position: prefs.get('panel_position')
+                show_near_selection: prefs.get("show_panel_near_selection"),
+                position: prefs.get("panel_position")
             });
         }
     });
@@ -246,20 +247,20 @@ function search_for_sidebar(search_keyword, request_url){
     // Show loading gif on sidebar until ajax request completes
     sidebar.prepare();
 
-    var xhr = Request({
+    let xhr = Request({
         url: request_url,
         onComplete: function(response){
-            var safeHtmlTxt;
+            let safeHtmlTxt;
 
             // Assume that url is invalid.
             if(response.status == 0){
-                safeHtmlTxt = 'サービスURLが正しく設定されていない可能性があります'; // Service url might be invalid.
+                safeHtmlTxt = "サービスURLが正しく設定されていない可能性があります"; // Service url might be invalid.
                 sidebar.showSearchResult(safeHtmlTxt);
                 return;
             }
 
             try{
-                safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get('service_deselector'));
+                safeHtmlTxt = Util.parseSearchResult(response.text, prefs.get("service_selector"), prefs.get("service_deselector"));
 
                 if(prefs.get("save_search_history")) {
                     db.add(search_keyword, safeHtmlTxt);
@@ -288,11 +289,11 @@ function search_for_sidebar(search_keyword, request_url){
  * @param {string} request_url - Url of search service
  */
 function search_for_tab(search_keyword, request_url){
-    var save_contents = function(tab){
+    let save_contents = function(tab){
         try{
-            var window = getTabContentWindow (getTabForId(tab.id));
-            var html_as_string = window.document.documentElement.outerHTML;
-            var safeHtmlTxt = Util.parseSearchResult(html_as_string, prefs.get("service_selector"), prefs.get('service_deselector'));
+            let window = getTabContentWindow (getTabForId(tab.id));
+            let html_as_string = window.document.documentElement.outerHTML;
+            let safeHtmlTxt = Util.parseSearchResult(html_as_string, prefs.get("service_selector"), prefs.get("service_deselector"));
 
             if(prefs.get("save_search_history")){
                 db.add(search_keyword, safeHtmlTxt);
@@ -303,7 +304,7 @@ function search_for_tab(search_keyword, request_url){
 
     // Open tab for translation page if there are no tabs already opened by this extension.
     // If there is a tab opend by this script, then reuse the tab for displaying translation page.
-    if (prefs.get('always_open_new_tab') || opened_tab === null) {
+    if (prefs.get("always_open_new_tab") || opened_tab === null) {
         tabs.open({
             url: request_url,
             onOpen: function onOpen(tab) {

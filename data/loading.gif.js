@@ -1,3 +1,9 @@
+/**
+ * Content script cannot handle raw image file, at least in my understanding.
+ * To use image in content script, let an image be formatted with svg element here.
+ *
+ * @returns {string} Loading animation image representation as svg element.
+ */
 const loading_gif = function() {
     return `
 <svg width="48px" height="48px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="uil-default">
