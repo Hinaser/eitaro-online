@@ -53,7 +53,7 @@ Sidebar.prototype.clearContents = function (){
 Sidebar.prototype.prepare = function (){
     this.content.empty();
 
-    let loading_image = $("<img>", {src: "./loader.gif"});
+    let loading_image = $("<img>", {src: "../common/loader.gif"});
     this.content.append(loading_image);
 };
 
