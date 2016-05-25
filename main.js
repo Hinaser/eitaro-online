@@ -46,7 +46,7 @@ let db_default_name = function(prefs){
 };
 let sidebar_default_title = "英太郎 ONLINE";
 let html_default_sanitizer = Util.sanitizeHtml;
-let frame_url = "./frame.html";
+let frame_url = "./frame/frame.html";
 let frame_option = {
     url: frame_url,
     onMessage: (e) => {
@@ -75,7 +75,7 @@ let hotkey_option = function(frame, frame_url){
 let context_menu_option = {
     label: "label",
     context: cm.SelectionContext(),
-    contentScriptFile: "./context_menu.js",
+    contentScriptFile: "./context_menu/context_menu.js",
     onMessage: function (msg) {
         let obj = JSON.parse(msg);
         switch (obj.type) {
