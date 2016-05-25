@@ -58,10 +58,22 @@ Sidebar.prototype.prepare = function (){
 };
 
 /**
+ * Set font size of sidebar
+ * @param {string} size - font size in pixel
+ */
+Sidebar.prototype.setFontSize = function(size){
+    let fontSize = size + "px";
+    this.content.css("fontSize", fontSize);
+};
+
+/**
  * Set error message to sidebar
  * @param {Object} data - Object which contains html text data to display.
  */
 Sidebar.prototype.setError = function (data){
+    // Set font size
+    this.setFontSize(data.option.fontSize);
+
     this.content.empty();
     // Please see the header comment of this file for security concern.
     this.content.append(data.single_data);
@@ -72,6 +84,9 @@ Sidebar.prototype.setError = function (data){
  * @param {Object} data - Object which contains html text data to display.
  */
 Sidebar.prototype.setSingle = function(data){
+    // Set font size
+    this.setFontSize(data.option.fontSize);
+
     this.content.empty();
     // Please see the header comment of this file for security concern.
     this.content.append(data.single_data);
@@ -95,6 +110,9 @@ Sidebar.prototype.setHistory = function (data){
             histories += "<div id='" + index + "' class='history'><div class='title'><a class='word' data-hidden='yes' data-href='" + index + "'>" + element.word + "</a><a class='remove-item' data-word='" + element.word + "'>削除</a></div><div class='data hidden'>" + element.result + "</div></div>";
         }
     });
+
+    // Set font size
+    this.setFontSize(data.option.fontSize);
 
     this.content.empty();
     // Please see the header comment of this file for security concern.
@@ -157,6 +175,10 @@ $(document).ready(function(){
 
     addon.port.on("clear", function(){
         sidebar.clearContents();
+    });
+
+    addon.port.on("set_font_size", function(size){
+        sidebar.setFontSize(size);
     });
 
     // Listen 'set' message from main script.

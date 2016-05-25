@@ -51,7 +51,7 @@ ${wrapper_id} button {
     color: rgb(85,85,85);
 }
 
-${wrapper_id} button#close-btn {
+${wrapper_id} button#eitaro-online-close-btn {
     border: 1px solid orange;
     border-radius: 4px;
     background-color: red;
@@ -62,7 +62,7 @@ ${wrapper_id} button#close-btn {
     line-height: 20px;
 }
 
-${wrapper_id} button#close-btn:hover {
+${wrapper_id} button#eitaro-online-close-btn:hover {
     background-color: orange;
     cursor: pointer;
 }

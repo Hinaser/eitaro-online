@@ -111,6 +111,12 @@
       "value": ".fukidashi"
     },
     {
+      "name": "font_size",
+      "title": "フォントサイズ(px)",
+      "type": "integer",
+      "value": 12
+    },
+    {
       "name": "clear_history",
       "type": "control",
       "label": "削除",

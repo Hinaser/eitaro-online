@@ -102,7 +102,7 @@ let context_menu_item = cm.Item(context_menu_option);
  INITIALIZE DB AND PREFS
  */
 db.open(db_default_name(prefs));
-prefs.init(frame, frame_url, db);
+prefs.init(frame, frame_url, sidebar, tooltip, db);
 
 // Variable to manage opened tab. Once a tab is opened by this script,
 // the tab will be re-used to display information. So we need to track which tab is opened by this script.

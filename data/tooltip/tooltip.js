@@ -10,14 +10,15 @@ const container_tag_id = "eitaro-online-container";
 const content_header_id = "eitaro-online-header";
 const content_tag_id = "eitaro-online";
 const style_id = "eitaro-online-style";
-const close_btn_id = "close-btn";
+const fontsize_input_id = "eitaro-online-font-size-input";
+const close_btn_id = "eitaro-online-close-btn";
 
 /**
  * Tooltip representation on Firefox Browser.
  * @constructor
  */
 const Tooltip = function(){
-
+    this.fontSize = "12px";
 };
 
 /**
@@ -104,8 +105,9 @@ Tooltip.prototype.initialize = function (){
  * @returns {jQuery} - jQuery instance of tooltip header.
  */
 Tooltip.prototype.createHeader = function (container, content){
+    const that = this;
     let header = $("<header>", {id: content_header_id});
-    let font_setting = $("<input>", {type: "number", value: "12"});
+    let font_setting = $("<input>", {id: fontsize_input_id, type: "number", value: parseInt(that.fontSize)});
     //let search_box = $("<input>", {type: "text", placeholder: "検索したいキーワード"});
     //let search_btn = $("<button>検索</button>");
     let close_btn = $(`<button id="${close_btn_id}">閉じる</button>`);
@@ -117,8 +119,8 @@ Tooltip.prototype.createHeader = function (container, content){
     header.append(close_btn);
 
     font_setting.on("keyup input", function(){
-        let font_size = font_setting.val();
-        content.css("font-size", `${font_size}px`);
+        let fontSize = font_setting.val();
+        content.css("font-size", `${fontSize}px`);
     });
 
     close_btn.on("click", function(e){
@@ -244,6 +246,12 @@ Tooltip.prototype.open = function(html, option){
 
     content.empty();
 
+    if(option.fontSize){
+        this.fontSize = option.fontSize + "px";
+        content.css("font-size", this.fontSize);
+        $(`#${fontsize_input_id}`).val(parseInt(this.fontSize));
+    }
+
     // NOTE FOR injecting dynamic html text to tooltip content.
     //
     // Dynamic html text is injected to tooltip html just the line below.
@@ -259,6 +267,20 @@ Tooltip.prototype.open = function(html, option){
     this.setPosition(container, option, false);
 
     container.show();
+};
+
+/**
+ * Set font size of content on tooltip
+ * @param {string} size - font size like "12px"
+ */
+Tooltip.prototype.setFontSize = function(size){
+    this.fontSize = size;
+
+    let content = $(`#${content_tag_id}`);
+    if(content.length > 0){
+        content.css("font-size", this.fontSize);
+        $(`#${fontsize_input_id}`).val(parseInt(this.fontSize));
+    }
 };
 
 /**
@@ -306,3 +328,9 @@ self.port.on("open", function(msg){
     tooltip.open(data.html, data.option);
 });
 
+// Set font size request by addon
+self.port.on("set_font_size", function(msg){
+    let fontSize = JSON.parse(msg).size + "px";
+
+    tooltip.setFontSize(fontSize);
+});
