@@ -46,7 +46,7 @@ let db_default_name = function(prefs){
 };
 let sidebar_default_title = "英太郎 ONLINE";
 let html_default_sanitizer = Util.sanitizeHtml;
-let frame_url = "./frame/frame.html";
+let frame_url = "./frame.html";
 let frame_option = {
     url: frame_url,
     onMessage: (e) => {
