@@ -11,6 +11,7 @@ const content_header_id = "eitaro-online-header";
 const content_tag_id = "eitaro-online";
 const style_id = "eitaro-online-style";
 const fontsize_input_id = "eitaro-online-font-size-input";
+const setting_btn_id = "eitaro-online-setting-btn";
 const close_btn_id = "eitaro-online-close-btn";
 
 /**
@@ -109,21 +110,16 @@ Tooltip.prototype.initialize = function (){
 Tooltip.prototype.createHeader = function (container, content){
     const that = this;
     let header = $("<header>", {id: content_header_id});
-    let font_setting = $("<input>", {id: fontsize_input_id, type: "number", value: parseInt(that.fontSize)});
     //let search_box = $("<input>", {type: "text", placeholder: "検索したいキーワード"});
     //let search_btn = $("<button>検索</button>");
+    let setting_btn = $(`<button id="${setting_btn_id}">${setting_button()}</button>`);
     let close_btn = $(`<button id="${close_btn_id}">${remove_button()}</button>`);
 
-    header.append("文字の大きさ ");
-    header.append(font_setting);
     //header.append(search_box);
     //header.append(search_btn);
+    header.append("<span class='title'>英太郎ONLINE</span>");
+    header.append(setting_btn);
     header.append(close_btn);
-
-    font_setting.on("keyup input", function(){
-        let fontSize = font_setting.val();
-        content.css("font-size", `${fontSize}px`);
-    });
 
     close_btn.on("click", function(e){
         container.hide();

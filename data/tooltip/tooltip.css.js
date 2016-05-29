@@ -26,6 +26,8 @@ ${wrapper_id} header {
     position: relative;
     min-width: 160px;
     background-color: gainsboro;
+    border-radius: 4px 4px 0 0;
+    height: 26px;
 }
 
 ${wrapper_id} header input {
@@ -43,23 +45,43 @@ ${wrapper_id} header input[type="text"] {
     padding: 5px;
 }
 
+${wrapper_id} header span.title {
+    position: relative;
+    top: 5px;
+}
+
+${wrapper_id} header button {
+    height: 26px;
+    width: 26px;
+    padding-top: 2px;
+    padding-left: 2px;
+}
+
+${wrapper_id} header svg {
+    width: 20px;
+    height: 20px;
+}
+
+${wrapper_id} header button#eitaro-online-setting-btn {
+    position: absolute;
+    right: 30px;
+}
+
+${wrapper_id} header button#eitaro-online-setting-btn:hover {
+    cursor: pointer;
+    background-color: #999;
+    border: 1px solid: #222;
+}
+
 ${wrapper_id} header button#eitaro-online-close-btn {
     position: absolute;
     right: 0px;
-    padding-top: 2px;
-    height: 26px;
-    width: 26px;
 }
 
 ${wrapper_id} header button#eitaro-online-close-btn:hover {
     cursor: pointer;
     background-color: #999;
     border: 1px solid: #222;
-}
-
-${wrapper_id} header svg#remove-button {
-    width: 20px;
-    height: 20px;
 }
 
 ${wrapper_id} header svg#remove-button path {
