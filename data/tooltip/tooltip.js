@@ -15,8 +15,8 @@ const setting_btn_id = "eitaro-online-setting-btn";
 const close_btn_id = "eitaro-online-close-btn";
 
 // Minimum width/height of tooltip
-let min_width = 250;
-let min_height = 250;
+let min_width = 150;
+let min_height = 100;
 
 // Size of resizing edge of tooltip 
 let resize_edge_size = "15px";
@@ -91,19 +91,32 @@ Tooltip.prototype.initialize = function (){
     container.draggable({
         handle: "header",
         stop: function(event, ui){
+            // Prevent container header to be out of window
             ["top", "right", "bottom", "left"].forEach(function(el, i, arr){
                 if(parseInt(container.css(el)) < 0){
-                    container.css(el, "0");
+                    container.css(el, "0px");
                 }
             });
 
-            const currentPosition = {
-                top: parseInt(container.css("top")),
-                right: parseInt(container.css("right")),
-                bottom: parseInt(container.css("bottom")),
-                left: parseInt(container.css("left"))
+            // Prevent container header to be too bottom where header cannot be draggable.
+            if(container.css("position") === "fixed" && parseInt(container.css("top")) >= ($(window).height() - 30 - min_height)){
+                container.css("top", ($(window).height() - 30 - min_height) + "px");
+            }
+
+            // Prevent container header to be off to right edge of window where header cannot be draggable.
+            if(container.css("position") === "fixed" && parseInt(container.css("left")) >= ($(window).width() - min_width)){
+                container.css("left", ($(window).width() - min_width) + "px");
+            }
+
+            const currentRect = {
+                top: parseInt(container.css("top")) || 0, // When container.css("top") is `auto`, then parseInt(container.css("top")) will be null. I want to set 0 instead of null here.
+                right: parseInt(container.css("right")) || 0,
+                bottom: parseInt(container.css("bottom")) || 0,
+                left: parseInt(container.css("left")) || 0,
+                width: container.width(),
+                height: container.height()
             };
-            sendMessage("moved", currentPosition);
+            sendMessage("moved", currentRect);
         }
     });
     container.resizable({
@@ -115,21 +128,40 @@ Tooltip.prototype.initialize = function (){
                 container.height($(window).height());
             }
 
-            content.height(container.height() - 20);
-            content.width(container.width());
+            if(container.height() < min_height){
+                container.height(min_height);
+            }
 
-            const currentPanelSize = {
-                width: content.width(),
-                height: content.height()
+            const window_width = $(window).width();
+            const is_fixed_panel_too_wide = (container.css("position") === "fixed" && container.width() > window_width);
+            if(is_fixed_panel_too_wide){
+                container.width($(window).width());
+            }
+
+            if(container.width() < min_width){
+                container.width(min_width);
+            }
+
+            // TODO Is this necessary?
+            //content.height(container.height() - 30);
+            //content.width(container.width());
+
+            const currentRect = {
+                top: parseInt(container.css("top")),
+                right: parseInt(container.css("right")),
+                bottom: parseInt(container.css("bottom")),
+                left: parseInt(container.css("left")),
+                width: container.width(),
+                height: container.height()
             };
-            sendMessage("resized", currentPanelSize);
+            sendMessage("resized", currentRect);
         }
     });
 
     content.css({
         overflow: "auto",
         width: "100%",
-        height: "100%"
+        height: "calc(100% - 11px)"
     });
 
     header.appendTo(container);
@@ -156,6 +188,10 @@ Tooltip.prototype.createHeader = function (container, content){
     header.append("<span class='title'>英太郎ONLINE</span>");
     header.append(setting_btn);
     header.append(close_btn);
+
+    setting_btn.on("click", function(e){
+        alert("すいません、まだここの処理作ってません。。");
+    });
 
     close_btn.on("click", function(e){
         container.hide();
@@ -220,26 +256,35 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
         };
 
         if(option.use_last_position && option.last_position){
-            ["top", "right", "bottom", "left", "width", "height"].forEach(function(el, i, arr){
+            // Ignore right/bottom position value since its intervene with width/height.
+            ["top", /*"right", "bottom",*/ "left", "width", "height"].forEach(function(el, i, arr){
                 if(el === "width"){
-                    if(option.position[el] >= min_width) {
-                        style[el] = option.position[el] + "px";
+                    let window_width = $(window).width();
+                    if(min_width <= option.last_position[el] && option.last_position[el] <= window_width) {
+                        style[el] = option.last_position[el] + "px";
+                    }
+                    else if(option.last_position[el] > window_width){
+                        style[el] = window_width + "px";
                     }
                     else{
                         style[el] = min_width + "px";
                     }
                 }
                 else if(el === "height"){
-                    if(option.position[el] >= min_height) {
-                        style[el] = option.position[el] + "px";
+                    let window_height = $(window).height();
+                    if(min_height <= option.last_position[el] && option.last_position[el] <= window_height) {
+                        style[el] = option.last_position[el] + "px";
+                    }
+                    else if(option.last_position[el] > window_height){
+                        style[el] = window_height + "px";
                     }
                     else{
                         style[el] = min_height + "px";
                     }
                 }
                 else{
-                    if(option.position[el] >= 0) {
-                        style[el] = option.position[el] + "px";
+                    if(option.last_position[el] >= 0) {
+                        style[el] = option.last_position[el] + "px";
                     }
                 }
             });
@@ -422,7 +467,7 @@ function trimContent(content, useSelectionPosition) {
     }
 
     // Check width as well
-    const max_content_width_per_window = 0.7;
+    const max_content_width_per_window = 1.0;
     const window_width = $(window).width();
     const content_width = content.width();
     if(content.width() > window_width * max_content_width_per_window){

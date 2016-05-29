@@ -30,6 +30,10 @@ ${wrapper_id} header {
     height: 26px;
 }
 
+${wrapper_id} header {
+    cursor: move;
+}
+
 ${wrapper_id} header input {
     border: 1px solid #DDD;
     border-radius: 4px;
@@ -48,6 +52,10 @@ ${wrapper_id} header input[type="text"] {
 ${wrapper_id} header span.title {
     position: relative;
     top: 5px;
+}
+
+${wrapper_id} header span.title:hover {
+    cursor: move;
 }
 
 ${wrapper_id} header button {
