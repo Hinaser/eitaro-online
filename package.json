@@ -1,7 +1,7 @@
 {
   "title": "英太郎ONLINE",
   "name": "eitaro_online",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "詳しくは https://github.com/Hinaser/eitaro-online/wiki をご確認ください。【注意】アドオン使用前に本アドオンの設定画面より「サービスURL」にちゃんとしたURLを入力しなおす作業が必要です。",
   "main": "main.js",
   "author": "Hinase",
