@@ -18,6 +18,9 @@ const close_btn_id = "eitaro-online-close-btn";
 let min_width = 150;
 let min_height = 150;
 
+// Size of resizing edge of tooltip 
+let resize_edge_size = "15px";
+
 /**
  * Tooltip representation on Firefox Browser.
  * @constructor
@@ -336,6 +339,13 @@ Tooltip.prototype.open = function(html, option){
             }
         });
     }
+
+    // Increase edge size which user can grab to resize
+    $(`#${wrapper_tag_id} .ui-resizable-n`).css("height", "10px"); // Top edge size is set here because if large value is set, dragging will not work.
+    $(`#${wrapper_tag_id} .ui-resizable-s`).css("height", resize_edge_size);
+    $(`#${wrapper_tag_id} .ui-resizable-e`).css("width", resize_edge_size);
+    $(`#${wrapper_tag_id} .ui-resizable-w`).css("width", resize_edge_size);
+    $(`#${wrapper_tag_id} .ui-resizable-se`).css({height: resize_edge_size, width: resize_edge_size});
 
     container.show();
 };
