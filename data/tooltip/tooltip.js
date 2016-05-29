@@ -80,7 +80,9 @@ Tooltip.prototype.initialize = function (){
     let content = $("<div>", {id: content_tag_id});
     let header = this.createHeader(container, content);
 
-    container.draggable();
+    container.draggable({
+        handle: "header"
+    });
     container.resizable();
 
     container.on("resize", function(){
@@ -110,7 +112,7 @@ Tooltip.prototype.createHeader = function (container, content){
     let font_setting = $("<input>", {id: fontsize_input_id, type: "number", value: parseInt(that.fontSize)});
     //let search_box = $("<input>", {type: "text", placeholder: "検索したいキーワード"});
     //let search_btn = $("<button>検索</button>");
-    let close_btn = $(`<button id="${close_btn_id}">閉じる</button>`);
+    let close_btn = $(`<button id="${close_btn_id}">${remove_button()}</button>`);
 
     header.append("文字の大きさ ");
     header.append(font_setting);
