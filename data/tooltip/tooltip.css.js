@@ -99,5 +99,22 @@ ${wrapper_id} header input[type="number"] + input[type="text"] {
 ${wrapper_id} header input[type="text"] + button {
     margin-left: 10px;
 }
+
+/* CSS styles for jQuery UI Resizable to expand resize draggable edge */
+// handle on the bottom
+${wrapper_id} .ui-resizable-s {
+    height: 10px;
+}
+
+// handle on the right
+${wrapper_id} .ui-resizable-e {
+    width: 10px;
+}
+
+// handle icon (corner)
+${wrapper_id} .ui-resizable-se {
+    width: 10px;
+    height: 10px;
+}
 `;
 };

@@ -84,10 +84,19 @@ Tooltip.prototype.initialize = function (){
     container.draggable({
         handle: "header"
     });
-    container.resizable();
+    container.resizable({
+        handles: "n, e, s, w"
+    });
 
     container.on("resize", function(){
-        content.height(container.height() - 45);
+        const window_height = $(window).height();
+        const is_fixed_panel_too_tall = (container.css("position") === "fixed" && container.height() > window_height);
+        if(is_fixed_panel_too_tall){
+            container.height($(window).height());
+        }
+
+        content.height(container.height() - 20);
+        content.width(container.width());
     });
 
     content.css({
@@ -264,6 +273,9 @@ Tooltip.prototype.open = function(html, option){
 
     this.setPosition(container, option, false);
 
+    // Trim content width/height if they are over their maximum values.
+    trimContent(content, isTextSelected() && option.show_near_selection);
+
     container.show();
 };
 
@@ -298,6 +310,38 @@ function getSelectionLocation(){
 function isTextSelected(){
     let selection = window.getSelection();
     return !selection.isCollapsed;
+}
+
+/**
+ * Check if content's height/width exceeds max limit.
+ * If exceeding, set height/width back to its maximum limit size.
+ * @param {jQuery} content - jQuery object which has search result content
+ * @param {boolean} useSelectionPosition - If panel position is being set to near text selection
+ */
+function trimContent(content, useSelectionPosition) {
+    // Check if height exceeds max height.
+    // If exceeding, set the height back to max limit
+    const window_height = $(window).height();
+    const content_height = content.height();
+    if(content.height() > window_height){
+        if(useSelectionPosition){
+            let location_of_selection = getSelectionLocation();
+            if(location_of_selection.top + 20 + content_height > window_height){
+                content.height(window_height - (location_of_selection.top + 20) - 50);
+            }
+        }
+        else {
+            content.height(window_height - 50);
+        }
+    }
+
+    // Check width as well
+    const max_content_width_per_window = 0.7;
+    const window_width = $(window).width();
+    const content_width = content.width();
+    if(content.width() > window_width * max_content_width_per_window){
+        content.width(window_width * max_content_width_per_window);
+    }
 }
 
 
