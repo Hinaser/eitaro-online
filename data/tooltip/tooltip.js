@@ -15,8 +15,8 @@ const setting_btn_id = "eitaro-online-setting-btn";
 const close_btn_id = "eitaro-online-close-btn";
 
 // Minimum width/height of tooltip
-let min_width = 150;
-let min_height = 150;
+let min_width = 250;
+let min_height = 250;
 
 // Size of resizing edge of tooltip 
 let resize_edge_size = "15px";
@@ -188,31 +188,38 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
             position: "fixed"
         };
 
-        if(!option.position || option.position == "center"){
-            style["top"] = $(window).height() / 2 - container.height() / 2;
-            style["left"] = $(window).width() / 2 - container.width() / 2;
-        }
-        else if(typeof(option.position) === "string"){
-            switch(option.position){
-                case "top-left":
-                    style["top"] = 0;
-                    style["left"] = 0;
-                    break;
-                case "top-right":
-                    style["top"] = 0;
-                    style["right"] = 0;
-                    break;
-                case "bottom-left":
-                    style["bottom"] = 0;
-                    style["left"] = 0;
-                    break;
-                case "bottom-right":
-                    style["bottom"] = 0;
-                    style["right"] = 0;
-                    break;
+        /**
+         * set position/width/height according to position string
+         * like 'top-left', 'bottom-right', 'top-right', 'bottom-left'.
+         */
+        const set_position_by_location_string = function(){
+            if(!option.position || option.position == "center"){
+                style["top"] = $(window).height() / 2 - container.height() / 2;
+                style["left"] = $(window).width() / 2 - container.width() / 2;
             }
-        }
-        else if(typeof(option.position) === "object"){
+            else {
+                switch(option.position){
+                    case "top-left":
+                        style["top"] = 0;
+                        style["left"] = 0;
+                        break;
+                    case "top-right":
+                        style["top"] = 0;
+                        style["right"] = 0;
+                        break;
+                    case "bottom-left":
+                        style["bottom"] = 0;
+                        style["left"] = 0;
+                        break;
+                    case "bottom-right":
+                        style["bottom"] = 0;
+                        style["right"] = 0;
+                        break;
+                }
+            }
+        };
+
+        if(option.use_last_position && option.last_position){
             ["top", "right", "bottom", "left", "width", "height"].forEach(function(el, i, arr){
                 if(el === "width"){
                     if(option.position[el] >= min_width) {
@@ -236,7 +243,15 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
                     }
                 }
             });
+
+            if((!style["top"] && !style["bottom"]) || (!style["right"] && !style["left"])){
+                set_position_by_location_string();
+            }
         }
+        else{
+            set_position_by_location_string();
+        }
+
     }
 
     if(isPrepare){
