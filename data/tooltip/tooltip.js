@@ -14,6 +14,10 @@ const fontsize_input_id = "eitaro-online-font-size-input";
 const setting_btn_id = "eitaro-online-setting-btn";
 const close_btn_id = "eitaro-online-close-btn";
 
+// Minimum width/height of tooltip
+let min_width = 150;
+let min_height = 150;
+
 /**
  * Tooltip representation on Firefox Browser.
  * @constructor
@@ -82,21 +86,41 @@ Tooltip.prototype.initialize = function (){
     let header = this.createHeader(container, content);
 
     container.draggable({
-        handle: "header"
+        handle: "header",
+        stop: function(event, ui){
+            ["top", "right", "bottom", "left"].forEach(function(el, i, arr){
+                if(parseInt(container.css(el)) < 0){
+                    container.css(el, "0");
+                }
+            });
+
+            const currentPosition = {
+                top: parseInt(container.css("top")),
+                right: parseInt(container.css("right")),
+                bottom: parseInt(container.css("bottom")),
+                left: parseInt(container.css("left"))
+            };
+            sendMessage("moved", currentPosition);
+        }
     });
     container.resizable({
-        handles: "n, e, s, w"
-    });
+        handles: "n, e, s, w",
+        stop: function(event, ui){
+            const window_height = $(window).height();
+            const is_fixed_panel_too_tall = (container.css("position") === "fixed" && container.height() > window_height);
+            if(is_fixed_panel_too_tall){
+                container.height($(window).height());
+            }
 
-    container.on("resize", function(){
-        const window_height = $(window).height();
-        const is_fixed_panel_too_tall = (container.css("position") === "fixed" && container.height() > window_height);
-        if(is_fixed_panel_too_tall){
-            container.height($(window).height());
+            content.height(container.height() - 20);
+            content.width(container.width());
+
+            const currentPanelSize = {
+                width: content.width(),
+                height: content.height()
+            };
+            sendMessage("resized", currentPanelSize);
         }
-
-        content.height(container.height() - 20);
-        content.width(container.width());
     });
 
     content.css({
@@ -165,7 +189,7 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
             style["top"] = $(window).height() / 2 - container.height() / 2;
             style["left"] = $(window).width() / 2 - container.width() / 2;
         }
-        else{
+        else if(typeof(option.position) === "string"){
             switch(option.position){
                 case "top-left":
                     style["top"] = 0;
@@ -184,6 +208,33 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
                     style["right"] = 0;
                     break;
             }
+        }
+        else if(typeof(option.position) === "object"){
+            ["top", "right", "bottom", "left", "width", "height"].forEach(function(el, i, arr){
+                if(el === "width"){
+                    if(option.position[el] >= min_width) {
+                        style[el] = option.position[el] + "px";
+                    }
+                    else{
+                        style[el] = min_width + "px";
+                    }
+                }
+                else if(el === "height"){
+                    if(option.position[el] >= min_height) {
+                        style[el] = option.position[el] + "px";
+                    }
+                    else{
+                        style[el] = min_height + "px";
+                    }
+                }
+                else{
+                    if(option.position[el] >= 0) {
+                        style[el] = option.position[el] + "px";
+                    }
+                }
+            });
+            console.log(style);
+            console.log(option);
         }
     }
 
@@ -342,6 +393,15 @@ function trimContent(content, useSelectionPosition) {
     if(content.width() > window_width * max_content_width_per_window){
         content.width(window_width * max_content_width_per_window);
     }
+}
+
+/**
+ * Send message to addon script
+ * @param {string} type - type of message
+ * @param {*} data - data to be sent to addon
+ */
+function sendMessage(type, data){
+    self.port.emit(type, JSON.stringify(data));
 }
 
 

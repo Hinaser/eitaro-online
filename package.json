@@ -86,6 +86,54 @@
       "value": true
     },
     {
+      "name": "remember_latest_panel_position_and_size",
+      "title": "パネルの最後の表示位置およびサイズを記憶する",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "panel_position_top",
+      "value": -1,
+      "title": "パネル位置(上から)",
+      "type": "integer",
+      "hidden": true
+    },
+    {
+      "name": "panel_position_right",
+      "value": -1,
+      "title": "パネル位置(右から)",
+      "type": "integer",
+      "hidden": true
+    },
+    {
+      "name": "panel_position_bottom",
+      "value": -1,
+      "title": "パネル位置(下から)",
+      "type": "integer",
+      "hidden": true
+    },
+    {
+      "name": "panel_position_left",
+      "value": -1,
+      "title": "パネル位置(左から)",
+      "type": "integer",
+      "hidden": true
+    },
+    {
+      "name": "panel_width",
+      "value": -1,
+      "title": "パネル幅",
+      "type": "integer",
+      "hidden": true
+    },
+    {
+      "name": "panel_height",
+      "value": -1,
+      "title": "パネル高さ",
+      "type": "integer",
+      "hidden": true
+    },
+    {
       "name": "service_name",
       "title": "サービス名",
       "type": "string",
