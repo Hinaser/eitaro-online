@@ -107,7 +107,7 @@ Tooltip.prototype.initialize = function (){
         }
     });
     container.resizable({
-        handles: "n, e, s, w",
+        handles: "n, e, s, w, se",
         stop: function(event, ui){
             const window_height = $(window).height();
             const is_fixed_panel_too_tall = (container.css("position") === "fixed" && container.height() > window_height);
