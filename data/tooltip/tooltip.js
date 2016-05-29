@@ -233,8 +233,6 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
                     }
                 }
             });
-            console.log(style);
-            console.log(option);
         }
     }
 
@@ -296,7 +294,7 @@ Tooltip.prototype.prepare = function(option){
  * @property {string} position - "top-left", "bottom-right" and like so on.
  */
 Tooltip.prototype.open = function(html, option){
-    this.initialize();
+    this.initialize(option);
 
     let wrapper = $("#" + wrapper_tag_id);
     let container = $("#" + container_tag_id);
@@ -322,10 +320,22 @@ Tooltip.prototype.open = function(html, option){
     // For additional sanitizing process, please see lib/tooltip.js.
     content.prepend(html);
 
+    // Set panel position with regarding to user configuration
     this.setPosition(container, option, false);
 
     // Trim content width/height if they are over their maximum values.
     trimContent(content, isTextSelected() && option.show_near_selection);
+
+    // Set dismissible if user configures to do so
+    if(option.dismiss_when_outside_clicked){
+        $(document).on('mouseup', function(e){
+            if(!container.is(e.target) && container.has(e.target).length === 0){
+                if(container.is(":visible")){
+                    container.hide();
+                }
+            }
+        });
+    }
 
     container.show();
 };

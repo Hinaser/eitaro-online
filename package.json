@@ -92,6 +92,12 @@
       "value": true
     },
     {
+      "name": "dismiss_panel_when_outside_area_is_clicked",
+      "title": "パネル外をクリックした時にパネルを消すようにする",
+      "type": "bool",
+      "value": false
+    },
+    {
       "name": "panel_position_top",
       "value": -1,
       "title": "パネル位置(上から)",
