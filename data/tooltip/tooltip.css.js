@@ -55,6 +55,7 @@ ${wrapper_id} header button {
     width: 26px;
     padding-top: 2px;
     padding-left: 2px;
+    box-sizing: border-box;
 }
 
 ${wrapper_id} header svg {
@@ -64,24 +65,24 @@ ${wrapper_id} header svg {
 
 ${wrapper_id} header button#eitaro-online-setting-btn {
     position: absolute;
-    right: 30px;
+    right: 42px;
 }
 
 ${wrapper_id} header button#eitaro-online-setting-btn:hover {
+    background-color: #66eeff;
+    border: 1px solid #00aaff;
     cursor: pointer;
-    background-color: #999;
-    border: 1px solid: #222;
 }
 
 ${wrapper_id} header button#eitaro-online-close-btn {
     position: absolute;
-    right: 0px;
+    right: 12px;
 }
 
 ${wrapper_id} header button#eitaro-online-close-btn:hover {
+    background-color: #66eeff;
+    border: 1px solid #00aaff;
     cursor: pointer;
-    background-color: #999;
-    border: 1px solid: #222;
 }
 
 ${wrapper_id} header svg#remove-button path {
