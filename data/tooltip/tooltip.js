@@ -299,6 +299,7 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
 
     }
 
+    // As to preparing panel, always show it on center
     if(isPrepare){
         let additional_style = {
             border: "1px solid gray",
@@ -315,6 +316,24 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
         }
 
         $.extend(style, additional_style);
+    }
+
+    // Correct if position is off the window
+    // Prevent container header to be too bottom where header cannot be draggable.
+    if(style["position"] === "fixed"){
+        ["top", "right", "bottom", "left"].forEach(function(el, i, arr){
+            if(parseInt(style[el]) < 0){
+                style[el] = "0px";
+            }
+        });
+
+        if(parseInt(style["top"]) >= ($(window).height() - 30 - min_height)){
+            style["top"] = ($(window).height() - 30 - min_height) + "px";
+        }
+        // Prevent container header to be off to right edge of window where header cannot be draggable.
+        if(parseInt(style["left"]) >= ($(window).width() - min_width)){
+            style["left"] = ($(window).width() - min_width) + "px";
+        }
     }
 
     container.css(style);
