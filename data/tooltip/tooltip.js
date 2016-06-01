@@ -91,6 +91,11 @@ Tooltip.prototype.initialize = function (){
     container.draggable({
         handle: "header",
         stop: function(event, ui){
+            // When position:absolute, do not remember panel position since it is relative to document, not window.
+            if(container.css("position") !== "fixed"){
+                return;
+            }
+
             // Prevent container header to be out of window
             ["top", "right", "bottom", "left"].forEach(function(el, i, arr){
                 if(parseInt(container.css(el)) < 0){
@@ -99,12 +104,12 @@ Tooltip.prototype.initialize = function (){
             });
 
             // Prevent container header to be too bottom where header cannot be draggable.
-            if(container.css("position") === "fixed" && parseInt(container.css("top")) >= ($(window).height() - 30 - min_height)){
+            if(parseInt(container.css("top")) >= ($(window).height() - 30 - min_height)){
                 container.css("top", ($(window).height() - 30 - min_height) + "px");
             }
 
             // Prevent container header to be off to right edge of window where header cannot be draggable.
-            if(container.css("position") === "fixed" && parseInt(container.css("left")) >= ($(window).width() - min_width)){
+            if(parseInt(container.css("left")) >= ($(window).width() - min_width)){
                 container.css("left", ($(window).width() - min_width) + "px");
             }
 
@@ -218,6 +223,32 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
             top: location_of_selection.top + 20 + window.scrollY,
             left: location_of_selection.left + 20 + window.scrollX
         };
+
+        if(option.use_last_position && option.last_position){
+            // Set previous width
+            let window_width = $(window).width();
+            if (min_width <= option.last_position["width"] && option.last_position["width"] <= window_width) {
+                style["width"] = option.last_position["width"] + "px";
+            }
+            else if (option.last_position["width"] > window_width) {
+                style["width"] = window_width + "px";
+            }
+            else {
+                style["width"] = min_width + "px";
+            }
+
+            // Set previous height
+            let window_height = $(window).height();
+            if (min_height <= option.last_position["height"] && option.last_position["height"] <= window_height) {
+                style["height"] = option.last_position["height"] + "px";
+            }
+            else if (option.last_position["height"] > window_height) {
+                style["height"] = window_height + "px";
+            }
+            else {
+                style["height"] = min_height + "px";
+            }
+        }
     }
     else{
         style = {
@@ -318,7 +349,7 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
         $.extend(style, additional_style);
     }
 
-    // Correct if position is off the window
+    // Correct position if it is off the window
     // Prevent container header to be too bottom where header cannot be draggable.
     if(style["position"] === "fixed"){
         ["top", "right", "bottom", "left"].forEach(function(el, i, arr){
