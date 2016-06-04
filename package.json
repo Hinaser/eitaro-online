@@ -80,12 +80,6 @@
       "value": "bottom-right"
     },
     {
-      "name": "show_panel_near_selection",
-      "title": "選択したテキストの右クリック検索結果はその選択テキスト付近に表示する。",
-      "type": "bool",
-      "value": true
-    },
-    {
       "name": "remember_latest_panel_position",
       "title": "パネルの最後の表示位置を記憶する",
       "type": "bool",
@@ -94,6 +88,18 @@
     {
       "name": "remember_latest_panel_size",
       "title": "パネルの最後のサイズを記憶する",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "show_panel_near_selection",
+      "title": "パネルを選択されたテキスト付近に表示する。(テキストが選択されている場合のみ)",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "auto_sizing_panel_for_selection",
+      "title": "パネルサイズを自動調節する。(パネルを選択したテキスト付近に表示する場合のみ)",
       "type": "bool",
       "value": true
     },

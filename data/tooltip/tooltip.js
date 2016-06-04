@@ -322,7 +322,7 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
 Tooltip.prototype.setSize = function (container, option, isPrepare=false){
     let style = {};
 
-    if(option.use_last_size && option.last_size){
+    if(option.use_last_size && option.last_size && !(option.show_near_selection && option.auto_sizing_panel_for_selection)){
         // Set previous width
         let window_width = $(window).width();
         if (min_width <= option.last_size["width"] && option.last_size["width"] <= window_width) {
