@@ -214,58 +214,28 @@ Tooltip.prototype.createHeader = function (container, content){
  * @param {boolean=false} isPrepare - Indicates whether position being set is for loading animation.
  */
 Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
-    let style;
+    let style = {};
 
     if(isTextSelected() && option.show_near_selection){
-        let location_of_selection = getSelectionLocation();
-        style = {
-            position: "absolute",
-            top: location_of_selection.top + 20 + window.scrollY,
-            left: location_of_selection.left + 20 + window.scrollX
-        };
-
-        if(option.use_last_position && option.last_position){
-            // Set previous width
-            let window_width = $(window).width();
-            if (min_width <= option.last_position["width"] && option.last_position["width"] <= window_width) {
-                style["width"] = option.last_position["width"] + "px";
-            }
-            else if (option.last_position["width"] > window_width) {
-                style["width"] = window_width + "px";
-            }
-            else {
-                style["width"] = min_width + "px";
-            }
-
-            // Set previous height
-            let window_height = $(window).height();
-            if (min_height <= option.last_position["height"] && option.last_position["height"] <= window_height) {
-                style["height"] = option.last_position["height"] + "px";
-            }
-            else if (option.last_position["height"] > window_height) {
-                style["height"] = window_height + "px";
-            }
-            else {
-                style["height"] = min_height + "px";
-            }
-        }
+        const location_of_selection = getSelectionLocation();
+        style["position"] = "absolute";
+        style["top"] = location_of_selection.top + 20 + window.scrollY;
+        style["left"] = location_of_selection.left + 20 + window.scrollX;
     }
-    else{
-        style = {
-            position: "fixed"
-        };
+    else {
+        style["position"] = "fixed";
 
         /**
          * set position/width/height according to position string
          * like 'top-left', 'bottom-right', 'top-right', 'bottom-left'.
          */
-        const set_position_by_location_string = function(){
-            if(!option.position || option.position == "center"){
+        const set_position_by_location_string = function () {
+            if (!option.position || option.position === "center") {
                 style["top"] = $(window).height() / 2 - container.height() / 2;
                 style["left"] = $(window).width() / 2 - container.width() / 2;
             }
             else {
-                switch(option.position){
+                switch (option.position) {
                     case "top-left":
                         style["top"] = 0;
                         style["left"] = 0;
@@ -286,59 +256,30 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
             }
         };
 
-        if(option.use_last_position && option.last_position){
+        if (option.use_last_position && option.last_position) {
             // Ignore right/bottom position value since its intervene with width/height.
-            ["top", /*"right", "bottom",*/ "left", "width", "height"].forEach(function(el, i, arr){
-                if(el === "width"){
-                    let window_width = $(window).width();
-                    if(min_width <= option.last_position[el] && option.last_position[el] <= window_width) {
-                        style[el] = option.last_position[el] + "px";
-                    }
-                    else if(option.last_position[el] > window_width){
-                        style[el] = window_width + "px";
-                    }
-                    else{
-                        style[el] = min_width + "px";
-                    }
-                }
-                else if(el === "height"){
-                    let window_height = $(window).height();
-                    if(min_height <= option.last_position[el] && option.last_position[el] <= window_height) {
-                        style[el] = option.last_position[el] + "px";
-                    }
-                    else if(option.last_position[el] > window_height){
-                        style[el] = window_height + "px";
-                    }
-                    else{
-                        style[el] = min_height + "px";
-                    }
-                }
-                else{
-                    if(option.last_position[el] >= 0) {
-                        style[el] = option.last_position[el] + "px";
-                    }
+            ["top", /*"right", "bottom",*/ "left"].forEach(function (el, i, arr) {
+                if (option.last_position[el] >= 0) {
+                    style[el] = option.last_position[el] + "px";
                 }
             });
 
-            if((!style["top"] && !style["bottom"]) || (!style["right"] && !style["left"])){
+            if ((!style["top"] && !style["bottom"]) || (!style["right"] && !style["left"])) {
                 set_position_by_location_string();
             }
         }
-        else{
+        else {
             set_position_by_location_string();
         }
-
     }
-
+        
     // As to preparing panel, always show it on center
     if(isPrepare){
         let additional_style = {
-            border: "1px solid gray",
+            border: "1px solid #d8d8d8",
             borderRadius: 4,
-            width: "48px",
-            height: "48px",
             zIndex: 100000,
-            backgroundColor: "rgba(255,255,255,0.9)"
+            backgroundColor: "#f6f6f6"
         };
 
         if(!(isTextSelected() && option.show_near_selection)){
@@ -371,6 +312,56 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
 };
 
 /**
+ * Set tooltip element width on web page in a context of user configuration/environment.
+ * @param {jQuery} container - jQuery instance of a div of direct descendant of tooltip's wrapper element.
+ * @param {Object}option - Contains configuration to specify tooltip's position on a web page, which may derive from addon's preference page.
+ * @property {boolean} show_near_selection - Whether tooltip should appear near the text selection.
+ * @property {Object} last_size - Contains width/height in each of last_size.width, last_size.height
+ * @param {boolean=false} isPrepare - Indicates whether position being set is for loading animation.
+ */
+Tooltip.prototype.setSize = function (container, option, isPrepare=false){
+    let style = {};
+
+    if(option.use_last_size && option.last_size){
+        // Set previous width
+        let window_width = $(window).width();
+        if (min_width <= option.last_size["width"] && option.last_size["width"] <= window_width) {
+            style["width"] = option.last_size["width"] + "px";
+        }
+        else if (option.last_size["width"] > window_width) {
+            style["width"] = window_width + "px";
+        }
+        else {
+            style["width"] = min_width + "px";
+        }
+
+        // Set previous height
+        let window_height = $(window).height();
+        if (min_height <= option.last_size["height"] && option.last_size["height"] <= window_height) {
+            style["height"] = option.last_size["height"] + "px";
+        }
+        else if (option.last_size["height"] > window_height) {
+            style["height"] = window_height + "px";
+        }
+        else {
+            style["height"] = min_height + "px";
+        }
+    }
+
+    // As to preparing panel, always show it on center
+    if(isPrepare){
+        let additional_style = {
+            width: "48px",
+            height: "48px"
+        };
+
+        $.extend(style, additional_style);
+    }
+
+    container.css(style);
+};
+
+/**
  * Show loading animation on tooltip.
  * Loading will be end when actual search result html data arrives from addon.
  * @param {Object} option - Indicating where to set tooltip in window.
@@ -395,6 +386,7 @@ Tooltip.prototype.prepare = function(option){
     wrapper.append(container);
 
     this.setPosition(container, option, true);
+    this.setSize(container, option, true);
 
     container.draggable();
 };
@@ -435,6 +427,9 @@ Tooltip.prototype.open = function(html, option){
 
     // Set panel position with regarding to user configuration
     this.setPosition(container, option, false);
+
+    // Set panel size with regarding to user configuration
+    this.setSize(container, option, false);
 
     // Trim content width/height if they are over their maximum values.
     trimContent(content, isTextSelected() && option.show_near_selection);

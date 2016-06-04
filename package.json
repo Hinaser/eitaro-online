@@ -86,8 +86,14 @@
       "value": true
     },
     {
-      "name": "remember_latest_panel_position_and_size",
-      "title": "パネルの最後の表示位置およびサイズを記憶する",
+      "name": "remember_latest_panel_position",
+      "title": "パネルの最後の表示位置を記憶する",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "remember_latest_panel_size",
+      "title": "パネルの最後のサイズを記憶する",
       "type": "bool",
       "value": true
     },
