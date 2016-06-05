@@ -2,13 +2,14 @@ const tooltip_css = function(wrapper_id) {
     return `
 ${wrapper_id} {
     font-size: 12px;
+    font-family: sans-serif;
 }
 
 ${wrapper_id} > div {
     position: absolute;
     z-index: 1000000;
     background-color: rgba(255,255,255,1);
-    border: 2px solid gray;
+    border: 1px solid #d8d8d8;
     border-radius: 4px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
     padding: 15px 12px 12px 15px;
@@ -21,11 +22,11 @@ ${wrapper_id} > div {
 ${wrapper_id} header {
     margin: -15px -12px 5px -15px;
     padding: 0 5px 0 5px;
-    border-bottom: 2px solid gray;
+    border-bottom: 1px solid #d8d8d8;
     font-family: cursive;
     position: relative;
     min-width: 160px;
-    background-color: gainsboro;
+    background-color: #f6f6f6;
     border-radius: 4px 4px 0 0;
     height: 26px;
 }

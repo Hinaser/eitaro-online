@@ -227,8 +227,8 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
     if(isTextSelected() && option.show_near_selection){
         const location_of_selection = getSelectionLocation();
         style["position"] = "absolute";
-        style["top"] = location_of_selection.top + 20 + window.scrollY;
-        style["left"] = location_of_selection.left + 20 + window.scrollX;
+        style["top"] = location_of_selection.bottom + 10 + window.scrollY;
+        style["left"] = location_of_selection.left + 10 + window.scrollX;
     }
     else {
         style["position"] = "fixed";
@@ -426,8 +426,9 @@ Tooltip.prototype.suggest = function(search_keyword){
     const location_of_selection = getSelectionLocation();
     let style = {};
     style["position"] = "absolute";
-    style["top"] = location_of_selection.top + 20 + window.scrollY;
-    style["left"] = location_of_selection.left + 20 + window.scrollX;
+    style["top"] = location_of_selection.bottom + 10 + window.scrollY;
+    style["left"] = location_of_selection.left + 10 + window.scrollX;
+    style["z-index"] = 10000;
     style["border"] = "none";
 
     container.css(style);
