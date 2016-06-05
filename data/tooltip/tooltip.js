@@ -422,16 +422,17 @@ Tooltip.prototype.suggest = function(search_keyword){
     container.append(button);
     wrapper.append(container);
 
-    // Set position of button
+    // Set style and position of button
     const location_of_selection = getSelectionLocation();
-    let style = {};
-    style["position"] = "absolute";
-    style["top"] = location_of_selection.bottom + 10 + window.scrollY;
-    style["left"] = location_of_selection.left + 10 + window.scrollX;
-    style["z-index"] = 10000;
-    style["border"] = "none";
-
-    container.css(style);
+    let container_style = {}, button_style = {};
+    container_style["position"] = "absolute";
+    container_style["top"] = location_of_selection.bottom + 10 + window.scrollY;
+    container_style["left"] = location_of_selection.left + 10 + window.scrollX;
+    container_style["z-index"] = 10000;
+    container_style["border"] = "none";
+    button_style["cursor"] = "pointer";
+    container.css(container_style);
+    button.css(button_style);
 
     // When button is clicked, execute search
     button.on('mouseup', function(e){
