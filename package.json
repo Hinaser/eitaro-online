@@ -186,7 +186,7 @@
       "name": "service_deselector",
       "title": "サービスデセレクター (検索結果から除外する子要素)",
       "type": "string",
-      "value": ".fukidashi,tango"
+      "value": ".fukidashi,.tango"
     },
     {
       "name": "font_size",
