@@ -43,7 +43,7 @@
           "label":  "ページ内パネル"
         }
       ],
-      "value": "sidebar"
+      "value": "panel"
     },
     {
       "name": "always_open_new_tab",
@@ -107,7 +107,7 @@
       "name": "dismiss_panel_when_outside_area_is_clicked",
       "title": "パネル外をクリックした時にパネルを消すようにする",
       "type": "bool",
-      "value": false
+      "value": true
     },
     {
       "name": "hide_show_panel_remove_button",
@@ -117,7 +117,7 @@
     },
     {
       "name": "execute_search_immediately_after_clicking_selection",
-      "title": "選択したテキストをもう一度クリックすると検索を実行する",
+      "title": "テキスト選択時に検索ボタンを選択したテキスト付近に表示する",
       "type": "bool",
       "value": true
     },
@@ -186,7 +186,7 @@
       "name": "service_deselector",
       "title": "サービスデセレクター (検索結果から除外する子要素)",
       "type": "string",
-      "value": ".fukidashi"
+      "value": ".fukidashi,tango"
     },
     {
       "name": "font_size",
