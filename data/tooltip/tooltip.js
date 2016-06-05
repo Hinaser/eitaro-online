@@ -460,6 +460,7 @@ Tooltip.prototype.open = function(html, option){
     wrapper.find(".ui-resizable-w").css("width", resize_edge_size);
     wrapper.find(".ui-resizable-se").css({height: resize_edge_size, width: resize_edge_size});
 
+    content.scrollTop(0);
     container.show();
 };
 
