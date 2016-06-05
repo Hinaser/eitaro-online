@@ -13,6 +13,7 @@ const style_id = "eitaro-online-style";
 const fontsize_input_id = "eitaro-online-font-size-input";
 const setting_btn_id = "eitaro-online-setting-btn";
 const close_btn_id = "eitaro-online-close-btn";
+const suggest_btn_id = "eitaro-online-suggest-btn";
 
 // Minimum width/height of tooltip
 let min_width = 150;
@@ -400,6 +401,53 @@ Tooltip.prototype.prepare = function(option){
 };
 
 /**
+ * Show button for user to choose whether search should be done.
+ * @param {string} search_keyword - text to be searched
+ */
+Tooltip.prototype.suggest = function(search_keyword){
+    $(`#${style_id}`).remove();
+
+    let wrapper = $(`#${wrapper_tag_id}`);
+    if(wrapper.length > 0){
+        wrapper.empty();
+    }
+    else{
+        wrapper = $("<div>", {id: wrapper_tag_id});
+        wrapper.appendTo("body");
+    }
+
+    let container = $("<div>", {id: container_tag_id});
+    let button = $(`<button>英太郎で検索: ${search_keyword}</button>`, {id: suggest_btn_id});
+
+    container.append(button);
+    wrapper.append(container);
+
+    // Set position of button
+    const location_of_selection = getSelectionLocation();
+    let style = {};
+    style["position"] = "absolute";
+    style["top"] = location_of_selection.top + 20 + window.scrollY;
+    style["left"] = location_of_selection.left + 20 + window.scrollX;
+    style["border"] = "none";
+
+    container.css(style);
+
+    // When button is clicked, execute search
+    button.on('mouseup', function(e){
+        container.hide();
+        self.port.emit("search",  search_keyword);
+    });
+
+    // When outside of button is clicked, hide container
+    $(document).on('mouseup', function(e){
+        if(button.length > 0 && !button.is(e.target) && button.has(e.target).length === 0){
+            button.remove();
+            container.hide();
+        }
+    });
+};
+
+/**
  * Open up tooltip with search result
  * @param {string} html - Search result html.
  * @param {Object} option - Indicating where to set tooltip in window.
@@ -489,6 +537,20 @@ function getSelectionLocation(){
 }
 
 /**
+ * Get text selected in window
+ * @returns {string}
+ */
+function getSelectedText() {
+    var text = "";
+    if (window.getSelection) {
+        text = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+        text = document.selection.createRange().text;
+    }
+    return text;
+}
+
+/**
  * Returns whether text selection exists.
  * @returns {boolean}
  */
@@ -539,7 +601,6 @@ function sendMessage(type, data){
 }
 
 
-
 // Instantiate Tooltip instance
 let tooltip = new Tooltip();
 
@@ -569,4 +630,24 @@ self.port.on("set_font_size", function(msg){
     let fontSize = JSON.parse(msg).size + "px";
 
     tooltip.setFontSize(fontSize);
+});
+
+// Process for immediate search for selection
+$(document).ready(function(){
+    //
+    // Just after text is selected, popup search button near selection.
+    //
+    $(document).on("mouseup", function(e){
+        if
+        (
+            // When text selection is not made, do nothing.
+            !isTextSelected()
+            // When event is raised by clicking suggest button, do nothing
+            || $(`#${suggest_btn_id}`).is(e.target)
+            // When panel is clicked, do nothing
+            || $(`#${wrapper_tag_id}`).has(e.target).length > 0
+        ){ return; }
+
+        tooltip.suggest(getSelectedText());
+    });
 });

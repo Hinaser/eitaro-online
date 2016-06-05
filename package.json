@@ -116,6 +116,12 @@
       "value": false
     },
     {
+      "name": "execute_search_immediately_after_clicking_selection",
+      "title": "選択したテキストをもう一度クリックすると検索を実行する",
+      "type": "bool",
+      "value": true
+    },
+    {
       "name": "panel_position_top",
       "value": -1,
       "title": "パネル位置(上から)",
