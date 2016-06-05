@@ -329,7 +329,8 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
 Tooltip.prototype.setSize = function (container, option, isPrepare=false){
     let style = {};
 
-    if(option.use_last_size && option.last_size && !(option.show_near_selection && option.auto_sizing_panel_for_selection)){
+    const isSelectionAutoSizingEnabled = isTextSelected() && option.show_near_selection && option.auto_sizing_panel_for_selection;
+    if(option.use_last_size && option.last_size && !isSelectionAutoSizingEnabled){
         // Set previous width
         let window_width = $(window).width();
         if (min_width <= option.last_size["width"] && option.last_size["width"] <= window_width) {
@@ -453,11 +454,11 @@ Tooltip.prototype.open = function(html, option){
     }
 
     // Increase edge size which user can grab to resize
-    $(`#${wrapper_tag_id} .ui-resizable-n`).css("height", "10px"); // Top edge size is set here because if large value is set, dragging will not work.
-    $(`#${wrapper_tag_id} .ui-resizable-s`).css("height", resize_edge_size);
-    $(`#${wrapper_tag_id} .ui-resizable-e`).css("width", resize_edge_size);
-    $(`#${wrapper_tag_id} .ui-resizable-w`).css("width", resize_edge_size);
-    $(`#${wrapper_tag_id} .ui-resizable-se`).css({height: resize_edge_size, width: resize_edge_size});
+    wrapper.find(".ui-resizable-n").css("height", "10px"); // Top edge size is set here because if large value is set, dragging will not work.
+    wrapper.find(".ui-resizable-s").css("height", resize_edge_size);
+    wrapper.find(".ui-resizable-e").css("width", resize_edge_size);
+    wrapper.find(".ui-resizable-w").css("width", resize_edge_size);
+    wrapper.find(".ui-resizable-se").css({height: resize_edge_size, width: resize_edge_size});
 
     container.show();
 };
