@@ -71,8 +71,9 @@ Tooltip.prototype.setStyle = function (style){
 /**
  * Intialize a element which wraps tooltip html content.
  * The wrapper element will be added to the tail of website's body element.
+ * @param {Object} option
  */
-Tooltip.prototype.initialize = function (){
+Tooltip.prototype.initialize = function (option){
     this.initStyle();
 
     let wrapper = $(`#${wrapper_tag_id}`);
@@ -86,7 +87,7 @@ Tooltip.prototype.initialize = function (){
 
     let container = $("<div>", {id: container_tag_id});
     let content = $("<div>", {id: content_tag_id});
-    let header = this.createHeader(container, content);
+    let header = this.createHeader(container, content, option);
 
     container.draggable({
         handle: "header",
@@ -178,28 +179,34 @@ Tooltip.prototype.initialize = function (){
  * Create tooltip header html element. (This may have `config button` or `close button` or like these elements).
  * @param {jQuery} container - jQuery instance of a div of direct descendant of tooltip's wrapper element.
  * @param {jQuery} content - Direct descendant of `container`, which holds the tooltip main html content..
+ * @param {Object} option - Optional settings
  * @returns {jQuery} - jQuery instance of tooltip header.
  */
-Tooltip.prototype.createHeader = function (container, content){
+Tooltip.prototype.createHeader = function (container, content, option){
     const that = this;
+
     let header = $("<header>", {id: content_header_id});
+    header.append("<span class='title'>英太郎ONLINE</span>");
+
     //let search_box = $("<input>", {type: "text", placeholder: "検索したいキーワード"});
     //let search_btn = $("<button>検索</button>");
-    let setting_btn = $(`<button id="${setting_btn_id}">${setting_button()}</button>`);
-    let close_btn = $(`<button id="${close_btn_id}">${remove_button()}</button>`);
-
     //header.append(search_box);
     //header.append(search_btn);
-    header.append("<span class='title'>英太郎ONLINE</span>");
+
+    if(option && !option.hide_show_remove_button){
+        let close_btn = $(`<button id="${close_btn_id}">${remove_button()}</button>`);
+        header.append(close_btn);
+
+        close_btn.on("click", function(e){
+            container.hide();
+        });
+    }
+
+    let setting_btn = $(`<button id="${setting_btn_id}">${setting_button()}</button>`);
     header.append(setting_btn);
-    header.append(close_btn);
 
     setting_btn.on("click", function(e){
         alert("すいません、まだここの処理作ってません。。");
-    });
-
-    close_btn.on("click", function(e){
-        container.hide();
     });
 
     return header;

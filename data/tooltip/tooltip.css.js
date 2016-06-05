@@ -72,8 +72,8 @@ ${wrapper_id} header svg {
 }
 
 ${wrapper_id} header button#eitaro-online-setting-btn {
-    position: absolute;
-    right: 42px;
+    display: inline-block;
+    float: right;
 }
 
 ${wrapper_id} header button#eitaro-online-setting-btn:hover {
@@ -83,8 +83,8 @@ ${wrapper_id} header button#eitaro-online-setting-btn:hover {
 }
 
 ${wrapper_id} header button#eitaro-online-close-btn {
-    position: absolute;
-    right: 12px;
+    display: inline-block;
+    float: right;
 }
 
 ${wrapper_id} header button#eitaro-online-close-btn:hover {

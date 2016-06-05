@@ -198,10 +198,7 @@ function debug(obj) {
  * @param {string} request_url - Url of search service
  */
 function search_for_tooltip(search_keyword, request_url){
-    tooltip.prepare({
-        show_near_selection: prefs.get("show_panel_near_selection"),
-        position: prefs.get("panel_position")
-    });
+    tooltip.prepare();
 
     let xhr = Request({
         url: request_url,
@@ -211,9 +208,7 @@ function search_for_tooltip(search_keyword, request_url){
             // Assume that url is invalid.
             if(response.status == 0){
                 safeHtmlTxt = "サービスURLが正しく設定されていない可能性があります"; // Service url might be invalid.
-                tooltip.show(safeHtmlTxt, {
-                    show_near_selection: prefs.get("show_panel_near_selection")
-                });
+                tooltip.show(safeHtmlTxt);
                 return;
             }
 
@@ -228,10 +223,7 @@ function search_for_tooltip(search_keyword, request_url){
                 safeHtmlTxt = e.message;
             }
 
-            tooltip.show(safeHtmlTxt, {
-                show_near_selection: prefs.get("show_panel_near_selection"),
-                position: prefs.get("panel_position")
-            });
+            tooltip.show(safeHtmlTxt);
         }
     });
 

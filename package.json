@@ -110,6 +110,12 @@
       "value": false
     },
     {
+      "name": "hide_show_panel_remove_button",
+      "title": "パネル削除ボタンを表示しない(パネル外でパネルを削除する場合のみ)",
+      "type": "bool",
+      "value": false
+    },
+    {
       "name": "panel_position_top",
       "value": -1,
       "title": "パネル位置(上から)",
