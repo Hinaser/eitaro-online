@@ -137,9 +137,9 @@ Tooltip.prototype.initialize = function (option){
                 container.width(min_width);
             }
 
-            // TODO Is this necessary?
-            //content.height(container.height() - 30);
-            //content.width(container.width());
+            content.css({
+                height: "calc(100% - 11px)"
+            });
 
             const currentRect = {
                 top: parseInt(container.css("top")),
