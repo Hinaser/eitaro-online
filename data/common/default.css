@@ -1,0 +1,3995 @@
+* {
+    all: unset;
+}
+
+/*********************************************************************************
+ * html.css
+ *********************************************************************************/
+/* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+address,
+article,
+aside,
+blockquote,
+body,
+caption,
+center,
+col,
+colgroup,
+dd,
+dir,
+div,
+dl,
+dt,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+hr,
+html,
+legend,
+li,
+listing,
+main,
+marquee,
+menu,
+nav,
+noframes,
+ol,
+p,
+plaintext,
+pre,
+section,
+summary,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr,
+ul,
+xmp {
+    unicode-bidi: -moz-isolate;
+}
+
+bdi, output {
+    unicode-bidi: -moz-isolate;
+}
+bdo, bdo[dir] {
+    unicode-bidi: bidi-override;
+}
+bdo[dir="auto"] {
+    unicode-bidi: -moz-isolate-override;
+}
+textarea[dir="auto"], pre[dir="auto"] { unicode-bidi: -moz-plaintext; }
+
+/* blocks */
+
+article,
+aside,
+details,
+div,
+dt,
+figcaption,
+footer,
+form,
+header,
+hgroup,
+html,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+p, dl, multicol {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+dd {
+    display: block;
+    margin-inline-start: 40px;
+}
+
+blockquote, figure {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 40px;
+    margin-inline-end: 40px;
+}
+
+address {
+    display: block;
+    font-style: italic;
+}
+
+center {
+    display: block;
+    text-align: -moz-center;
+}
+
+blockquote[type=cite] {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-inline-start: 1em;
+    border-inline-start: solid;
+    border-color: blue;
+    border-width: thin;
+}
+
+span[_moz_quote=true] {
+    color: blue;
+}
+
+pre[_moz_quote=true] {
+    color: blue;
+}
+
+h1 {
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    margin-block-start: .67em;
+    margin-block-end: .67em;
+}
+
+h2,
+:-moz-any(article, aside, nav, section)
+h1 {
+    display: block;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-block-start: .83em;
+    margin-block-end: .83em;
+}
+
+h3,
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+h1 {
+    display: block;
+    font-size: 1.17em;
+    font-weight: bold;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+h4,
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+h1 {
+    display: block;
+    font-size: 1.00em;
+    font-weight: bold;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+}
+
+h5,
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+h1 {
+    display: block;
+    font-size: 0.83em;
+    font-weight: bold;
+    margin-block-start: 1.67em;
+    margin-block-end: 1.67em;
+}
+
+h6,
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+:-moz-any(article, aside, nav, section)
+h1 {
+    display: block;
+    font-size: 0.67em;
+    font-weight: bold;
+    margin-block-start: 2.33em;
+    margin-block-end: 2.33em;
+}
+
+listing {
+    display: block;
+    font-family: -moz-fixed;
+    font-size: medium;
+    white-space: pre;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+xmp, pre, plaintext {
+    display: block;
+    font-family: -moz-fixed;
+    white-space: pre;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+/* tables */
+
+table {
+    display: table;
+    border-spacing: 2px;
+    border-collapse: separate;
+    /* XXXldb do we want this if we're border-collapse:collapse ? */
+    box-sizing: border-box;
+    text-indent: 0;
+}
+
+table[align="left"] {
+    float: left;
+}
+
+table[align="right"] {
+    float: right;
+    text-align: start;
+}
+
+
+/* border collapse rules */
+
+/* Set hidden if we have 'frame' or 'rules' attribute.
+   Set it on all sides when we do so there's more consistency
+   in what authors should expect */
+
+/* Put this first so 'border' and 'frame' rules can override it. */
+table[rules] {
+    border-width: thin;
+    border-style: hidden;
+}
+
+/* 'border' before 'frame' so 'frame' overrides
+    A border with a given value should, of course, pass that value
+    as the border-width in pixels -> attr mapping */
+
+/* :-moz-table-border-nonzero is like [border]:not([border="0"]) except it
+   also checks for other zero-like values according to HTML attribute
+   parsing rules */
+table:-moz-table-border-nonzero {
+    border-width: thin;
+    border-style: outset;
+}
+
+table[frame] {
+    border: thin hidden;
+}
+
+/* specificity must beat table:-moz-table-border-nonzero rule above */
+table[frame="void"]   { border-style: hidden; }
+table[frame="above"]  { border-style: outset hidden hidden hidden; }
+table[frame="below"]  { border-style: hidden hidden outset hidden; }
+table[frame="lhs"]    { border-style: hidden hidden hidden outset; }
+table[frame="rhs"]    { border-style: hidden outset hidden hidden; }
+table[frame="hsides"] { border-style: outset hidden; }
+table[frame="vsides"] { border-style: hidden outset; }
+table[frame="box"],
+table[frame="border"] { border-style: outset; }
+
+
+/* Internal Table Borders */
+
+/* 'border' cell borders first */
+
+table:-moz-table-border-nonzero > * > tr > td,
+table:-moz-table-border-nonzero > * > tr > th,
+table:-moz-table-border-nonzero > * > td,
+table:-moz-table-border-nonzero > * > th,
+table:-moz-table-border-nonzero > td,
+table:-moz-table-border-nonzero > th
+{
+    border-width: thin;
+    border-style: inset;
+}
+
+/* collapse only if rules are really specified */
+table[rules]:not([rules="none"]):not([rules=""]) {
+    border-collapse: collapse;
+}
+
+/* only specified rules override 'border' settings
+  (increased specificity to achieve this) */
+table[rules]:not([rules=""])> tr > td,
+table[rules]:not([rules=""])> * > tr > td,
+table[rules]:not([rules=""])> tr > th,
+table[rules]:not([rules=""])> * > tr > th,
+table[rules]:not([rules=""])> td,
+table[rules]:not([rules=""])> th
+{
+    border-width: thin;
+    border-style: none;
+}
+
+
+table[rules][rules="none"]  > tr > td,
+table[rules][rules="none"] > * > tr > td,
+table[rules][rules="none"] > tr > th,
+table[rules][rules="none"] > * > tr > th,
+table[rules][rules="none"] > td,
+table[rules][rules="none"] > th
+{
+    border-width: thin;
+    border-style: none;
+}
+
+table[rules][rules="all"] > tr > td,
+table[rules][rules="all"] > * > tr > td,
+table[rules][rules="all"] > tr > th,
+table[rules][rules="all"] > * > tr > th,
+table[rules][rules="all"] > td,
+table[rules][rules="all"] > th
+{
+    border-width: thin;
+    border-style: solid;
+}
+
+table[rules][rules="rows"] > tr,
+table[rules][rules="rows"] > * > tr {
+    border-block-start-width: thin;
+    border-block-end-width: thin;
+    border-block-start-style: solid;
+    border-block-end-style: solid;
+}
+
+
+table[rules][rules="cols"] > tr > td,
+table[rules][rules="cols"] > * > tr > td,
+table[rules][rules="cols"] > tr > th,
+table[rules][rules="cols"] > * > tr > th {
+    border-inline-start-width: thin;
+    border-inline-end-width: thin;
+    border-inline-start-style: solid;
+    border-inline-end-style: solid;
+}
+
+table[rules][rules="groups"] > colgroup {
+    border-inline-start-width: thin;
+    border-inline-end-width: thin;
+    border-inline-start-style: solid;
+    border-inline-end-style: solid;
+}
+table[rules][rules="groups"] > tfoot,
+table[rules][rules="groups"] > thead,
+table[rules][rules="groups"] > tbody {
+    border-block-start-width: thin;
+    border-block-end-width: thin;
+    border-block-start-style: solid;
+    border-block-start-style: solid;
+}
+
+
+/* caption inherits from table not table-outer */
+caption {
+    display: table-caption;
+    text-align: center;
+}
+
+table[align="center"] > caption {
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+}
+
+table[align="center"] > caption[align="left"]:dir(ltr) {
+    margin-inline-end: 0;
+}
+table[align="center"] > caption[align="left"]:dir(rtl) {
+    margin-inline-start: 0;
+}
+
+table[align="center"] > caption[align="right"]:dir(ltr) {
+    margin-inline-start: 0;
+}
+table[align="center"] > caption[align="right"]:dir(rtl) {
+    margin-inline-end: 0;
+}
+
+tr {
+    display: table-row;
+    vertical-align: inherit;
+}
+
+col {
+    display: table-column;
+}
+
+colgroup {
+    display: table-column-group;
+}
+
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+}
+
+thead {
+    display: table-header-group;
+    vertical-align: middle;
+}
+
+tfoot {
+    display: table-footer-group;
+    vertical-align: middle;
+}
+
+/* for XHTML tables without tbody */
+table > tr {
+    vertical-align: middle;
+}
+
+td {
+    display: table-cell;
+    vertical-align: inherit;
+    text-align: inherit;
+    padding: 1px;
+}
+
+th {
+    display: table-cell;
+    vertical-align: inherit;
+    font-weight: bold;
+    padding: 1px;
+}
+
+tr > form:-moz-is-html, tbody > form:-moz-is-html,
+thead > form:-moz-is-html, tfoot > form:-moz-is-html,
+table > form:-moz-is-html {
+    /* Important: don't show these forms in HTML */
+    display: none !important;
+}
+
+table[bordercolor] > tbody,
+table[bordercolor] > thead,
+table[bordercolor] > tfoot,
+table[bordercolor] > col,
+table[bordercolor] > colgroup,
+table[bordercolor] > tr,
+table[bordercolor] > * > tr,
+table[bordercolor]  > tr > td,
+table[bordercolor] > * > tr > td,
+table[bordercolor]  > tr > th,
+table[bordercolor] > * > tr > th {
+    border-color: inherit;
+}
+
+/* inlines */
+
+q:before {
+    content: open-quote;
+}
+
+q:after {
+    content: close-quote;
+}
+
+b, strong {
+    font-weight: bolder;
+}
+
+i, cite, em, var, dfn {
+    font-style: italic;
+}
+
+tt, code, kbd, samp {
+    font-family: -moz-fixed;
+}
+
+u, ins {
+    text-decoration: underline;
+}
+
+s, strike, del {
+    text-decoration: line-through;
+}
+
+big {
+    font-size: larger;
+}
+
+small {
+    font-size: smaller;
+}
+
+sub {
+    vertical-align: sub;
+    font-size: smaller;
+    line-height: normal;
+}
+
+sup {
+    vertical-align: super;
+    font-size: smaller;
+    line-height: normal;
+}
+
+nobr {
+    white-space: nowrap;
+}
+
+mark {
+    background: yellow;
+    color: black;
+}
+
+/* titles */
+abbr[title], acronym[title] {
+    text-decoration: dotted underline;
+}
+
+/* lists */
+
+ul, menu, dir {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    padding-inline-start: 40px;
+}
+
+menu[type="context"] {
+    display: none !important;
+}
+
+ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    padding-inline-start: 40px;
+}
+
+li {
+    display: list-item;
+    text-align: match-parent;
+}
+
+/* nested lists have no top/bottom margins */
+:-moz-any(ul, ol, dir, menu, dl) ul,
+:-moz-any(ul, ol, dir, menu, dl) ol,
+:-moz-any(ul, ol, dir, menu, dl) dir,
+:-moz-any(ul, ol, dir, menu, dl) menu,
+:-moz-any(ul, ol, dir, menu, dl) dl {
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+/* 2 deep unordered lists use a circle */
+:-moz-any(ol, ul, menu, dir) ul,
+:-moz-any(ol, ul, menu, dir) menu,
+:-moz-any(ol, ul, menu, dir) dir {
+    list-style-type: circle;
+}
+
+/* 3 deep (or more) unordered lists use a square */
+:-moz-any(ol, ul, menu, dir) :-moz-any(ol, ul, menu, dir) ul,
+:-moz-any(ol, ul, menu, dir) :-moz-any(ol, ul, menu, dir) menu,
+:-moz-any(ol, ul, menu, dir) :-moz-any(ol, ul, menu, dir) dir {
+    list-style-type: square;
+}
+
+
+/* leafs */
+
+/* <hr> noshade and color attributes are handled completely by
+ * the nsHTMLHRElement attribute mapping code
+ */
+hr {
+    display: block;
+    border: 1px inset;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+    color: gray;
+    -moz-float-edge: margin-box;
+    box-sizing: border-box;
+}
+
+hr[size="1"] {
+    border-style: solid none none none;
+}
+
+img:-moz-broken::before, input:-moz-broken::before,
+img:-moz-user-disabled::before, input:-moz-user-disabled::before,
+img:-moz-loading::before, input:-moz-loading::before,
+applet:-moz-empty-except-children-with-localname(param):-moz-broken::before,
+applet:-moz-empty-except-children-with-localname(param):-moz-user-disabled::before {
+    content: -moz-alt-content !important;
+    unicode-bidi: -moz-isolate;
+}
+
+:-moz-any(object,applet):-moz-any(:-moz-broken,:-moz-user-disabled) > *|* {
+    /*
+      Inherit in the object's alignment so that if we aren't aligned explicitly
+      we'll end up in the right place vertically.  See bug 36997.  Note that this
+      is not !important because we _might_ be aligned explicitly.
+    */
+    vertical-align: inherit;
+}
+
+img:-moz-suppressed, input:-moz-suppressed, object:-moz-suppressed,
+embed:-moz-suppressed, applet:-moz-suppressed {
+    /*
+      Set visibility too in case the page changes display.  Note that we _may_
+      want to just set visibility and not display, in general, if we find that
+      display:none breaks too many layouts.  And if we decide we really do want
+      people to be able to right-click blocked images, etc, we need to set
+      neither one, and hack the painting code.... :(
+     */
+    display: none !important;
+    visibility: hidden !important;
+}
+
+img[usemap], object[usemap] {
+    color: blue;
+}
+
+frameset {
+    display: block ! important;
+    overflow: -moz-hidden-unscrollable;
+    position: static ! important;
+    float: none ! important;
+    border: none ! important;
+}
+
+link {
+    display: none;
+}
+
+frame {
+    border-radius: 0 ! important;
+}
+
+iframe {
+    border: 2px inset;
+}
+
+noframes {
+    display: none;
+}
+
+spacer {
+    position: static ! important;
+    float: none ! important;
+}
+
+canvas {
+    -moz-user-select: none;
+}
+
+/* focusable content: anything w/ tabindex >=0 is focusable, but we
+   skip drawing a focus outline on a few things that handle it
+   themselves. */
+:-moz-focusring:not(input):not(button):not(select):not(textarea):not(iframe):not(frame):not(body):not(html) {
+    /* Don't specify the outline-color, we should always use initial value. */
+    outline: 1px dotted;
+}
+
+/* hidden elements */
+base, basefont, datalist, head, meta, script, style, title,
+noembed, param, template {
+    display: none;
+}
+
+area {
+    /* Don't give it frames other than its imageframe */
+    display: none ! important;
+}
+
+iframe:fullscreen {
+    /* iframes in full-screen mode don't show a border. */
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* media elements */
+video > xul|videocontrols, audio > xul|videocontrols {
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-binding: url("chrome://global/content/bindings/videocontrols.xml#videoControls");
+}
+
+video:not([controls]) > xul|videocontrols,
+audio:not([controls]) > xul|videocontrols {
+    visibility: hidden;
+    -moz-binding: none;
+}
+
+video {
+    object-fit: contain;
+}
+
+video > img:-moz-native-anonymous {
+    /* Video poster images should render with the video element's "object-fit" &
+       "object-position" properties */
+    object-fit: inherit !important;
+    object-position: inherit !important;
+}
+
+audio:not([controls]) {
+    display: none;
+}
+
+*|*::-moz-html-canvas-content {
+    display: block !important;
+    /* we want to be an absolute and fixed container */
+    transform: translate(0) !important;
+}
+
+video > .caption-box {
+    position: relative;
+    overflow: hidden;
+}
+
+/* details & summary */
+/* Need to revert Bug 1259889 Part 2 when removing details preference. */
+@supports -moz-bool-pref("dom.details_element.enabled") {
+    details > summary:first-of-type,
+    details > summary:-moz-native-anonymous {
+        display: list-item;
+        list-style: disclosure-closed inside;
+    }
+
+    details[open] > summary:first-of-type,
+    details[open] > summary:-moz-native-anonymous {
+        list-style-type: disclosure-open;
+    }
+
+    details > summary:first-of-type > *|* {
+        /* Cancel "list-style-position: inside" inherited from summary. */
+        list-style-position: initial;
+    }
+}
+
+/* emulation of non-standard HTML <marquee> tag */
+marquee {
+    inline-size: -moz-available;
+    display: inline-block;
+    vertical-align: text-bottom;
+    text-align: start;
+    -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-horizontal');
+}
+
+marquee[direction="up"], marquee[direction="down"] {
+    -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-vertical');
+    block-size: 200px;
+}
+
+/* PRINT ONLY rules follow */
+@media print {
+
+    marquee { -moz-binding: none; }
+
+}
+
+/* Ruby */
+
+ruby {
+    display: ruby;
+}
+rb {
+    display: ruby-base;
+    white-space: nowrap;
+}
+rp {
+    display: none;
+}
+rt {
+    display: ruby-text;
+}
+rtc {
+    display: ruby-text-container;
+}
+rtc, rt {
+    white-space: nowrap;
+    font-size: 50%;
+    -moz-min-font-size-ratio: 50%;
+    line-height: 1;
+%ifndef XP_WIN
+    /* The widely-used Windows font Meiryo doesn't work fine with this
+     * setting, so disable this on Windows. We should re-enable it once
+     * Microsoft fixes this issue. See bug 1164279. */
+font-variant-east-asian: ruby;
+%endif
+}
+rtc, rt {
+    text-emphasis: none;
+}
+rtc:lang(zh), rt:lang(zh) {
+    ruby-align: center;
+}
+rtc:lang(zh-TW), rt:lang(zh-TW) {
+    font-size: 30%; /* bopomofo */
+    -moz-min-font-size-ratio: 30%;
+}
+rtc > rt {
+             font-size: inherit;
+         }
+ruby, rb, rt, rtc {
+    unicode-bidi: -moz-isolate;
+}
+
+/*
+ * forms.css
+ */
+*|*::-moz-fieldset-content {
+    display: block; /* nsRuleNode::ComputeDisplayData overrules this in some cases */
+    unicode-bidi: inherit;
+    text-overflow: inherit;
+    overflow: inherit;
+    overflow-clip-box: inherit;
+    padding: inherit;
+    block-size: 100%; /* Need this so percentage block-sizes of kids work right */
+    /* Please keep the Multicol/Flex/Grid/Align sections below in sync with
+       ::-moz-scrolled-content in ua.css */
+    /* Multicol container */
+    -moz-column-count: inherit;
+    -moz-column-width: inherit;
+    -moz-column-gap: inherit;
+    -moz-column-rule: inherit;
+    -moz-column-fill: inherit;
+    /* Flex container */
+    flex-direction: inherit;
+    flex-wrap: inherit;
+    /* Grid container */
+    grid-auto-columns: inherit;
+    grid-auto-rows: inherit;
+    grid-auto-flow: inherit;
+    grid-column-gap: inherit;
+    grid-row-gap: inherit;
+    grid-template-areas: inherit;
+    grid-template-columns: inherit;
+    grid-template-rows: inherit;
+    /* CSS Align */
+    align-content: inherit;
+    align-items: inherit;
+    justify-content: inherit;
+    justify-items: inherit;
+}
+
+/* miscellaneous form elements */
+
+fieldset > legend {
+                  -moz-padding-start: 2px;
+                  -moz-padding-end: 2px;
+                  inline-size: -moz-fit-content;
+              }
+
+legend {
+    display: block;
+}
+
+fieldset {
+    display: block;
+    -moz-margin-start: 2px;
+    -moz-margin-end: 2px;
+    padding-block-start: 0.35em;
+    padding-block-end: 0.75em;
+    -moz-padding-start: 0.625em;
+    -moz-padding-end: 0.625em;
+    border: 2px groove ThreeDLightShadow;
+}
+
+label {
+    cursor: default;
+}
+
+/* default inputs, text inputs, and selects */
+
+/* Note: Values in nsNativeTheme IsWidgetStyled function
+   need to match textfield background/border values here */
+
+input {
+    -moz-appearance: textfield;
+    /* The sum of border and padding on block-start and block-end
+       must be the same here, for buttons, and for <select> (including its
+       internal padding magic) */
+    padding: 1px;
+    border: 2px inset ThreeDLightShadow;
+    background-color: -moz-Field;
+    color: -moz-FieldText;
+    font: -moz-field;
+    text-rendering: optimizeLegibility;
+    line-height: normal;
+    text-align: start;
+    text-transform: none;
+    word-spacing: normal;
+    letter-spacing: normal;
+    cursor: text;
+    -moz-binding: url("chrome://global/content/platformHTMLBindings.xml#inputFields");
+    text-indent: 0;
+    -moz-user-select: text;
+    text-shadow: none;
+    overflow-clip-box: content-box;
+}
+
+input > .anonymous-div,
+           input::-moz-placeholder {
+               word-wrap: normal !important;
+               /* Make the line-height equal to the available height */
+               line-height: -moz-block-height;
+           }
+
+@-moz-document url-prefix(chrome://) {
+    input.uri-element-right-align:-moz-locale-dir(rtl) {
+        direction: ltr !important;
+        text-align: right !important;
+    }
+
+    /* Make sure that the location bar's alignment in RTL mode changes according
+       to the input box direction if the user switches the text direction using
+       cmd_switchTextDirection (which applies a dir attribute to the </select><input>). */
+    input.uri-element-right-align[dir=ltr]:-moz-locale-dir(rtl) {
+        text-align: left !important;
+    }
+}
+
+textarea {
+    margin-block-start: 1px;
+    margin-block-end: 1px;
+    border: 2px inset ThreeDLightShadow;
+    /* The 1px inline padding is for parity with Win/IE */
+    -moz-padding-start: 1px;
+    -moz-padding-end: 1px;
+    background-color: -moz-Field;
+    color: -moz-FieldText;
+    font: medium -moz-fixed;
+    text-rendering: optimizeLegibility;
+    text-align: start;
+    text-transform: none;
+    word-spacing: normal;
+    letter-spacing: normal;
+    vertical-align: text-bottom;
+    cursor: text;
+    resize: both;
+    -moz-binding: url("chrome://global/content/platformHTMLBindings.xml#textAreas");
+    -moz-appearance: textfield-multiline;
+    text-indent: 0;
+    -moz-user-select: text;
+    text-shadow: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-clip-box: content-box;
+}
+
+textarea > scrollbar {
+                  cursor: default;
+              }
+
+textarea > .anonymous-div,
+              input > .anonymous-div,
+                         input::-moz-placeholder,
+                         textarea::-moz-placeholder {
+                             overflow: auto;
+                             border: 0px !important;
+                             padding: inherit !important;
+                             margin: 0px;
+                             text-decoration: inherit;
+                             text-decoration-color: inherit;
+                             text-decoration-style: inherit;
+                             display: inline-block;
+                             ime-mode: inherit;
+                             resize: inherit;
+                             -moz-control-character-visibility: visible;
+                             overflow-clip-box: inherit;
+                         }
+
+input > .anonymous-div,
+           input::-moz-placeholder {
+               white-space: pre;
+           }
+
+input > .anonymous-div.wrap {
+               white-space: pre-wrap;
+           }
+textarea > .anonymous-div.inherit-overflow,
+              input > .anonymous-div.inherit-overflow {
+                             overflow: inherit;
+                         }
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+    /*
+     * Changing display to inline can leads to broken behaviour and will assert.
+     */
+    display: inline-block !important;
+
+    /*
+     * Changing resize would display a broken behaviour and will assert.
+     */
+    resize: none !important;
+
+    overflow: hidden !important;
+
+    /*
+     * The placeholder should be ignored by pointer otherwise, we might have some
+     * unexpected behavior like the resize handle not being selectable.
+     */
+    pointer-events: none !important;
+
+    opacity: 0.54;
+}
+
+textarea::-moz-placeholder {
+    white-space: pre-wrap !important;
+}
+
+input:-moz-read-write,
+textarea:-moz-read-write {
+    -moz-user-modify: read-write !important;
+}
+
+select {
+    margin: 0;
+    border-color: ThreeDLightShadow;
+    background-color: -moz-Combobox;
+    color: -moz-ComboboxText;
+    font: -moz-list;
+    /*
+     * Note that the "UA !important" tests in
+     * layout/style/test/test_animations.html depend on this rule, because
+     * they need some UA !important rule to test.  If this changes, use a
+     * different one there.
+     */
+    line-height: normal !important;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    text-align: start;
+    cursor: default;
+    box-sizing: border-box;
+    -moz-user-select: none;
+    -moz-appearance: menulist;
+    border-width: 2px;
+    border-style: inset;
+    text-indent: 0;
+    overflow: -moz-hidden-unscrollable;
+    text-shadow: none;
+    /* No text-decoration reaching inside, by default */
+    display: inline-block;
+    page-break-inside: avoid;
+    overflow-clip-box: padding-box !important; /* bug 992447 */
+}
+
+/* Need the "select[size][multiple]" selector to override the settings on
+   'select[size="1"]', eg if one has <select size="1" multiple=""> */
+
+select[size],
+select[multiple],
+select[size][multiple] {
+    /* Different alignment and padding for listbox vs combobox */
+    background-color: -moz-Field;
+    color: -moz-FieldText;
+    vertical-align: text-bottom;
+    padding-block-start: 1px;
+    padding-block-end: 1px;
+    -moz-padding-start: 0;
+    -moz-padding-end: 0;
+    -moz-appearance: listbox;
+}
+
+select[size="0"],
+select[size="1"] {
+    /* Except this is not a listbox */
+    background-color: -moz-Combobox;
+    color: -moz-ComboboxText;
+    vertical-align: baseline;
+    padding: 0;
+    -moz-appearance: menulist;
+}
+
+select > button {
+                inline-size: 12px;
+                white-space: nowrap;
+                position: static !important;
+                background-image: url("arrow.gif") !important;
+                background-repeat: no-repeat !important;
+                background-position: center !important;
+                -moz-appearance: menulist-button;
+
+                /* Make sure to size correctly if the combobox has a non-auto height. */
+                block-size: 100% ! important;
+                box-sizing: border-box ! important;
+
+                /*
+                  Make sure to align properly with the display frame.  Note that we
+                  want the baseline of the combobox to match the baseline of the
+                  display frame, so the dropmarker is what gets the vertical-align.
+                */
+                vertical-align: top !important;
+            }
+
+select > button:active {
+                background-image: url("arrowd.gif") !important;
+            }
+
+select > button[orientation="left"] {
+                background-image: url("arrow-left.gif") !important;
+            }
+
+select > button[orientation="right"] {
+                background-image: url("arrow-right.gif") !important;
+            }
+
+select > button[orientation="left"]:active {
+                background-image: url("arrowd-left.gif") !important;
+            }
+
+select > button[orientation="right"]:active {
+                background-image: url("arrowd-right.gif") !important;
+            }
+
+select:empty {
+    inline-size: 2.5em;
+}
+
+*|*::-moz-display-comboboxcontrol-frame {
+    overflow: -moz-hidden-unscrollable;
+    /* This block-start/end padding plus the combobox block-start/end border need to
+       add up to the block-start/end borderpadding of text inputs and buttons */
+    padding-block-start: 1px;
+    padding-block-end: 1px;
+    -moz-padding-start: 4px;
+    -moz-padding-end: 0;
+    color: inherit;
+    white-space: nowrap;
+    text-align: inherit;
+    -moz-user-select: none;
+    /* Make sure to size correctly if the combobox has a non-auto block-size. */
+    block-size: 100% ! important;
+    box-sizing: border-box ! important;
+    line-height: -moz-block-height;
+}
+
+option {
+    display: block;
+    float: none !important;
+    position: static !important;
+    min-block-size: 1em;
+    line-height: normal !important;
+    -moz-user-select: none;
+    text-indent: 0;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    text-align: match-parent;
+}
+
+select > option {
+                padding-block-start : 0;
+                padding-block-end: 0;
+                -moz-padding-start: 3px;
+                -moz-padding-end: 5px;
+            }
+
+option:checked {
+    background-color: -moz-html-cellhighlight !important;
+    color: -moz-html-cellhighlighttext !important;
+}
+
+select:focus > option:checked,
+                  select:focus > optgroup > option:checked {
+                                                      background-color: Highlight ! important;
+                                                      color: HighlightText ! important;
+                                                  }
+
+optgroup {
+    display: block;
+    float: none !important;
+    position: static !important;
+    font: -moz-list;
+    line-height: normal !important;
+    font-style: italic;
+    font-weight: bold;
+    font-size: inherit;
+    -moz-user-select: none;
+    text-indent: 0;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+}
+
+optgroup > option {
+                  -moz-padding-start: 20px;
+                  font-style: normal;
+                  font-weight: normal;
+              }
+
+optgroup:before {
+    display: block;
+    content: attr(label);
+}
+
+*|*::-moz-dropdown-list {
+    z-index: 2147483647;
+    background-color: inherit;
+    -moz-user-select: none;
+    position: static !important;
+    float: none !important;
+
+    /*
+     * We can't change the padding here, because that would affect our
+     * intrinsic inline-size, since we scroll.  But at the same time, we want
+     * to make sure that our inline-start border+padding matches the inline-start
+     * border+padding of a combobox so that our scrollbar will line up
+     * with the dropmarker.  So set our inline-start border to 2px.
+     */
+    border: 1px outset black !important;
+    -moz-border-start-width: 2px ! important;
+}
+
+input:disabled,
+textarea:disabled,
+option:disabled,
+optgroup:disabled,
+select:disabled:disabled /* Need the pseudo-class twice to have the specificity
+                            be at least the same as select[size][multiple] above */
+{
+    -moz-user-input: disabled;
+    color: GrayText;
+    background-color: ThreeDLightShadow;
+    cursor: inherit;
+}
+
+input:disabled,
+textarea:disabled {
+    cursor: default;
+}
+
+option:disabled,
+optgroup:disabled {
+    background-color: transparent;
+}
+
+/* hidden inputs */
+input[type="hidden"] {
+    -moz-appearance: none;
+    display: none !important;
+    padding: 0;
+    border: 0;
+    cursor: auto;
+    -moz-user-focus: ignore;
+    -moz-binding: none;
+}
+
+/* image buttons */
+input[type="image"] {
+    -moz-appearance: none;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    font-family: sans-serif;
+    font-size: small;
+    cursor: pointer;
+    -moz-binding: none;
+}
+
+input[type="image"]:disabled {
+    cursor: inherit;
+}
+
+input[type="image"]:-moz-focusring {
+    /* Don't specify the outline-color, we should always use initial value. */
+    outline: 1px dotted;
+}
+
+/* file selector */
+input[type="file"] {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    overflow-clip-box: padding-box;
+    color: inherit;
+
+    /* Revert rules which apply on all inputs. */
+    -moz-appearance: none;
+    -moz-binding: none;
+    cursor: default;
+
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+input[type="file"] > xul|label {
+                            min-inline-size: 12em;
+                            -moz-padding-start: 5px;
+                            text-align: match-parent;
+
+                            color: inherit;
+                            font-size: inherit;
+                            letter-spacing: inherit;
+
+                            /*
+                             * Force the text to have LTR directionality. Otherwise filenames containing
+                             * RTL characters will be reordered with chaotic results.
+                             */
+                            direction: ltr !important;
+                        }
+
+/* button part of file selector */
+input[type="file"] > button[type="button"] {
+                            block-size: inherit;
+                            font-size: inherit;
+                            letter-spacing: inherit;
+                            cursor: inherit;
+                        }
+
+/* colored part of the color selector button */
+input[type="color"]:-moz-system-metric(color-picker-available)::-moz-color-swatch {
+    width: 100%;
+    height: 100%;
+    min-width: 3px;
+    min-height: 3px;
+    -moz-margin-start: auto;
+    -moz-margin-end: auto;
+    box-sizing: border-box;
+    border: 1px solid grey;
+    display: block;
+}
+
+/* Try to make RTL </select><input type="file"> look nicer. */
+/* TODO: find a better solution than forcing direction: ltr on all file
+   input labels and remove this override -- bug 1161482 */
+input[type="file"]:-moz-dir(rtl) > xul|label {
+                                          -moz-padding-start: 0px;
+                                          -moz-padding-end: 5px;
+                                      }
+
+/* radio buttons */
+input[type="radio"] {
+    -moz-appearance: radio;
+    margin-block-start: 3px;
+    margin-block-end: 0px;
+    -moz-margin-start: 5px;
+    -moz-margin-end: 3px;
+    border-radius: 100% !important;
+}
+
+/* check boxes */
+input[type="checkbox"] {
+    -moz-appearance: checkbox;
+    margin-block-start: 3px;
+    margin-block-end: 3px;
+    -moz-margin-start: 4px;
+    -moz-margin-end: 3px;
+    border-radius: 0 !important;
+}
+
+/* common features of radio buttons and check boxes */
+
+/* NOTE: The width, height, border-width, and padding here must all
+   add up the way nsFormControlFrame::GetIntrinsic(Width|Height)
+   expects them to, or they will not come out with total width equal
+   to total height on sites that set their 'width' or 'height' to 'auto'.
+   (Should we maybe set !important on width and height, then?)  */
+input[type="radio"],
+input[type="checkbox"] {
+    box-sizing: border-box;
+    inline-size: 13px;
+    block-size: 13px;
+    cursor: default;
+    padding: 0 !important;
+    -moz-binding: none;
+    /* same colors as |input| rule, but |!important| this time. */
+    background-color: -moz-Field ! important;
+    color: -moz-FieldText ! important;
+    border: 2px inset ThreeDLightShadow ! important;
+}
+
+input[type="radio"]:disabled,
+input[type="radio"]:disabled:active,
+input[type="radio"]:disabled:hover,
+input[type="radio"]:disabled:hover:active,
+input[type="checkbox"]:disabled,
+input[type="checkbox"]:disabled:active,
+input[type="checkbox"]:disabled:hover,
+input[type="checkbox"]:disabled:hover:active {
+    padding: 1px;
+    border: 1px inset ThreeDShadow ! important;
+    /* same as above, but !important */
+    color: GrayText ! important;
+    background-color: ThreeDFace ! important;
+    cursor: inherit;
+}
+
+input[type="checkbox"]:-moz-focusring,
+input[type="radio"]:-moz-focusring {
+    border-style: groove !important;
+}
+
+input[type="checkbox"]:hover:active,
+input[type="radio"]:hover:active {
+    background-color: ThreeDFace ! important;
+    border-style: inset !important;
+}
+
+input[type="search"] {
+    box-sizing: border-box;
+}
+
+/* buttons */
+
+/* Note: Values in nsNativeTheme IsWidgetStyled function
+   need to match button background/border values here */
+
+/* Non text-related properties for buttons: these ones are shared with
+   input[type="color"] */
+button,
+input[type="color"]:-moz-system-metric(color-picker-available),
+input[type="reset"],
+input[type="button"],
+input[type="submit"] {
+    -moz-appearance: button;
+    /* The sum of border and padding on block-start and block-end
+       must be the same here, for text inputs, and for <select>.  For
+       buttons, make sure to include the -moz-focus-inner border/padding. */
+    padding-block-start: 0px;
+    -moz-padding-end: 6px;
+    padding-block-end: 0px;
+    -moz-padding-start: 6px;
+    border: 2px outset ThreeDLightShadow;
+    background-color: ButtonFace;
+    cursor: default;
+    box-sizing: border-box;
+    -moz-user-select: none;
+    -moz-binding: none;
+}
+
+/* Text-related properties for buttons: these ones are not shared with
+   input[type="color"] */
+button,
+input[type="reset"],
+input[type="button"],
+input[type="submit"] {
+    color: ButtonText;
+    font: -moz-button;
+    line-height: normal;
+    white-space: pre;
+    text-align: center;
+    text-shadow: none;
+    overflow-clip-box: padding-box;
+}
+
+input[type="color"]:-moz-system-metric(color-picker-available) {
+    inline-size: 64px;
+    block-size: 23px;
+}
+
+button {
+    /* Buttons should lay out like "normal" html, mostly */
+    white-space: inherit;
+    text-indent: 0;
+    /* But no text-decoration reaching inside, by default */
+    display: inline-block;
+}
+
+*|*::-moz-button-content {
+    display: block;
+}
+
+button:hover,
+input[type="color"]:-moz-system-metric(color-picker-available):hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover {
+    background-color: -moz-buttonhoverface;
+}
+
+button:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover {
+    color: -moz-buttonhovertext;
+}
+
+button:active:hover,
+input[type="color"]:-moz-system-metric(color-picker-available):active:hover,
+input[type="reset"]:active:hover,
+input[type="button"]:active:hover,
+input[type="submit"]:active:hover {
+    padding-block-start: 0px;
+    -moz-padding-end: 5px;
+    padding-block-end: 0px;
+    -moz-padding-start: 7px;
+    border-style: inset;
+    background-color: ButtonFace;
+}
+
+button:active:hover,
+input[type="reset"]:active:hover,
+input[type="button"]:active:hover,
+input[type="submit"]:active:hover {
+    color: ButtonText;
+}
+
+button::-moz-focus-inner,
+input[type="color"]:-moz-system-metric(color-picker-available)::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="file"] > button[type="button"]::-moz-focus-inner {
+                            padding-block-start: 0px;
+                            -moz-padding-end: 2px;
+                            padding-block-end: 0px;
+                            -moz-padding-start: 2px;
+                            border: 1px dotted transparent;
+                        }
+
+button:-moz-focusring::-moz-focus-inner,
+input[type="color"]:-moz-system-metric(color-picker-available):-moz-focusring::-moz-focus-inner,
+input[type="reset"]:-moz-focusring::-moz-focus-inner,
+input[type="button"]:-moz-focusring::-moz-focus-inner,
+input[type="submit"]:-moz-focusring::-moz-focus-inner,
+input[type="file"] > button[type="button"]:-moz-focusring::-moz-focus-inner {
+                            border-color: ButtonText;
+                        }
+
+button:disabled:active, button:disabled,
+input[type="color"]:-moz-system-metric(color-picker-available):disabled:active,
+input[type="color"]:-moz-system-metric(color-picker-available):disabled,
+input[type="reset"]:disabled:active,
+input[type="reset"]:disabled,
+input[type="button"]:disabled:active,
+input[type="button"]:disabled,
+select:disabled > button,
+                     select:disabled > button,
+                                          input[type="submit"]:disabled:active,
+                                          input[type="submit"]:disabled {
+                                              /* The sum of border and padding on block-start and block-end
+                                                 must be the same here and for text inputs */
+                                              padding-block-start: 0px;
+                                              -moz-padding-end: 6px;
+                                              padding-block-end: 0px;
+                                              -moz-padding-start: 6px;
+                                              border: 2px outset ThreeDLightShadow;
+                                              cursor: inherit;
+                                          }
+
+button:disabled:active, button:disabled,
+input[type="reset"]:disabled:active,
+input[type="reset"]:disabled,
+input[type="button"]:disabled:active,
+input[type="button"]:disabled,
+select:disabled > button,
+                     select:disabled > button,
+                                          input[type="submit"]:disabled:active,
+                                          input[type="submit"]:disabled {
+                                              color: GrayText;
+                                          }
+
+/*
+ * Make form controls inherit 'unicode-bidi' transparently as required by
+ *  their various anonymous descendants and pseudo-elements:
+ *
+ * </select><textarea> and <input type="text">:
+ *  inherit into the XULScroll frame with class 'anonymous-div' which is a
+ *  child of the text control.
+ *
+ * Buttons (either <button>, <input type="submit">, <input type="button">
+ *          or <input type="reset">)
+ *  inherit into the ':-moz-button-content' pseudo-element.
+ *
+ * <select>:
+ *  inherit into the ':-moz-display-comboboxcontrol-frame' pseudo-element and
+ *  the <optgroup>'s ':before' pseudo-element, which is where the label of
+ *  the <optgroup> gets displayed. The <option>s don't use anonymous boxes,
+ *  so they need no special rules.
+ */
+textarea > .anonymous-div,
+              input > .anonymous-div,
+                         input::-moz-placeholder,
+                         textarea::-moz-placeholder,
+                         *|*::-moz-button-content,
+                         *|*::-moz-display-comboboxcontrol-frame,
+                         optgroup:before {
+                             unicode-bidi: inherit;
+                             text-overflow: inherit;
+                         }
+
+/**
+ * Set default style for invalid elements.
+ */
+:not(output):-moz-ui-invalid {
+    box-shadow: 0 0 1.5px 1px red;
+}
+
+:not(output):-moz-ui-invalid:-moz-focusring {
+    box-shadow: 0 0 2px 2px rgba(255,0,0,0.4);
+}
+
+output:-moz-ui-invalid {
+    color: red;
+}
+
+@media print {
+    input, textarea, select, button {
+        -moz-user-input: none !important;
+    }
+
+    input[type="file"] { height: 2em; }
+}
+
+progress {
+    -moz-appearance: progressbar;
+    display: inline-block;
+    vertical-align: -0.2em;
+
+    /* Default style in case of there is -moz-appearance: none; */
+    border: 2px solid;
+    /* #e6e6e6 is a light gray. */
+    -moz-border-top-colors: ThreeDShadow #e6e6e6;
+    -moz-border-right-colors: ThreeDHighlight #e6e6e6;
+    -moz-border-bottom-colors: ThreeDHighlight #e6e6e6;
+    -moz-border-left-colors: ThreeDShadow #e6e6e6;
+    background-color: #e6e6e6;
+}
+
+::-moz-progress-bar {
+    /* Prevent styling that would change the type of frame we construct. */
+    display: inline-block ! important;
+    float: none ! important;
+    position: static ! important;
+    overflow: visible ! important;
+    box-sizing: border-box ! important;
+
+    -moz-appearance: progresschunk;
+    height: 100%;
+    width: 100%;
+
+    /* Default style in case of there is -moz-appearance: none; */
+    background-color: #0064b4; /* blue */
+}
+
+meter {
+    -moz-appearance: meterbar;
+    display: inline-block;
+    vertical-align: -0.2em;
+
+    background: linear-gradient(#e6e6e6, #e6e6e6, #eeeeee 20%, #cccccc 45%, #cccccc 55%);
+}
+
+::-moz-meter-bar {
+    /* Block styles that would change the type of frame we construct. */
+    display: inline-block ! important;
+    float: none ! important;
+    position: static ! important;
+    overflow: visible ! important;
+
+    -moz-appearance: meterchunk;
+    height: 100%;
+    width: 100%;
+}
+
+:-moz-meter-optimum::-moz-meter-bar {
+    /* green. */
+    background: linear-gradient(#ad7, #ad7, #cea 20%, #7a3 45%, #7a3 55%);
+}
+:-moz-meter-sub-optimum::-moz-meter-bar {
+    /* orange. */
+    background: linear-gradient(#fe7, #fe7, #ffc 20%, #db3 45%, #db3 55%);
+}
+:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+    /* red. */
+    background: linear-gradient(#f77, #f77, #fcc 20%, #d44 45%, #d44 55%);
+}
+
+input[type=range] {
+    -moz-appearance: range;
+    display: inline-block;
+    inline-size: 12em;
+    block-size: 1.3em;
+    -moz-margin-start: 0.7em;
+    -moz-margin-end: 0.7em;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    /* Override some rules that apply on all input types: */
+    cursor: default;
+    background: none;
+    border: none;
+    -moz-binding: none; /* we don't want any of platformHTMLBindings.xml#inputFields */
+    /* Prevent nsFrame::HandlePress setting mouse capture to this element. */
+    -moz-user-select: none ! important;
+}
+
+input[type=range][orient=block] {
+    inline-size: 1.3em;
+    block-size: 12em;
+    -moz-margin-start: 0;
+    -moz-margin-end: 0;
+    margin-block-start: 0.7em;
+    margin-block-end: 0.7em;
+}
+
+input[type=range][orient=horizontal] {
+    width: 12em;
+    height: 1.3em;
+    margin: 0 0.7em;
+}
+
+input[type=range][orient=vertical] {
+    width: 1.3em;
+    height: 12em;
+    margin: 0.7em 0;
+}
+
+/**
+ * Ideally we'd also require :-moz-focusring here, but that doesn't currently
+ * work. Instead we only use the -moz-focus-outer border style if
+ * NS_EVENT_STATE_FOCUSRING is set (the check is in
+ * nsRangeFrame::BuildDisplayList).
+ */
+input[type=range]::-moz-focus-outer {
+    border: 1px dotted black;
+}
+
+/**
+ * Layout handles positioning of this pseudo-element specially (so that content
+ * authors can concentrate on styling the thumb without worrying about the
+ * logic to position it). Specifically the 'margin', 'top' and 'left'
+ * properties are ignored.
+ *
+ * If content authors want to have a vertical range, they will also need to
+ * set the width/height of this pseudo-element.
+ */
+input[type=range]::-moz-range-track {
+    /* Prevent styling that would change the type of frame we construct. */
+    display: inline-block !important;
+    float: none !important;
+    position: static !important;
+    border: none;
+    background-color: #999;
+    inline-size: 100%;
+    block-size: 0.2em;
+    /* Prevent nsFrame::HandlePress setting mouse capture to this element. */
+    -moz-user-select: none ! important;
+}
+
+input[type=range][orient=block]::-moz-range-track {
+    inline-size: 0.2em;
+    block-size: 100%;
+}
+
+input[type=range][orient=horizontal]::-moz-range-track {
+    width: 100%;
+    height: 0.2em;
+}
+
+input[type=range][orient=vertical]::-moz-range-track {
+    width: 0.2em;
+    height: 100%;
+}
+
+/**
+ * Layout handles positioning of this pseudo-element specially (so that content
+ * authors can concentrate on styling this pseudo-element without worrying
+ * about the logic to position it). Specifically the 'margin', 'top' and 'left'
+ * properties are ignored. Additionally, if the range is horizontal, the width
+ * property is ignored, and if the range range is vertical, the height property
+ * is ignored.
+ */
+input[type=range]::-moz-range-progress {
+    /* Prevent styling that would change the type of frame we construct. */
+    display: inline-block !important;
+    float: none !important;
+    position: static !important;
+    /* Since one of width/height will be ignored, this just sets the "other"
+       dimension.
+     */
+    width: 0.2em;
+    height: 0.2em;
+    /* Prevent nsFrame::HandlePress setting mouse capture to this element. */
+    -moz-user-select: none ! important;
+}
+
+/**
+ * Layout handles positioning of this pseudo-element specially (so that content
+ * authors can concentrate on styling the thumb without worrying about the
+ * logic to position it). Specifically the 'margin', 'top' and 'left'
+ * properties are ignored.
+ */
+input[type=range]::-moz-range-thumb {
+    /* Native theming is atomic for range. Set -moz-appearance on the range
+     * to get rid of it. The thumb's -moz-appearance is fixed.
+     */
+    -moz-appearance: range-thumb !important;
+    /* Prevent styling that would change the type of frame we construct. */
+    display: inline-block !important;
+    float: none !important;
+    position: static !important;
+    width: 1em;
+    height: 1em;
+    border: 0.1em solid #999;
+    border-radius: 0.5em;
+    background-color: #F0F0F0;
+    /* Prevent nsFrame::HandlePress setting mouse capture to this element. */
+    -moz-user-select: none ! important;
+}
+
+/* As a temporary workaround until bug 677302 the rule for input[type=number]
+ * has moved to number-control.css
+ */
+
+input[type=number]::-moz-number-wrapper {
+    /* Prevent styling that would change the type of frame we construct. */
+    display: flex;
+    float: none !important;
+    position: static !important;
+    block-size: 100%;
+}
+
+input[type=number]::-moz-number-text {
+    display: block; /* Flex items must be block-level. Normally we do fixup in
+                     the style system to ensure this, but that fixup is disabled
+                     inside of form controls. So, we hardcode display here. */
+    -moz-appearance: none;
+    /* work around autofocus bug 939248 on initial load */
+    -moz-user-modify: read-write;
+    /* This pseudo-element is also an 'input' element (nested inside and
+     * distinct from the <input type=number> element) so we need to prevent the
+     * explicit setting of 'text-align' by the general CSS rule for 'input'
+     * above. We want to inherit its value from its <input type=number>
+     * ancestor, not have that general CSS rule reset it.
+     */
+    text-align: inherit;
+    flex: 1;
+    min-inline-size: 0;
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+input[type=number]::-moz-number-spin-box {
+    writing-mode: horizontal-tb;
+    display: flex;
+    flex-direction: column;
+    /* The Window's Theme's spin buttons have a very narrow minimum width, so
+     * make it something reasonable:
+     */
+    width: 16px;
+    /* If the spin-box has auto height, it ends up enlarging the default height
+     * of the control, so we limit it to 1em here. The height doesn't affect
+     * the rendering of the spinner-buttons; it's only for layout purposes.
+     *
+     * This is a temporary hack until we implement better positioning for the
+     * spin-box in vertical mode; it works OK at default size but less well
+     * if the font-size is made substantially larger or smaller. (Bug 1175074.)
+     */
+    max-height: 1em;
+    align-self: center;
+    justify-content: center;
+}
+
+input[type=number]::-moz-number-spin-up {
+    -moz-appearance: spinner-upbutton;
+    display: block; /* bug 926670 */
+    flex: none;
+    cursor: default;
+    /* Style for when native theming is off: */
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="5"><path d="M1,4 L3,0 5,4" fill="dimgrey"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    border: 1px solid darkgray;
+    border-bottom: none;
+    /* [JK] I think the border-*-*-radius properties here can remain physical,
+       as we probably don't want to turn the spinner sideways in vertical writing mode */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+input[type=number]::-moz-number-spin-down {
+    -moz-appearance: spinner-downbutton;
+    display: block; /* bug 926670 */
+    flex: none;
+    cursor: default;
+    /* Style for when native theming is off: */
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="5"><path d="M1,1 L3,5 5,1" fill="dimgrey"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: center top;
+    border: 1px solid darkgray;
+    border-top: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+input[type="number"] > div > div > div:hover {
+                                                /* give some indication of hover state for the up/down buttons */
+                                                background-color: lightblue;
+                                            }
+
+/*********************************************************************************
+ * ua.css
+ *********************************************************************************/
+/* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/* Tables */
+
+*|*::-moz-table {
+    display: table !important;
+    box-sizing: border-box; /* XXX do we really want this? */
+}
+
+*|*::-moz-inline-table {
+    display: inline-table !important;
+    box-sizing: border-box; /* XXX do we really want this? */
+}
+
+*|*::-moz-table-outer {
+    display: inherit !important; /* table or inline-table */
+    margin: inherit ! important;
+    padding: 0 ! important;
+    border: none ! important;
+    float: inherit;
+    clear: inherit;
+    position: inherit;
+    top: inherit;
+    right: inherit;
+    bottom: inherit;
+    left: inherit;
+    z-index: inherit;
+    page-break-before: inherit;
+    page-break-after: inherit;
+    page-break-inside: inherit;
+    vertical-align: inherit; /* needed for inline-table */
+    line-height: inherit; /* needed for vertical-align on inline-table */
+    align-self: inherit;
+    justify-self: inherit;
+    order: inherit;   /* needed for "order" to work on table flex/grid items */
+    /* Bug 722777 */
+    transform: inherit;
+    transform-origin: inherit;
+    /* Bug 724750 */
+    backface-visibility: inherit;
+    clip: inherit;
+}
+
+*|*::-moz-table-row {
+    display: table-row !important;
+}
+
+/* The ::-moz-table-column pseudo-element is for extra columns at the end
+   of a table. */
+*|*::-moz-table-column {
+    display: table-column !important;
+}
+
+*|*::-moz-table-column-group {
+    display: table-column-group !important;
+}
+
+*|*::-moz-table-row-group {
+    display: table-row-group !important;
+}
+
+*|*::-moz-table-cell {
+    display: table-cell !important;
+    white-space: inherit;
+}
+
+/* Ruby */
+*|*::-moz-ruby {
+    display: ruby;
+    unicode-bidi: -moz-isolate;
+}
+*|*::-moz-ruby-base {
+    display: ruby-base;
+    unicode-bidi: -moz-isolate;
+}
+*|*::-moz-ruby-text {
+    display: ruby-text;
+    unicode-bidi: -moz-isolate;
+}
+*|*::-moz-ruby-base-container {
+    display: ruby-base-container;
+    unicode-bidi: -moz-isolate;
+}
+*|*::-moz-ruby-text-container {
+    display: ruby-text-container;
+    unicode-bidi: -moz-isolate;
+}
+
+/* Lists */
+
+*|*::-moz-list-bullet, *|*::-moz-list-number {
+    display: inline;
+    vertical-align: baseline;
+    font-variant-numeric: tabular-nums;
+}
+
+/* SVG documents don't always load this file but they do have links.
+ * If you change the link rules, consider carefully whether to make
+ * the same changes to svg.css.
+ */
+
+/* Links */
+
+*|*:-moz-any-link {
+    cursor: pointer;
+}
+
+*|*:-moz-any-link:-moz-focusring {
+    /* Don't specify the outline-color, we should always use initial value. */
+    outline: 1px dotted;
+}
+
+/* Miscellaneous */
+
+*|*::-moz-anonymous-block, *|*::-moz-cell-content {
+    display: block !important;
+    position: static !important;
+    unicode-bidi: inherit;
+    text-overflow: inherit;
+    overflow-clip-box: inherit;
+}
+
+*|*::-moz-anonymous-block, *|*::-moz-anonymous-positioned-block {
+    /* we currently inherit from the inline that is split */
+    outline: inherit;
+    outline-offset: inherit;
+    clip-path: inherit;
+    filter: inherit;
+    mask: inherit;
+    opacity: inherit;
+    text-decoration: inherit;
+    -moz-box-ordinal-group: inherit !important;
+    overflow-clip-box: inherit;
+}
+
+*|*::-moz-xul-anonymous-block {
+    display: block ! important;
+    position: static ! important;
+    float: none ! important;
+    -moz-box-ordinal-group: inherit !important;
+    text-overflow: inherit;
+    overflow-clip-box: inherit;
+}
+
+*|*::-moz-scrolled-content, *|*::-moz-scrolled-canvas,
+*|*::-moz-scrolled-page-sequence {
+    /* e.g., text inputs, select boxes */
+    padding: inherit;
+    /* The display doesn't affect the kind of frame constructed here.  This just
+       affects auto-width sizing of the block we create. */
+    display: block;
+    -moz-box-orient: inherit;
+    /* make unicode-bidi inherit, otherwise it has no effect on text inputs and
+       blocks with overflow: scroll; */
+    unicode-bidi: inherit;
+    text-overflow: inherit;
+    /* Please keep the Multicol/Flex/Grid/Align sections below in sync with
+       ::-moz-fieldset-content in forms.css */
+    /* Multicol container */
+    -moz-column-count: inherit;
+    -moz-column-width: inherit;
+    -moz-column-gap: inherit;
+    -moz-column-rule: inherit;
+    -moz-column-fill: inherit;
+    /* Flex container */
+    flex-direction: inherit;
+    flex-wrap: inherit;
+    /* Grid container */
+    grid-auto-columns: inherit;
+    grid-auto-rows: inherit;
+    grid-auto-flow: inherit;
+    grid-column-gap: inherit;
+    grid-row-gap: inherit;
+    grid-template-areas: inherit;
+    grid-template-columns: inherit;
+    grid-template-rows: inherit;
+    /* CSS Align */
+    align-content: inherit;
+    align-items: inherit;
+    justify-content: inherit;
+    justify-items: inherit;
+    /* Do not change these. nsCSSFrameConstructor depends on them to create a good
+       frame tree. */
+    position: static !important;
+    float: none !important;
+    overflow-clip-box: inherit;
+}
+
+*|*::-moz-viewport, *|*::-moz-viewport-scroll, *|*::-moz-canvas, *|*::-moz-scrolled-canvas {
+    display: block !important;
+    background-color: inherit;
+}
+
+*|*::-moz-viewport-scroll {
+    overflow: auto;
+    resize: both;
+}
+
+*|*::-moz-column-content {
+    /* the column boxes inside a column-flowed block */
+    /* make unicode-bidi inherit, otherwise it has no effect on column boxes */
+    unicode-bidi: inherit;
+    text-overflow: inherit;
+    /* inherit the outer frame's display, otherwise we turn into an inline */
+    display: inherit !important;
+    /* Carry through our parent's height so that %-height children get
+    their heights set */
+    height: 100%;
+}
+
+*|*::-moz-anonymous-flex-item,
+*|*::-moz-anonymous-grid-item {
+    /* Anonymous blocks that wrap contiguous runs of text
+     * inside of a flex or grid container. */
+    display: block;
+}
+
+*|*::-moz-page-sequence, *|*::-moz-scrolled-page-sequence {
+    /* Collection of pages in print/print preview. Visual styles may only appear
+     * in print preview. */
+    display: block !important;
+    background: linear-gradient(#606060, #8a8a8a) fixed;
+    height: 100%;
+}
+
+*|*::-moz-page {
+    /* Individual page in print/print preview. Visual styles may only appear
+     * in print preview. */
+    display: block !important;
+    background: white;
+    box-shadow: 5px 5px 8px #202020;
+    margin: 0.125in 0.25in;
+}
+
+*|*::-moz-pagecontent {
+    display: block !important;
+    margin: auto;
+}
+
+*|*::-moz-pagebreak {
+    display: block !important;
+}
+
+*|*::-moz-anonymous-positioned-block {
+    display: block !important;
+    position: inherit; /* relative or sticky */
+    top: inherit;
+    left: inherit;
+    bottom: inherit;
+    right: inherit;
+    z-index: inherit;
+    clip: inherit;
+    opacity: inherit;
+    unicode-bidi: inherit;
+    text-overflow: inherit;
+}
+
+/* Printing */
+
+@media print {
+
+    * {
+        cursor: default !important;
+    }
+
+}
+
+*|*:fullscreen:not(:root) {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    object-fit: contain !important;
+    transform: none !important;
+}
+
+/* Selectors here should match the check in
+ * nsViewportFrame.cpp:ShouldInTopLayerForFullscreen() */
+*|*:fullscreen:not(:root):not(:-moz-browser-frame) {
+    -moz-top-layer: top !important;
+}
+
+*|*::backdrop {
+    -moz-top-layer: top !important;
+    display: block;
+    position: fixed;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+}
+
+*|*:-moz-full-screen:not(:root)::backdrop {
+    background: black;
+}
+
+/* XML parse error reporting */
+
+parsererror|parsererror {
+    display: block;
+    font-family: sans-serif;
+    font-weight: bold;
+    white-space: pre;
+    margin: 1em;
+    padding: 1em;
+    border-width: thin;
+    border-style: inset;
+    border-color: red;
+    font-size: 14pt;
+    background-color: lightyellow;
+    color: black;
+}
+
+parsererror|sourcetext {
+    display: block;
+    white-space: pre;
+    font-family: -moz-fixed;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    color: red;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+div:-moz-native-anonymous.moz-accessiblecaret,
+div:-moz-native-anonymous.moz-accessiblecaret > div.image,
+                                                   div:-moz-native-anonymous.moz-accessiblecaret > div.bar {
+                                                                                                          position: absolute;
+                                                                                                          z-index: 2147483647;
+                                                                                                      }
+
+div:-moz-native-anonymous.moz-accessiblecaret > div.image {
+                                                       background-position: center bottom;
+                                                       background-size: 100%;
+                                                       background-repeat: no-repeat;
+                                                       bottom: 0;
+                                                       width: 100%;
+                                                       height: 100%;
+
+                                                       /* Override this property in moz-custom-content-container to make dummy touch
+                                                        * listener work. */
+                                                       pointer-events: auto;
+                                                   }
+
+div:-moz-native-anonymous.moz-accessiblecaret > div.bar {
+                                                       margin-left: 49%;
+                                                       background-color: #008aa0;
+                                                   }
+
+div:-moz-native-anonymous.moz-accessiblecaret.no-bar > div.bar {
+                                                              display: none;
+                                                          }
+
+div:-moz-native-anonymous.moz-accessiblecaret.normal > div.image {
+                                                              background-image: url("resource://gre-resources/accessiblecaret-normal@1x.png");
+                                                          }
+
+div:-moz-native-anonymous.moz-accessiblecaret.left > div.image {
+                                                            background-image: url("resource://gre-resources/accessiblecaret-tilt-left@1x.png");
+                                                            margin-left: -39%;
+                                                        }
+
+div:-moz-native-anonymous.moz-accessiblecaret.right > div.image {
+                                                             background-image: url("resource://gre-resources/accessiblecaret-tilt-right@1x.png");
+                                                             margin-left: 41%;
+                                                         }
+
+div:-moz-native-anonymous.moz-accessiblecaret.none {
+    display: none;
+}
+
+@media (min-resolution: 1.5dppx) {
+    div:-moz-native-anonymous.moz-accessiblecaret.normal > div.image {
+                                                                  background-image: url("resource://gre-resources/accessiblecaret-normal@1.5x.png");
+                                                              }
+
+    div:-moz-native-anonymous.moz-accessiblecaret.left > div.image {
+                                                                background-image: url("resource://gre-resources/accessiblecaret-tilt-left@1.5x.png");
+                                                            }
+
+    div:-moz-native-anonymous.moz-accessiblecaret.right > div.image {
+                                                                 background-image: url("resource://gre-resources/accessiblecaret-tilt-right@1.5x.png");
+                                                             }
+}
+
+@media (min-resolution: 2dppx) {
+    div:-moz-native-anonymous.moz-accessiblecaret.normal > div.image {
+                                                                  background-image: url("resource://gre-resources/accessiblecaret-normal@2x.png");
+                                                              }
+
+    div:-moz-native-anonymous.moz-accessiblecaret.left > div.image {
+                                                                background-image: url("resource://gre-resources/accessiblecaret-tilt-left@2x.png");
+                                                            }
+
+    div:-moz-native-anonymous.moz-accessiblecaret.right > div.image {
+                                                                 background-image: url("resource://gre-resources/accessiblecaret-tilt-right@2x.png");
+                                                             }
+}
+
+@media (min-resolution: 2.25dppx) {
+    div:-moz-native-anonymous.moz-accessiblecaret.normal > div.image {
+                                                                  background-image: url("resource://gre-resources/accessiblecaret-normal@2.25x.png");
+                                                              }
+
+    div:-moz-native-anonymous.moz-accessiblecaret.left > div.image {
+                                                                background-image: url("resource://gre-resources/accessiblecaret-tilt-left@2.25x.png");
+                                                            }
+
+    div:-moz-native-anonymous.moz-accessiblecaret.right > div.image {
+                                                                 background-image: url("resource://gre-resources/accessiblecaret-tilt-right@2.25x.png");
+                                                             }
+}
+
+/* Custom content container in the CanvasFrame, fixed positioned on top of
+   everything else, not reacting to pointer events. */
+div:-moz-native-anonymous.moz-custom-content-container {
+    pointer-events: none;
+    -moz-top-layer: top;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/*********************************************************************************
+ * plaintext.css
+ *********************************************************************************/
+/* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    -moz-control-character-visibility: visible;
+}
+
+/*********************************************************************************
+ * number-control.css
+ *********************************************************************************/
+/* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+input[type="number"] {
+    -moz-appearance: number-input;
+    /* Has to revert some properties applied by the generic input rule. */
+    -moz-binding: none;
+    inline-size: 20ch; /* It'd be nice if this matched the default inline-size
+                        of <input type=text>, but that's not easy to achieve
+                        due to platform differences. */
+}
+
+/*********************************************************************************
+ * noscript.css
+ *********************************************************************************/
+/* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+noscript {
+    display: none !important;
+}
+
+/*********************************************************************************
+ * noframes.css
+ *********************************************************************************/
+/* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+noframes {
+    display: block;
+}
+
+frame, frameset, iframe {
+    display: none !important;
+}
+
+/*********************************************************************************
+ * mathml.css
+ *********************************************************************************/
+/* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+/**************************************************************************/
+/* namespace for MathML elements                                          */
+/**************************************************************************/
+
+@namespace url(http://www.w3.org/1998/Math/MathML);
+
+/**************************************************************************/
+/* <math> - outermost math element                                        */
+/**************************************************************************/
+
+math {
+    writing-mode: horizontal-tb !important;
+    direction: ltr;
+    unicode-bidi: embed;
+    display: inline;
+    font-size: inherit;
+    font-style: normal;
+    font-family: serif;
+    line-height: normal;
+    word-spacing: normal;
+    letter-spacing: normal;
+    text-rendering: optimizeLegibility;
+    -moz-float-edge: margin-box;
+    -moz-math-display: inline;
+}
+math[mode="display"], math[display="block"] {
+    display: block;
+    text-align: -moz-center;
+    -moz-math-display: block;
+}
+math[display="inline"] {
+    display: inline;
+    -moz-math-display: inline;
+}
+math[displaystyle="false"] {
+    -moz-math-display: inline;
+}
+math[displaystyle="true"] {
+    -moz-math-display: block;
+}
+
+/**************************************************************************/
+/* Token elements                                                         */
+/**************************************************************************/
+
+ms {
+    display: inline;
+}
+ms:before, ms:after {
+    content: "\0022"
+}
+ms[lquote]:before {
+    content: attr(lquote)
+}
+ms[rquote]:after {
+    content: attr(rquote)
+}
+
+/**************************************************************************/
+/* Links                                                                  */
+/**************************************************************************/
+:-moz-any-link {
+    text-decoration: none !important;
+}
+
+/**************************************************************************/
+/* attributes common to all tags                                          */
+/**************************************************************************/
+
+/* These attributes are mapped to style in nsMathMLElement.cpp:
+
+   - background -> background                             (deprecated)
+   - color -> color                                       (deprecated)
+   - fontfamily -> font-family                            (deprecated)
+   - fontsize -> font-size                                (deprecated)
+   - fontstyle -> font-style                              (deprecated)
+   - fontweight -> font-weight                            (deprecated)
+   - mathvariant -> -moz-math-variant
+   - scriptsizemultiplier -> -moz-script-size-multiplier
+   - scriptminsize -> -moz-script-min-size
+   - scriptlevel -> -moz-script-level
+   - mathsize -> font-size
+   - mathcolor -> color
+   - mathbackground -> background
+
+*/
+
+
+/**************************************************************************/
+/* merror                                                                 */
+/**************************************************************************/
+
+merror {
+    display: block;
+    font-family: sans-serif;
+    font-weight: bold;
+    white-space: pre;
+    margin: 1em;
+    padding: 1em;
+    border-width: thin;
+    border-style: inset;
+    border-color: red;
+    font-size: 14pt;
+    background-color: lightyellow;
+}
+
+/**************************************************************************/
+/* mtable and its related tags                                            */
+/**************************************************************************/
+
+mtable {
+    display: inline-table;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-indent: 0;
+}
+mtable[frame="none"] {
+    border: none;
+}
+mtable[frame="solid"] {
+    border: solid thin;
+}
+mtable[frame="dashed"] {
+    border: dashed thin;
+}
+
+mtr, mlabeledtr {
+    display: table-row;
+    vertical-align: baseline;
+}
+
+mtd {
+    display: table-cell;
+    vertical-align: inherit;
+    text-align: -moz-center;
+    white-space: nowrap;
+}
+
+/* Don't support m(labeled)tr without mtable, nor mtd without m(labeled)tr */
+:not(mtable) > mtr,
+                  :not(mtable) > mlabeledtr,
+                                    :not(mtr):not(mlabeledtr) > mtd {
+                                                                       display: none !important;
+                                                                   }
+
+/* Hide the label because mlabeledtr is not supported yet (bug 356870). This
+   rule can be overriden by users. */
+mlabeledtr > mtd:first-child {
+                    display: none;
+                }
+
+/**********************************************************************/
+/* rules to achieve the default spacing between cells. When rowspacing,
+   columnspacing and framespacing aren't set on mtable.  The back-end code
+   will set the internal attributes depending on the cell's position.
+   When they are set, the spacing behaviour is handled outside of CSS */
+mtd {
+    padding-right: 0.4em;  /* half of columnspacing[colindex] */
+    padding-left: 0.4em;   /* half of columnspacing[colindex-1] */
+    padding-bottom: 0.5ex; /* half of rowspacing[rowindex] */
+    padding-top: 0.5ex;    /* half of rowspacing[rowindex-1] */
+}
+/* turn off the spacing at the periphery of boundary cells */
+mtr:first-child > mtd {
+                         padding-top: 0ex;
+                     }
+mtr:last-child > mtd {
+                        padding-bottom: 0ex;
+                    }
+mtd:first-child {
+    -moz-padding-start: 0em;
+}
+mtd:last-child {
+    -moz-padding-end: 0em;
+}
+/* re-instate the spacing if the table has a surrounding frame */
+mtable[frame="solid"] > mtr:first-child > mtd,
+                                                mtable[frame="dashed"] > mtr:first-child > mtd {
+                                                                                                     padding-top: 0.5ex; /* framespacing.top */
+                                                                                                 }
+mtable[frame="solid"] > mtr:last-child > mtd,
+                                               mtable[frame="dashed"] > mtr:last-child > mtd {
+                                                                                                   padding-bottom: 0.5ex; /* framespacing.bottom */
+                                                                                               }
+mtable[frame="solid"] > mtr > mtd:first-child,
+                                    mtable[frame="dashed"] > mtr > mtd:first-child {
+                                                                             -moz-padding-start: 0.4em; /* framespacing.left (or right in rtl)*/
+                                                                         }
+mtable[frame="solid"] > mtr > mtd:last-child,
+                                    mtable[frame="dashed"] > mtr > mtd:last-child {
+                                                                             -moz-padding-end: 0.4em; /* framespacing.right (or left in rtl)*/
+                                                                         }
+
+mtable[rowspacing] > mtr > mtd,
+                                 mtable[columnspacing] > mtr > mtd,
+                                                                     mtable[framespacing] > mtr > mtd {
+                                                                                                            /* Spacing handled outside of CSS */
+                                                                                                            padding: 0px;
+                                                                                                        }
+
+/**************************************************************************/
+/* This rule is used to give a style context suitable for nsMathMLChars.
+   We don't actually style -moz-math-anonymous by default. */
+/*
+::-moz-math-anonymous {
+}
+*/
+
+/**********************************************************************/
+/* This is used when wrapping non-MathML inline elements inside math. */
+*|*::-moz-mathml-anonymous-block {
+    display: inline-block !important;
+    position: static !important;
+    text-indent: 0;
+}
+
+/**************************************************************************/
+/* Controlling Displaystyle and Scriptlevel                               */
+/**************************************************************************/
+
+/*
+  http://www.w3.org/Math/draft-spec/chapter3.html#presm.scriptlevel
+
+  The determination of -moz-math-display for <math> involves the displaystyle
+  and display attributes. See the <math> section above.
+*/
+
+/*
+  Map mstyle@displaystyle to -moz-math-display.
+*/
+mstyle[displaystyle="false"] {
+    -moz-math-display: inline;
+}
+mstyle[displaystyle="true"] {
+    -moz-math-display: block;
+}
+
+/*  munder, mover and munderover change the scriptlevels of their children
+   using -moz-math-increment-script-level because regular CSS rules are
+   insufficient to control when the scriptlevel should be incremented. All other
+   cases can be described using regular CSS, so we do it this way because it's
+   more efficient and less code. */
+:-moz-math-increment-script-level { -moz-script-level: +1; }
+
+/*
+   The mfrac element sets displaystyle to "false", or if it was already false
+   increments scriptlevel by 1, within numerator and denominator.
+*/
+mfrac > * {
+               -moz-script-level: auto;
+               -moz-math-display: inline;
+           }
+
+/*
+   The mroot element increments scriptlevel by 2, and sets displaystyle to
+   "false", within index, but leaves both attributes unchanged within base.
+   The msqrt element leaves both attributes unchanged within its argument.
+*/
+mroot > :not(:first-child) {
+               -moz-script-level: +2;
+               -moz-math-display: inline;
+           }
+
+/*
+   The msub element [...] increments scriptlevel by 1, and sets displaystyle to
+   "false", within subscript, but leaves both attributes unchanged within base.
+
+   The msup element [...] increments scriptlevel by 1, and sets displaystyle to
+   "false", within superscript, but leaves both attributes unchanged within
+   base.
+
+   The msubsup element [...] increments scriptlevel by 1, and sets displaystyle
+   to "false", within subscript and superscript, but leaves both attributes
+   unchanged within base.
+
+   The mmultiscripts element increments scriptlevel by 1, and sets displaystyle
+   to "false", within each of its arguments except base, but leaves both
+   attributes unchanged within base.
+ */
+msub > :not(:first-child),
+          msup > :not(:first-child),
+                    msubsup > :not(:first-child),
+                                 mmultiscripts > :not(:first-child) {
+                                                        -moz-script-level: +1;
+                                                        -moz-math-display: inline;
+                                                    }
+
+/*
+   The munder element [...] always sets displaystyle to "false" within the
+   underscript, but increments scriptlevel by 1 only when accentunder is
+   "false". Within base, it always leaves both attributes unchanged.
+
+   The mover element [...] always sets displaystyle to "false" within
+   overscript, but increments scriptlevel by 1 only when accent is "false".
+   Within base, it always leaves both attributes unchanged.
+
+   The munderover [..] always sets displaystyle to "false" within underscript
+   and overscript, but increments scriptlevel by 1 only when accentunder or
+   accent, respectively, are "false". Within base, it always leaves both
+   attributes unchanged.
+*/
+munder > :not(:first-child),
+            mover > :not(:first-child),
+                       munderover > :not(:first-child) {
+                                           -moz-math-display: inline;
+                                       }
+
+/*
+   The displaystyle attribute is allowed on the mtable element to set the
+   inherited value of the attribute. If the attribute is not present, the
+   mtable element sets displaystyle to "false" within the table elements.
+*/
+mtable { -moz-math-display: inline; }
+mtable[displaystyle="true"] { -moz-math-display: block; }
+
+/*
+   The mscarries element sets displaystyle to "false", and increments
+   scriptlevel by 1, so the children are typically displayed in a smaller font.
+   XXXfredw: This element is not implemented yet. See bug 534967.
+mscarries {
+  -moz-script-level: +1;
+  -moz-math-display: inline;
+}
+*/
+
+/* "The mphantom element renders invisibly, but with the same size and other
+   dimensions, including baseline position, that its contents would have if
+   they were rendered normally.".
+   Also, we do not expose the <mphantom> element to the accessible tree
+   (see bug 1108378). */
+mphantom {
+    visibility: hidden;
+}
+
+
+/*********************************************************************************
+ * jquery.ui.css
+ *********************************************************************************/
+
+ /*! jQuery UI - v1.11.4 - 2015-03-11
+ * http://jqueryui.com
+ * Includes: core.css, accordion.css, autocomplete.css, button.css, datepicker.css, dialog.css, draggable.css, menu.css, progressbar.css, resizable.css, selectable.css, selectmenu.css, slider.css, sortable.css, spinner.css, tabs.css, tooltip.css, theme.css
+ * To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Trebuchet%20MS%2CTahoma%2CVerdana%2CArial%2Csans-serif&fwDefault=bold&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=f6a828&bgTextureHeader=gloss_wave&bgImgOpacityHeader=35&borderColorHeader=e78f08&fcHeader=ffffff&iconColorHeader=ffffff&bgColorContent=eeeeee&bgTextureContent=highlight_soft&bgImgOpacityContent=100&borderColorContent=dddddd&fcContent=333333&iconColorContent=222222&bgColorDefault=f6f6f6&bgTextureDefault=glass&bgImgOpacityDefault=100&borderColorDefault=cccccc&fcDefault=1c94c4&iconColorDefault=ef8c08&bgColorHover=fdf5ce&bgTextureHover=glass&bgImgOpacityHover=100&borderColorHover=fbcb09&fcHover=c77405&iconColorHover=ef8c08&bgColorActive=ffffff&bgTextureActive=glass&bgImgOpacityActive=65&borderColorActive=fbd850&fcActive=eb8f00&iconColorActive=ef8c08&bgColorHighlight=ffe45c&bgTextureHighlight=highlight_soft&bgImgOpacityHighlight=75&borderColorHighlight=fed22f&fcHighlight=363636&iconColorHighlight=228ef1&bgColorError=b81900&bgTextureError=diagonals_thick&bgImgOpacityError=18&borderColorError=cd0a0a&fcError=ffffff&iconColorError=ffd27a&bgColorOverlay=666666&bgTextureOverlay=diagonals_thick&bgImgOpacityOverlay=20&opacityOverlay=50&bgColorShadow=000000&bgTextureShadow=flat&bgImgOpacityShadow=10&opacityShadow=20&thicknessShadow=5px&offsetTopShadow=-5px&offsetLeftShadow=-5px&cornerRadiusShadow=5px
+ * Copyright 2015 jQuery Foundation and other contributors; Licensed MIT */
+
+ /* Layout helpers
+ ----------------------------------*/
+ .ui-helper-hidden {
+     display: none;
+ }
+.ui-helper-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+.ui-helper-reset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    line-height: 1.3;
+    text-decoration: none;
+    font-size: 100%;
+    list-style: none;
+}
+.ui-helper-clearfix:before,
+.ui-helper-clearfix:after {
+    content: "";
+    display: table;
+    border-collapse: collapse;
+}
+.ui-helper-clearfix:after {
+    clear: both;
+}
+.ui-helper-clearfix {
+    min-height: 0; /* support: IE7 */
+}
+.ui-helper-zfix {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0;
+    filter:Alpha(Opacity=0); /* support: IE8 */
+}
+
+.ui-front {
+    z-index: 100;
+}
+
+
+/* Interaction Cues
+----------------------------------*/
+.ui-state-disabled {
+    cursor: default !important;
+}
+
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+.ui-icon {
+    display: block;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Overlays */
+.ui-widget-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.ui-accordion .ui-accordion-header {
+    display: block;
+    cursor: pointer;
+    position: relative;
+    margin: 2px 0 0 0;
+    padding: .5em .5em .5em .7em;
+    min-height: 0; /* support: IE7 */
+    font-size: 100%;
+}
+.ui-accordion .ui-accordion-icons {
+    padding-left: 2.2em;
+}
+.ui-accordion .ui-accordion-icons .ui-accordion-icons {
+    padding-left: 2.2em;
+}
+.ui-accordion .ui-accordion-header .ui-accordion-header-icon {
+    position: absolute;
+    left: .5em;
+    top: 50%;
+    margin-top: -8px;
+}
+.ui-accordion .ui-accordion-content {
+    padding: 1em 2.2em;
+    border-top: 0;
+    overflow: auto;
+}
+.ui-autocomplete {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: default;
+}
+.ui-button {
+    display: inline-block;
+    position: relative;
+    padding: 0;
+    line-height: normal;
+    margin-right: .1em;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center;
+    overflow: visible; /* removes extra width in IE */
+}
+.ui-button,
+.ui-button:link,
+.ui-button:visited,
+.ui-button:hover,
+.ui-button:active {
+    text-decoration: none;
+}
+/* to make room for the icon, a width needs to be set here */
+.ui-button-icon-only {
+    width: 2.2em;
+}
+/* button elements seem to need a little more width */
+button.ui-button-icon-only {
+    width: 2.4em;
+}
+.ui-button-icons-only {
+    width: 3.4em;
+}
+button.ui-button-icons-only {
+    width: 3.7em;
+}
+
+/* button text element */
+.ui-button .ui-button-text {
+    display: block;
+    line-height: normal;
+}
+.ui-button-text-only .ui-button-text {
+    padding: .4em 1em;
+}
+.ui-button-icon-only .ui-button-text,
+.ui-button-icons-only .ui-button-text {
+    padding: .4em;
+    text-indent: -9999999px;
+}
+.ui-button-text-icon-primary .ui-button-text,
+.ui-button-text-icons .ui-button-text {
+    padding: .4em 1em .4em 2.1em;
+}
+.ui-button-text-icon-secondary .ui-button-text,
+.ui-button-text-icons .ui-button-text {
+    padding: .4em 2.1em .4em 1em;
+}
+.ui-button-text-icons .ui-button-text {
+    padding-left: 2.1em;
+    padding-right: 2.1em;
+}
+/* no icon support for input elements, provide padding by default */
+input.ui-button {
+    padding: .4em 1em;
+}
+
+/* button icon element(s) */
+.ui-button-icon-only .ui-icon,
+.ui-button-text-icon-primary .ui-icon,
+.ui-button-text-icon-secondary .ui-icon,
+.ui-button-text-icons .ui-icon,
+.ui-button-icons-only .ui-icon {
+    position: absolute;
+    top: 50%;
+    margin-top: -8px;
+}
+.ui-button-icon-only .ui-icon {
+    left: 50%;
+    margin-left: -8px;
+}
+.ui-button-text-icon-primary .ui-button-icon-primary,
+.ui-button-text-icons .ui-button-icon-primary,
+.ui-button-icons-only .ui-button-icon-primary {
+    left: .5em;
+}
+.ui-button-text-icon-secondary .ui-button-icon-secondary,
+.ui-button-text-icons .ui-button-icon-secondary,
+.ui-button-icons-only .ui-button-icon-secondary {
+    right: .5em;
+}
+
+/* button sets */
+.ui-buttonset {
+    margin-right: 7px;
+}
+.ui-buttonset .ui-button {
+    margin-left: 0;
+    margin-right: -.3em;
+}
+
+/* workarounds */
+/* reset extra padding in Firefox, see h5bp.com/l */
+input.ui-button::-moz-focus-inner,
+button.ui-button::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+.ui-datepicker {
+    width: 17em;
+    padding: .2em .2em 0;
+    display: none;
+}
+.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: .2em 0;
+}
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    position: absolute;
+    top: 2px;
+    width: 1.8em;
+    height: 1.8em;
+}
+.ui-datepicker .ui-datepicker-prev-hover,
+.ui-datepicker .ui-datepicker-next-hover {
+    top: 1px;
+}
+.ui-datepicker .ui-datepicker-prev {
+    left: 2px;
+}
+.ui-datepicker .ui-datepicker-next {
+    right: 2px;
+}
+.ui-datepicker .ui-datepicker-prev-hover {
+    left: 1px;
+}
+.ui-datepicker .ui-datepicker-next-hover {
+    right: 1px;
+}
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span {
+    display: block;
+    position: absolute;
+    left: 50%;
+    margin-left: -8px;
+    top: 50%;
+    margin-top: -8px;
+}
+.ui-datepicker .ui-datepicker-title {
+    margin: 0 2.3em;
+    line-height: 1.8em;
+    text-align: center;
+}
+.ui-datepicker .ui-datepicker-title select {
+    font-size: 1em;
+    margin: 1px 0;
+}
+.ui-datepicker select.ui-datepicker-month,
+.ui-datepicker select.ui-datepicker-year {
+    width: 45%;
+}
+.ui-datepicker table {
+    width: 100%;
+    font-size: .9em;
+    border-collapse: collapse;
+    margin: 0 0 .4em;
+}
+.ui-datepicker th {
+    padding: .7em .3em;
+    text-align: center;
+    font-weight: bold;
+    border: 0;
+}
+.ui-datepicker td {
+    border: 0;
+    padding: 1px;
+}
+.ui-datepicker td span,
+.ui-datepicker td a {
+    display: block;
+    padding: .2em;
+    text-align: right;
+    text-decoration: none;
+}
+.ui-datepicker .ui-datepicker-buttonpane {
+    background-image: none;
+    margin: .7em 0 0 0;
+    padding: 0 .2em;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+.ui-datepicker .ui-datepicker-buttonpane button {
+    float: right;
+    margin: .5em .2em .4em;
+    cursor: pointer;
+    padding: .2em .6em .3em .6em;
+    width: auto;
+    overflow: visible;
+}
+.ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
+    float: left;
+}
+
+/* with multiple calendars */
+.ui-datepicker.ui-datepicker-multi {
+    width: auto;
+}
+.ui-datepicker-multi .ui-datepicker-group {
+    float: left;
+}
+.ui-datepicker-multi .ui-datepicker-group table {
+    width: 95%;
+    margin: 0 auto .4em;
+}
+.ui-datepicker-multi-2 .ui-datepicker-group {
+    width: 50%;
+}
+.ui-datepicker-multi-3 .ui-datepicker-group {
+    width: 33.3%;
+}
+.ui-datepicker-multi-4 .ui-datepicker-group {
+    width: 25%;
+}
+.ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header,
+.ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header {
+    border-left-width: 0;
+}
+.ui-datepicker-multi .ui-datepicker-buttonpane {
+    clear: left;
+}
+.ui-datepicker-row-break {
+    clear: both;
+    width: 100%;
+    font-size: 0;
+}
+
+/* RTL support */
+.ui-datepicker-rtl {
+    direction: rtl;
+}
+.ui-datepicker-rtl .ui-datepicker-prev {
+    right: 2px;
+    left: auto;
+}
+.ui-datepicker-rtl .ui-datepicker-next {
+    left: 2px;
+    right: auto;
+}
+.ui-datepicker-rtl .ui-datepicker-prev:hover {
+    right: 1px;
+    left: auto;
+}
+.ui-datepicker-rtl .ui-datepicker-next:hover {
+    left: 1px;
+    right: auto;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane {
+    clear: right;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane button {
+    float: left;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current,
+.ui-datepicker-rtl .ui-datepicker-group {
+    float: right;
+}
+.ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header,
+.ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header {
+    border-right-width: 0;
+    border-left-width: 1px;
+}
+.ui-dialog {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: .2em;
+    outline: 0;
+}
+.ui-dialog .ui-dialog-titlebar {
+    padding: .4em 1em;
+    position: relative;
+}
+.ui-dialog .ui-dialog-title {
+    float: left;
+    margin: .1em 0;
+    white-space: nowrap;
+    width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+    position: absolute;
+    right: .3em;
+    top: 50%;
+    width: 20px;
+    margin: -10px 0 0 0;
+    padding: 1px;
+    height: 20px;
+}
+.ui-dialog .ui-dialog-content {
+    position: relative;
+    border: 0;
+    padding: .5em 1em;
+    background: none;
+    overflow: auto;
+}
+.ui-dialog .ui-dialog-buttonpane {
+    text-align: left;
+    border-width: 1px 0 0 0;
+    background-image: none;
+    margin-top: .5em;
+    padding: .3em 1em .5em .4em;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+    float: right;
+}
+.ui-dialog .ui-dialog-buttonpane button {
+    margin: .5em .4em .5em 0;
+    cursor: pointer;
+}
+.ui-dialog .ui-resizable-se {
+    width: 12px;
+    height: 12px;
+    right: -5px;
+    bottom: -5px;
+    background-position: 16px 16px;
+}
+.ui-draggable .ui-dialog-titlebar {
+    cursor: move;
+}
+.ui-draggable-handle {
+    -ms-touch-action: none;
+    touch-action: none;
+}
+.ui-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+    outline: none;
+}
+.ui-menu .ui-menu {
+    position: absolute;
+}
+.ui-menu .ui-menu-item {
+    position: relative;
+    margin: 0;
+    padding: 3px 1em 3px .4em;
+    cursor: pointer;
+    min-height: 0; /* support: IE7 */
+    /* support: IE10, see #8844 */
+    list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+}
+.ui-menu .ui-menu-divider {
+    margin: 5px 0;
+    height: 0;
+    font-size: 0;
+    line-height: 0;
+    border-width: 1px 0 0 0;
+}
+.ui-menu .ui-state-focus,
+.ui-menu .ui-state-active {
+    margin: -1px;
+}
+
+/* icon support */
+.ui-menu-icons {
+    position: relative;
+}
+.ui-menu-icons .ui-menu-item {
+    padding-left: 2em;
+}
+
+/* left-aligned */
+.ui-menu .ui-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: .2em;
+    margin: auto 0;
+}
+
+/* right-aligned */
+.ui-menu .ui-menu-icon {
+    left: auto;
+    right: 0;
+}
+.ui-progressbar {
+    height: 2em;
+    text-align: left;
+    overflow: hidden;
+}
+.ui-progressbar .ui-progressbar-value {
+    margin: -1px;
+    height: 100%;
+}
+.ui-progressbar .ui-progressbar-overlay {
+    background: url("data:image/gif;base64,R0lGODlhKAAoAIABAAAAAP///yH/C05FVFNDQVBFMi4wAwEAAAAh+QQJAQABACwAAAAAKAAoAAACkYwNqXrdC52DS06a7MFZI+4FHBCKoDeWKXqymPqGqxvJrXZbMx7Ttc+w9XgU2FB3lOyQRWET2IFGiU9m1frDVpxZZc6bfHwv4c1YXP6k1Vdy292Fb6UkuvFtXpvWSzA+HycXJHUXiGYIiMg2R6W459gnWGfHNdjIqDWVqemH2ekpObkpOlppWUqZiqr6edqqWQAAIfkECQEAAQAsAAAAACgAKAAAApSMgZnGfaqcg1E2uuzDmmHUBR8Qil95hiPKqWn3aqtLsS18y7G1SzNeowWBENtQd+T1JktP05nzPTdJZlR6vUxNWWjV+vUWhWNkWFwxl9VpZRedYcflIOLafaa28XdsH/ynlcc1uPVDZxQIR0K25+cICCmoqCe5mGhZOfeYSUh5yJcJyrkZWWpaR8doJ2o4NYq62lAAACH5BAkBAAEALAAAAAAoACgAAAKVDI4Yy22ZnINRNqosw0Bv7i1gyHUkFj7oSaWlu3ovC8GxNso5fluz3qLVhBVeT/Lz7ZTHyxL5dDalQWPVOsQWtRnuwXaFTj9jVVh8pma9JjZ4zYSj5ZOyma7uuolffh+IR5aW97cHuBUXKGKXlKjn+DiHWMcYJah4N0lYCMlJOXipGRr5qdgoSTrqWSq6WFl2ypoaUAAAIfkECQEAAQAsAAAAACgAKAAAApaEb6HLgd/iO7FNWtcFWe+ufODGjRfoiJ2akShbueb0wtI50zm02pbvwfWEMWBQ1zKGlLIhskiEPm9R6vRXxV4ZzWT2yHOGpWMyorblKlNp8HmHEb/lCXjcW7bmtXP8Xt229OVWR1fod2eWqNfHuMjXCPkIGNileOiImVmCOEmoSfn3yXlJWmoHGhqp6ilYuWYpmTqKUgAAIfkECQEAAQAsAAAAACgAKAAAApiEH6kb58biQ3FNWtMFWW3eNVcojuFGfqnZqSebuS06w5V80/X02pKe8zFwP6EFWOT1lDFk8rGERh1TTNOocQ61Hm4Xm2VexUHpzjymViHrFbiELsefVrn6XKfnt2Q9G/+Xdie499XHd2g4h7ioOGhXGJboGAnXSBnoBwKYyfioubZJ2Hn0RuRZaflZOil56Zp6iioKSXpUAAAh+QQJAQABACwAAAAAKAAoAAACkoQRqRvnxuI7kU1a1UU5bd5tnSeOZXhmn5lWK3qNTWvRdQxP8qvaC+/yaYQzXO7BMvaUEmJRd3TsiMAgswmNYrSgZdYrTX6tSHGZO73ezuAw2uxuQ+BbeZfMxsexY35+/Qe4J1inV0g4x3WHuMhIl2jXOKT2Q+VU5fgoSUI52VfZyfkJGkha6jmY+aaYdirq+lQAACH5BAkBAAEALAAAAAAoACgAAAKWBIKpYe0L3YNKToqswUlvznigd4wiR4KhZrKt9Upqip61i9E3vMvxRdHlbEFiEXfk9YARYxOZZD6VQ2pUunBmtRXo1Lf8hMVVcNl8JafV38aM2/Fu5V16Bn63r6xt97j09+MXSFi4BniGFae3hzbH9+hYBzkpuUh5aZmHuanZOZgIuvbGiNeomCnaxxap2upaCZsq+1kAACH5BAkBAAEALAAAAAAoACgAAAKXjI8By5zf4kOxTVrXNVlv1X0d8IGZGKLnNpYtm8Lr9cqVeuOSvfOW79D9aDHizNhDJidFZhNydEahOaDH6nomtJjp1tutKoNWkvA6JqfRVLHU/QUfau9l2x7G54d1fl995xcIGAdXqMfBNadoYrhH+Mg2KBlpVpbluCiXmMnZ2Sh4GBqJ+ckIOqqJ6LmKSllZmsoq6wpQAAAh+QQJAQABACwAAAAAKAAoAAAClYx/oLvoxuJDkU1a1YUZbJ59nSd2ZXhWqbRa2/gF8Gu2DY3iqs7yrq+xBYEkYvFSM8aSSObE+ZgRl1BHFZNr7pRCavZ5BW2142hY3AN/zWtsmf12p9XxxFl2lpLn1rseztfXZjdIWIf2s5dItwjYKBgo9yg5pHgzJXTEeGlZuenpyPmpGQoKOWkYmSpaSnqKileI2FAAACH5BAkBAAEALAAAAAAoACgAAAKVjB+gu+jG4kORTVrVhRlsnn2dJ3ZleFaptFrb+CXmO9OozeL5VfP99HvAWhpiUdcwkpBH3825AwYdU8xTqlLGhtCosArKMpvfa1mMRae9VvWZfeB2XfPkeLmm18lUcBj+p5dnN8jXZ3YIGEhYuOUn45aoCDkp16hl5IjYJvjWKcnoGQpqyPlpOhr3aElaqrq56Bq7VAAAOw==");
+    height: 100%;
+    filter: alpha(opacity=25); /* support: IE8 */
+    opacity: 0.25;
+}
+.ui-progressbar-indeterminate .ui-progressbar-value {
+    background-image: none;
+}
+.ui-resizable {
+    position: relative;
+}
+.ui-resizable-handle {
+    position: absolute;
+    font-size: 0.1px;
+    display: block;
+    -ms-touch-action: none;
+    touch-action: none;
+}
+.ui-resizable-disabled .ui-resizable-handle,
+.ui-resizable-autohide .ui-resizable-handle {
+    display: none;
+}
+.ui-resizable-n {
+    cursor: n-resize;
+    height: 7px;
+    width: 100%;
+    top: -5px;
+    left: 0;
+}
+.ui-resizable-s {
+    cursor: s-resize;
+    height: 7px;
+    width: 100%;
+    bottom: -5px;
+    left: 0;
+}
+.ui-resizable-e {
+    cursor: e-resize;
+    width: 7px;
+    right: -5px;
+    top: 0;
+    height: 100%;
+}
+.ui-resizable-w {
+    cursor: w-resize;
+    width: 7px;
+    left: -5px;
+    top: 0;
+    height: 100%;
+}
+.ui-resizable-se {
+    cursor: se-resize;
+    width: 12px;
+    height: 12px;
+    right: 1px;
+    bottom: 1px;
+}
+.ui-resizable-sw {
+    cursor: sw-resize;
+    width: 9px;
+    height: 9px;
+    left: -5px;
+    bottom: -5px;
+}
+.ui-resizable-nw {
+    cursor: nw-resize;
+    width: 9px;
+    height: 9px;
+    left: -5px;
+    top: -5px;
+}
+.ui-resizable-ne {
+    cursor: ne-resize;
+    width: 9px;
+    height: 9px;
+    right: -5px;
+    top: -5px;
+}
+.ui-selectable {
+    -ms-touch-action: none;
+    touch-action: none;
+}
+.ui-selectable-helper {
+    position: absolute;
+    z-index: 100;
+    border: 1px dotted black;
+}
+.ui-selectmenu-menu {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+.ui-selectmenu-menu .ui-menu {
+    overflow: auto;
+    /* Support: IE7 */
+    overflow-x: hidden;
+    padding-bottom: 1px;
+}
+.ui-selectmenu-menu .ui-menu .ui-selectmenu-optgroup {
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1.5;
+    padding: 2px 0.4em;
+    margin: 0.5em 0 0 0;
+    height: auto;
+    border: 0;
+}
+.ui-selectmenu-open {
+    display: block;
+}
+.ui-selectmenu-button {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    cursor: pointer;
+}
+.ui-selectmenu-button span.ui-icon {
+    right: 0.5em;
+    left: auto;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+}
+.ui-selectmenu-button span.ui-selectmenu-text {
+    text-align: left;
+    padding: 0.4em 2.1em 0.4em 1em;
+    display: block;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ui-slider {
+    position: relative;
+    text-align: left;
+}
+.ui-slider .ui-slider-handle {
+    position: absolute;
+    z-index: 2;
+    width: 1.2em;
+    height: 1.2em;
+    cursor: default;
+    -ms-touch-action: none;
+    touch-action: none;
+}
+.ui-slider .ui-slider-range {
+    position: absolute;
+    z-index: 1;
+    font-size: .7em;
+    display: block;
+    border: 0;
+    background-position: 0 0;
+}
+
+/* support: IE8 - See #6727 */
+.ui-slider.ui-state-disabled .ui-slider-handle,
+.ui-slider.ui-state-disabled .ui-slider-range {
+    filter: inherit;
+}
+
+.ui-slider-horizontal {
+    height: .8em;
+}
+.ui-slider-horizontal .ui-slider-handle {
+    top: -.3em;
+    margin-left: -.6em;
+}
+.ui-slider-horizontal .ui-slider-range {
+    top: 0;
+    height: 100%;
+}
+.ui-slider-horizontal .ui-slider-range-min {
+    left: 0;
+}
+.ui-slider-horizontal .ui-slider-range-max {
+    right: 0;
+}
+
+.ui-slider-vertical {
+    width: .8em;
+    height: 100px;
+}
+.ui-slider-vertical .ui-slider-handle {
+    left: -.3em;
+    margin-left: 0;
+    margin-bottom: -.6em;
+}
+.ui-slider-vertical .ui-slider-range {
+    left: 0;
+    width: 100%;
+}
+.ui-slider-vertical .ui-slider-range-min {
+    bottom: 0;
+}
+.ui-slider-vertical .ui-slider-range-max {
+    top: 0;
+}
+.ui-sortable-handle {
+    -ms-touch-action: none;
+    touch-action: none;
+}
+.ui-spinner {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    padding: 0;
+    vertical-align: middle;
+}
+.ui-spinner-input {
+    border: none;
+    background: none;
+    color: inherit;
+    padding: 0;
+    margin: .2em 0;
+    vertical-align: middle;
+    margin-left: .4em;
+    margin-right: 22px;
+}
+.ui-spinner-button {
+    width: 16px;
+    height: 50%;
+    font-size: .5em;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    position: absolute;
+    cursor: default;
+    display: block;
+    overflow: hidden;
+    right: 0;
+}
+/* more specificity required here to override default borders */
+.ui-spinner a.ui-spinner-button {
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+}
+/* vertically center icon */
+.ui-spinner .ui-icon {
+    position: absolute;
+    margin-top: -8px;
+    top: 50%;
+    left: 0;
+}
+.ui-spinner-up {
+    top: 0;
+}
+.ui-spinner-down {
+    bottom: 0;
+}
+
+/* TR overrides */
+.ui-spinner .ui-icon-triangle-1-s {
+    /* need to fix icons sprite */
+    background-position: -65px -16px;
+}
+.ui-tabs {
+    position: relative;/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
+    padding: .2em;
+}
+.ui-tabs .ui-tabs-nav {
+    margin: 0;
+    padding: .2em .2em 0;
+}
+.ui-tabs .ui-tabs-nav li {
+    list-style: none;
+    float: left;
+    position: relative;
+    top: 0;
+    margin: 1px .2em 0 0;
+    border-bottom-width: 0;
+    padding: 0;
+    white-space: nowrap;
+}
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+    float: left;
+    padding: .5em 1em;
+    text-decoration: none;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+    margin-bottom: -1px;
+    padding-bottom: 1px;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-state-disabled .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-tabs-loading .ui-tabs-anchor {
+    cursor: text;
+}
+.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-active .ui-tabs-anchor {
+    cursor: pointer;
+}
+.ui-tabs .ui-tabs-panel {
+    display: block;
+    border-width: 0;
+    padding: 1em 1.4em;
+    background: none;
+}
+.ui-tooltip {
+    padding: 8px;
+    position: absolute;
+    z-index: 9999;
+    max-width: 300px;
+    -webkit-box-shadow: 0 0 5px #aaa;
+    box-shadow: 0 0 5px #aaa;
+}
+body .ui-tooltip {
+    border-width: 2px;
+}
+
+/* Component containers
+----------------------------------*/
+.ui-widget {
+    font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+    font-size: 1.1em;
+}
+.ui-widget .ui-widget {
+    font-size: 1em;
+}
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+    font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+    font-size: 1em;
+}
+.ui-widget-content {
+    border: 1px solid #dddddd;
+    background: #eeeeee url("images/ui-bg_highlight-soft_100_eeeeee_1x100.png") 50% top repeat-x;
+    color: #333333;
+}
+.ui-widget-content a {
+    color: #333333;
+}
+.ui-widget-header {
+    border: 1px solid #e78f08;
+    background: #f6a828 url("images/ui-bg_gloss-wave_35_f6a828_500x100.png") 50% 50% repeat-x;
+    color: #ffffff;
+    font-weight: bold;
+}
+.ui-widget-header a {
+    color: #ffffff;
+}
+
+/* Interaction states
+----------------------------------*/
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    border: 1px solid #cccccc;
+    background: #f6f6f6 url("images/ui-bg_glass_100_f6f6f6_1x400.png") 50% 50% repeat-x;
+    font-weight: bold;
+    color: #1c94c4;
+}
+.ui-state-default a,
+.ui-state-default a:link,
+.ui-state-default a:visited {
+    color: #1c94c4;
+    text-decoration: none;
+}
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus {
+    border: 1px solid #fbcb09;
+    background: #fdf5ce url("images/ui-bg_glass_100_fdf5ce_1x400.png") 50% 50% repeat-x;
+    font-weight: bold;
+    color: #c77405;
+}
+.ui-state-hover a,
+.ui-state-hover a:hover,
+.ui-state-hover a:link,
+.ui-state-hover a:visited,
+.ui-state-focus a,
+.ui-state-focus a:hover,
+.ui-state-focus a:link,
+.ui-state-focus a:visited {
+    color: #c77405;
+    text-decoration: none;
+}
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+    border: 1px solid #fbd850;
+    background: #ffffff url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
+    font-weight: bold;
+    color: #eb8f00;
+}
+.ui-state-active a,
+.ui-state-active a:link,
+.ui-state-active a:visited {
+    color: #eb8f00;
+    text-decoration: none;
+}
+
+/* Interaction Cues
+----------------------------------*/
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight {
+    border: 1px solid #fed22f;
+    background: #ffe45c url("images/ui-bg_highlight-soft_75_ffe45c_1x100.png") 50% top repeat-x;
+    color: #363636;
+}
+.ui-state-highlight a,
+.ui-widget-content .ui-state-highlight a,
+.ui-widget-header .ui-state-highlight a {
+    color: #363636;
+}
+.ui-state-error,
+.ui-widget-content .ui-state-error,
+.ui-widget-header .ui-state-error {
+    border: 1px solid #cd0a0a;
+    background: #b81900 url("images/ui-bg_diagonals-thick_18_b81900_40x40.png") 50% 50% repeat;
+    color: #ffffff;
+}
+.ui-state-error a,
+.ui-widget-content .ui-state-error a,
+.ui-widget-header .ui-state-error a {
+    color: #ffffff;
+}
+.ui-state-error-text,
+.ui-widget-content .ui-state-error-text,
+.ui-widget-header .ui-state-error-text {
+    color: #ffffff;
+}
+.ui-priority-primary,
+.ui-widget-content .ui-priority-primary,
+.ui-widget-header .ui-priority-primary {
+    font-weight: bold;
+}
+.ui-priority-secondary,
+.ui-widget-content .ui-priority-secondary,
+.ui-widget-header .ui-priority-secondary {
+    opacity: .7;
+    filter:Alpha(Opacity=70); /* support: IE8 */
+    font-weight: normal;
+}
+.ui-state-disabled,
+.ui-widget-content .ui-state-disabled,
+.ui-widget-header .ui-state-disabled {
+    opacity: .35;
+    filter:Alpha(Opacity=35); /* support: IE8 */
+    background-image: none;
+}
+.ui-state-disabled .ui-icon {
+    filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */
+}
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+.ui-icon {
+    width: 16px;
+    height: 16px;
+}
+.ui-icon,
+.ui-widget-content .ui-icon {
+    background-image: url("images/ui-icons_222222_256x240.png");
+}
+.ui-widget-header .ui-icon {
+    background-image: url("images/ui-icons_ffffff_256x240.png");
+}
+.ui-state-default .ui-icon {
+    background-image: url("images/ui-icons_ef8c08_256x240.png");
+}
+.ui-state-hover .ui-icon,
+.ui-state-focus .ui-icon {
+    background-image: url("images/ui-icons_ef8c08_256x240.png");
+}
+.ui-state-active .ui-icon {
+    background-image: url("images/ui-icons_ef8c08_256x240.png");
+}
+.ui-state-highlight .ui-icon {
+    background-image: url("images/ui-icons_228ef1_256x240.png");
+}
+.ui-state-error .ui-icon,
+.ui-state-error-text .ui-icon {
+    background-image: url("images/ui-icons_ffd27a_256x240.png");
+}
+
+/* positioning */
+.ui-icon-blank { background-position: 16px 16px; }
+.ui-icon-carat-1-n { background-position: 0 0; }
+.ui-icon-carat-1-ne { background-position: -16px 0; }
+.ui-icon-carat-1-e { background-position: -32px 0; }
+.ui-icon-carat-1-se { background-position: -48px 0; }
+.ui-icon-carat-1-s { background-position: -64px 0; }
+.ui-icon-carat-1-sw { background-position: -80px 0; }
+.ui-icon-carat-1-w { background-position: -96px 0; }
+.ui-icon-carat-1-nw { background-position: -112px 0; }
+.ui-icon-carat-2-n-s { background-position: -128px 0; }
+.ui-icon-carat-2-e-w { background-position: -144px 0; }
+.ui-icon-triangle-1-n { background-position: 0 -16px; }
+.ui-icon-triangle-1-ne { background-position: -16px -16px; }
+.ui-icon-triangle-1-e { background-position: -32px -16px; }
+.ui-icon-triangle-1-se { background-position: -48px -16px; }
+.ui-icon-triangle-1-s { background-position: -64px -16px; }
+.ui-icon-triangle-1-sw { background-position: -80px -16px; }
+.ui-icon-triangle-1-w { background-position: -96px -16px; }
+.ui-icon-triangle-1-nw { background-position: -112px -16px; }
+.ui-icon-triangle-2-n-s { background-position: -128px -16px; }
+.ui-icon-triangle-2-e-w { background-position: -144px -16px; }
+.ui-icon-arrow-1-n { background-position: 0 -32px; }
+.ui-icon-arrow-1-ne { background-position: -16px -32px; }
+.ui-icon-arrow-1-e { background-position: -32px -32px; }
+.ui-icon-arrow-1-se { background-position: -48px -32px; }
+.ui-icon-arrow-1-s { background-position: -64px -32px; }
+.ui-icon-arrow-1-sw { background-position: -80px -32px; }
+.ui-icon-arrow-1-w { background-position: -96px -32px; }
+.ui-icon-arrow-1-nw { background-position: -112px -32px; }
+.ui-icon-arrow-2-n-s { background-position: -128px -32px; }
+.ui-icon-arrow-2-ne-sw { background-position: -144px -32px; }
+.ui-icon-arrow-2-e-w { background-position: -160px -32px; }
+.ui-icon-arrow-2-se-nw { background-position: -176px -32px; }
+.ui-icon-arrowstop-1-n { background-position: -192px -32px; }
+.ui-icon-arrowstop-1-e { background-position: -208px -32px; }
+.ui-icon-arrowstop-1-s { background-position: -224px -32px; }
+.ui-icon-arrowstop-1-w { background-position: -240px -32px; }
+.ui-icon-arrowthick-1-n { background-position: 0 -48px; }
+.ui-icon-arrowthick-1-ne { background-position: -16px -48px; }
+.ui-icon-arrowthick-1-e { background-position: -32px -48px; }
+.ui-icon-arrowthick-1-se { background-position: -48px -48px; }
+.ui-icon-arrowthick-1-s { background-position: -64px -48px; }
+.ui-icon-arrowthick-1-sw { background-position: -80px -48px; }
+.ui-icon-arrowthick-1-w { background-position: -96px -48px; }
+.ui-icon-arrowthick-1-nw { background-position: -112px -48px; }
+.ui-icon-arrowthick-2-n-s { background-position: -128px -48px; }
+.ui-icon-arrowthick-2-ne-sw { background-position: -144px -48px; }
+.ui-icon-arrowthick-2-e-w { background-position: -160px -48px; }
+.ui-icon-arrowthick-2-se-nw { background-position: -176px -48px; }
+.ui-icon-arrowthickstop-1-n { background-position: -192px -48px; }
+.ui-icon-arrowthickstop-1-e { background-position: -208px -48px; }
+.ui-icon-arrowthickstop-1-s { background-position: -224px -48px; }
+.ui-icon-arrowthickstop-1-w { background-position: -240px -48px; }
+.ui-icon-arrowreturnthick-1-w { background-position: 0 -64px; }
+.ui-icon-arrowreturnthick-1-n { background-position: -16px -64px; }
+.ui-icon-arrowreturnthick-1-e { background-position: -32px -64px; }
+.ui-icon-arrowreturnthick-1-s { background-position: -48px -64px; }
+.ui-icon-arrowreturn-1-w { background-position: -64px -64px; }
+.ui-icon-arrowreturn-1-n { background-position: -80px -64px; }
+.ui-icon-arrowreturn-1-e { background-position: -96px -64px; }
+.ui-icon-arrowreturn-1-s { background-position: -112px -64px; }
+.ui-icon-arrowrefresh-1-w { background-position: -128px -64px; }
+.ui-icon-arrowrefresh-1-n { background-position: -144px -64px; }
+.ui-icon-arrowrefresh-1-e { background-position: -160px -64px; }
+.ui-icon-arrowrefresh-1-s { background-position: -176px -64px; }
+.ui-icon-arrow-4 { background-position: 0 -80px; }
+.ui-icon-arrow-4-diag { background-position: -16px -80px; }
+.ui-icon-extlink { background-position: -32px -80px; }
+.ui-icon-newwin { background-position: -48px -80px; }
+.ui-icon-refresh { background-position: -64px -80px; }
+.ui-icon-shuffle { background-position: -80px -80px; }
+.ui-icon-transfer-e-w { background-position: -96px -80px; }
+.ui-icon-transferthick-e-w { background-position: -112px -80px; }
+.ui-icon-folder-collapsed { background-position: 0 -96px; }
+.ui-icon-folder-open { background-position: -16px -96px; }
+.ui-icon-document { background-position: -32px -96px; }
+.ui-icon-document-b { background-position: -48px -96px; }
+.ui-icon-note { background-position: -64px -96px; }
+.ui-icon-mail-closed { background-position: -80px -96px; }
+.ui-icon-mail-open { background-position: -96px -96px; }
+.ui-icon-suitcase { background-position: -112px -96px; }
+.ui-icon-comment { background-position: -128px -96px; }
+.ui-icon-person { background-position: -144px -96px; }
+.ui-icon-print { background-position: -160px -96px; }
+.ui-icon-trash { background-position: -176px -96px; }
+.ui-icon-locked { background-position: -192px -96px; }
+.ui-icon-unlocked { background-position: -208px -96px; }
+.ui-icon-bookmark { background-position: -224px -96px; }
+.ui-icon-tag { background-position: -240px -96px; }
+.ui-icon-home { background-position: 0 -112px; }
+.ui-icon-flag { background-position: -16px -112px; }
+.ui-icon-calendar { background-position: -32px -112px; }
+.ui-icon-cart { background-position: -48px -112px; }
+.ui-icon-pencil { background-position: -64px -112px; }
+.ui-icon-clock { background-position: -80px -112px; }
+.ui-icon-disk { background-position: -96px -112px; }
+.ui-icon-calculator { background-position: -112px -112px; }
+.ui-icon-zoomin { background-position: -128px -112px; }
+.ui-icon-zoomout { background-position: -144px -112px; }
+.ui-icon-search { background-position: -160px -112px; }
+.ui-icon-wrench { background-position: -176px -112px; }
+.ui-icon-gear { background-position: -192px -112px; }
+.ui-icon-heart { background-position: -208px -112px; }
+.ui-icon-star { background-position: -224px -112px; }
+.ui-icon-link { background-position: -240px -112px; }
+.ui-icon-cancel { background-position: 0 -128px; }
+.ui-icon-plus { background-position: -16px -128px; }
+.ui-icon-plusthick { background-position: -32px -128px; }
+.ui-icon-minus { background-position: -48px -128px; }
+.ui-icon-minusthick { background-position: -64px -128px; }
+.ui-icon-close { background-position: -80px -128px; }
+.ui-icon-closethick { background-position: -96px -128px; }
+.ui-icon-key { background-position: -112px -128px; }
+.ui-icon-lightbulb { background-position: -128px -128px; }
+.ui-icon-scissors { background-position: -144px -128px; }
+.ui-icon-clipboard { background-position: -160px -128px; }
+.ui-icon-copy { background-position: -176px -128px; }
+.ui-icon-contact { background-position: -192px -128px; }
+.ui-icon-image { background-position: -208px -128px; }
+.ui-icon-video { background-position: -224px -128px; }
+.ui-icon-script { background-position: -240px -128px; }
+.ui-icon-alert { background-position: 0 -144px; }
+.ui-icon-info { background-position: -16px -144px; }
+.ui-icon-notice { background-position: -32px -144px; }
+.ui-icon-help { background-position: -48px -144px; }
+.ui-icon-check { background-position: -64px -144px; }
+.ui-icon-bullet { background-position: -80px -144px; }
+.ui-icon-radio-on { background-position: -96px -144px; }
+.ui-icon-radio-off { background-position: -112px -144px; }
+.ui-icon-pin-w { background-position: -128px -144px; }
+.ui-icon-pin-s { background-position: -144px -144px; }
+.ui-icon-play { background-position: 0 -160px; }
+.ui-icon-pause { background-position: -16px -160px; }
+.ui-icon-seek-next { background-position: -32px -160px; }
+.ui-icon-seek-prev { background-position: -48px -160px; }
+.ui-icon-seek-end { background-position: -64px -160px; }
+.ui-icon-seek-start { background-position: -80px -160px; }
+/* ui-icon-seek-first is deprecated, use ui-icon-seek-start instead */
+.ui-icon-seek-first { background-position: -80px -160px; }
+.ui-icon-stop { background-position: -96px -160px; }
+.ui-icon-eject { background-position: -112px -160px; }
+.ui-icon-volume-off { background-position: -128px -160px; }
+.ui-icon-volume-on { background-position: -144px -160px; }
+.ui-icon-power { background-position: 0 -176px; }
+.ui-icon-signal-diag { background-position: -16px -176px; }
+.ui-icon-signal { background-position: -32px -176px; }
+.ui-icon-battery-0 { background-position: -48px -176px; }
+.ui-icon-battery-1 { background-position: -64px -176px; }
+.ui-icon-battery-2 { background-position: -80px -176px; }
+.ui-icon-battery-3 { background-position: -96px -176px; }
+.ui-icon-circle-plus { background-position: 0 -192px; }
+.ui-icon-circle-minus { background-position: -16px -192px; }
+.ui-icon-circle-close { background-position: -32px -192px; }
+.ui-icon-circle-triangle-e { background-position: -48px -192px; }
+.ui-icon-circle-triangle-s { background-position: -64px -192px; }
+.ui-icon-circle-triangle-w { background-position: -80px -192px; }
+.ui-icon-circle-triangle-n { background-position: -96px -192px; }
+.ui-icon-circle-arrow-e { background-position: -112px -192px; }
+.ui-icon-circle-arrow-s { background-position: -128px -192px; }
+.ui-icon-circle-arrow-w { background-position: -144px -192px; }
+.ui-icon-circle-arrow-n { background-position: -160px -192px; }
+.ui-icon-circle-zoomin { background-position: -176px -192px; }
+.ui-icon-circle-zoomout { background-position: -192px -192px; }
+.ui-icon-circle-check { background-position: -208px -192px; }
+.ui-icon-circlesmall-plus { background-position: 0 -208px; }
+.ui-icon-circlesmall-minus { background-position: -16px -208px; }
+.ui-icon-circlesmall-close { background-position: -32px -208px; }
+.ui-icon-squaresmall-plus { background-position: -48px -208px; }
+.ui-icon-squaresmall-minus { background-position: -64px -208px; }
+.ui-icon-squaresmall-close { background-position: -80px -208px; }
+.ui-icon-grip-dotted-vertical { background-position: 0 -224px; }
+.ui-icon-grip-dotted-horizontal { background-position: -16px -224px; }
+.ui-icon-grip-solid-vertical { background-position: -32px -224px; }
+.ui-icon-grip-solid-horizontal { background-position: -48px -224px; }
+.ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+.ui-icon-grip-diagonal-se { background-position: -80px -224px; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Corner radius */
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-left,
+.ui-corner-tl {
+    border-top-left-radius: 4px;
+}
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-right,
+.ui-corner-tr {
+    border-top-right-radius: 4px;
+}
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-left,
+.ui-corner-bl {
+    border-bottom-left-radius: 4px;
+}
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-right,
+.ui-corner-br {
+    border-bottom-right-radius: 4px;
+}
+
+/* Overlays */
+.ui-widget-overlay {
+    background: #666666 url("images/ui-bg_diagonals-thick_20_666666_40x40.png") 50% 50% repeat;
+    opacity: .5;
+    filter: Alpha(Opacity=50); /* support: IE8 */
+}
+.ui-widget-shadow {
+    margin: -5px 0 0 -5px;
+    padding: 5px;
+    background: #000000 url("images/ui-bg_flat_10_000000_40x100.png") 50% 50% repeat-x;
+    opacity: .2;
+    filter: Alpha(Opacity=20); /* support: IE8 */
+    border-radius: 5px;
+}
+
+/*********************************************************************************
+ * Free custom styles
+ *********************************************************************************/
+a {
+    color: #07C;
+    text-decoration: none;
+}
+
+a:hover, a:active {
+    color: #3af;
+    text-decoration: underline;
+}

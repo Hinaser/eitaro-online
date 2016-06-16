@@ -1,11 +1,11 @@
-const tooltip_css = function(wrapper_id) {
+const tooltip_css = function(wrapper_id, container_id, suggest_container_id) {
     return `
 ${wrapper_id} {
     font-size: 12px;
     font-family: sans-serif;
 }
 
-${wrapper_id} > div {
+${wrapper_id} > ${container_id} {
     position: absolute;
     z-index: 1000000;
     background-color: rgba(255,255,255,1);
@@ -17,6 +17,44 @@ ${wrapper_id} > div {
     height: auto;
     display: inline-block;
     overflow: hidden;
+}
+
+${wrapper_id} > ${suggest_container_id} {
+    border: 1px solid blue;
+    background-color: #4d90fe;
+    border-radius: 3px;
+    width: 100px;
+    height: 25px;
+}
+
+${wrapper_id} > ${suggest_container_id} .triangle {
+    position: absolute;
+    top: -6px;
+    left: 15px;
+    width: 0;
+    height: 0;
+    border-bottom: 6px solid #4d90fe;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+}
+
+${wrapper_id} > ${suggest_container_id} button {
+    display: none; /* This will turn to be "block" after button is incorporated into DOM. This prevents css style of parent page to be applied for an very short time. */
+    background-color: transparent;
+    color: white;
+    border: none;
+    box-shadow: none;
+    border-radius: 3px;
+    width: 100%;
+    height: 100%;
+}
+
+${wrapper_id} > ${suggest_container_id}:hover .triangle {
+    border-bottom: 6px solid rgb(89,150,255);
+}
+
+${wrapper_id} > ${suggest_container_id}:hover button  {
+    background-color: rgb(89,150,255);
 }
 
 ${wrapper_id} header {
@@ -65,6 +103,9 @@ ${wrapper_id} header button {
     padding-top: 2px;
     padding-left: 2px;
     box-sizing: border-box;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 ${wrapper_id} header svg {

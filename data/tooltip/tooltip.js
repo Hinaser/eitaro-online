@@ -7,6 +7,7 @@
 // Variable declarations/initializations
 const wrapper_tag_id = "eitaro-online-wrapper";
 const container_tag_id = "eitaro-online-container";
+const suggest_container_tag_id = "eitaro-online-suggest-container";
 const content_header_id = "eitaro-online-header";
 const content_tag_id = "eitaro-online";
 const style_id = "eitaro-online-style";
@@ -31,42 +32,27 @@ const Tooltip = function(){
 };
 
 /**
- * Initialize css style for tooltip. This is needed because style of html on tooltip can be affected by
- * original web page's stylesheet.
- * Here, reset all style on html on tooltip to browser's default and apply addon's custom stylesheet.
+ * Detach all styles specified by web page on any elements under wrapper tag made by this addon.
  */
-Tooltip.prototype.initStyle = function (){
-    $(`#${style_id}`).remove();
-
-    let reset_style_to_default = `
-    #${wrapper_tag_id} {
-        all: initial;
-    }
-    #${wrapper_tag_id} * {
-        all: unset;
-    }
-    `;
-
-    this.setStyle(reset_style_to_default);
-    this.setStyle(firefox_default_css(`#${wrapper_tag_id}`));
-    this.setStyle(jquery_ui_css(`#${wrapper_tag_id}`));
-    this.setStyle(tooltip_css(`#${wrapper_tag_id}`));
-};
-
-/**
- * Add css text to addon's style tag. The style to be added always has precedence over website's style.
- * @param {string} style - CSS text to be added.
- */
-Tooltip.prototype.setStyle = function (style){
-    let style_tag = $(`#${style_id}`);
-    if(style_tag.length < 1){
-        style_tag = $("<style>", {id: style_id, rel: "stylesheet", type: "text/css"});
-        style_tag.appendTo("head");
+Tooltip.prototype.initStyle = function(){
+    const wrapper = $(`#${wrapper_tag_id}`);
+    if(wrapper.length < 1){
+        return;
     }
 
-    style = "\n" + style;
+    // If style tag already exists, clear it.
+    if($(`#${style_id}`).length > 0){
+        style.remove();
+    }
 
-    style_tag.append(style);
+    const style = $("<style scoped>", {id: style_id, type: "text/css"});
+
+    // `default.css` contains browser's ua default css styles
+    style.append("@import 'resource://eitaro_online/data/common/default.css';");
+    // `tooltip_css()` contains styles for addon widget
+    style.append(tooltip_css(`#${wrapper_tag_id}`, `#${container_tag_id}`, `#${suggest_container_tag_id}`));
+
+    wrapper.append(style);
 };
 
 /**
@@ -75,7 +61,6 @@ Tooltip.prototype.setStyle = function (style){
  * @param {Object} option
  */
 Tooltip.prototype.initialize = function (option){
-    this.initStyle();
 
     let wrapper = $(`#${wrapper_tag_id}`);
     if(wrapper.length > 0){
@@ -85,6 +70,9 @@ Tooltip.prototype.initialize = function (option){
         wrapper = $("<div>", {id: wrapper_tag_id});
         wrapper.appendTo("body");
     }
+
+    // Added default style
+    this.initStyle();
 
     let container = $("<div>", {id: container_tag_id});
     let content = $("<div>", {id: content_tag_id});
@@ -405,8 +393,6 @@ Tooltip.prototype.prepare = function(option){
  * @param {string} search_keyword - text to be searched
  */
 Tooltip.prototype.suggest = function(search_keyword){
-    $(`#${style_id}`).remove();
-
     let wrapper = $(`#${wrapper_tag_id}`);
     if(wrapper.length > 0){
         wrapper.empty();
@@ -416,10 +402,14 @@ Tooltip.prototype.suggest = function(search_keyword){
         wrapper.appendTo("body");
     }
 
-    let container = $("<div>", {id: container_tag_id});
-    let button = $(`<button>英太郎で検索: ${search_keyword}</button>`, {id: suggest_btn_id});
+    // Add default style
+    this.initStyle();
+
+    let container = $("<div>", {id: suggest_container_tag_id});
+    let button = $(`<button>英太郎で検索</button>`, {id: suggest_btn_id});
 
     container.append(button);
+    container.append("<div class='triangle'></div>");
     wrapper.append(container);
 
     // Set style and position of button
@@ -427,10 +417,11 @@ Tooltip.prototype.suggest = function(search_keyword){
     let container_style = {}, button_style = {};
     container_style["position"] = "absolute";
     container_style["top"] = location_of_selection.bottom + 10 + window.scrollY;
-    container_style["left"] = location_of_selection.left + 10 + window.scrollX;
+    container_style["left"] = location_of_selection.right - 30 + window.scrollX;
     container_style["z-index"] = 10000;
     container_style["border"] = "none";
     button_style["cursor"] = "pointer";
+    button_style["display"] = "block";
     container.css(container_style);
     button.css(button_style);
 
