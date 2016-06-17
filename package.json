@@ -116,8 +116,8 @@
       "value": false
     },
     {
-      "name": "execute_search_immediately_after_clicking_selection",
-      "title": "テキスト選択時に検索ボタンを選択したテキスト付近に表示する",
+      "name": "show_search_button_for_selection",
+      "title": "テキスト選択時に検索ボタンを表示する",
       "type": "bool",
       "value": true
     },

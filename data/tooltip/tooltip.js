@@ -15,6 +15,8 @@ const fontsize_input_id = "eitaro-online-font-size-input";
 const setting_btn_id = "eitaro-online-setting-btn";
 const close_btn_id = "eitaro-online-close-btn";
 const suggest_btn_id = "eitaro-online-suggest-btn";
+const event_ns = "eitaro-online-ns";
+const event_ns_for_suggest_btn = "eitaro-online-ns-suggest";
 
 // Minimum width/height of tooltip
 let min_width = 150;
@@ -29,6 +31,7 @@ let resize_edge_size = "15px";
  */
 const Tooltip = function(){
     this.fontSize = "12px";
+    this.option = null;
 };
 
 /**
@@ -58,9 +61,8 @@ Tooltip.prototype.initStyle = function(){
 /**
  * Intialize a element which wraps tooltip html content.
  * The wrapper element will be added to the tail of website's body element.
- * @param {Object} option
  */
-Tooltip.prototype.initialize = function (option){
+Tooltip.prototype.initialize = function (){
 
     let wrapper = $(`#${wrapper_tag_id}`);
     if(wrapper.length > 0){
@@ -71,12 +73,12 @@ Tooltip.prototype.initialize = function (option){
         wrapper.appendTo("body");
     }
 
-    // Added default style
+    // Apply default style
     this.initStyle();
 
     let container = $("<div>", {id: container_tag_id});
     let content = $("<div>", {id: content_tag_id});
-    let header = this.createHeader(container, content, option);
+    let header = this.createHeader(container, content);
 
     container.draggable({
         handle: "header",
@@ -168,10 +170,9 @@ Tooltip.prototype.initialize = function (option){
  * Create tooltip header html element. (This may have `config button` or `close button` or like these elements).
  * @param {jQuery} container - jQuery instance of a div of direct descendant of tooltip's wrapper element.
  * @param {jQuery} content - Direct descendant of `container`, which holds the tooltip main html content..
- * @param {Object} option - Optional settings
  * @returns {jQuery} - jQuery instance of tooltip header.
  */
-Tooltip.prototype.createHeader = function (container, content, option){
+Tooltip.prototype.createHeader = function (container, content){
     const that = this;
 
     let header = $("<header>", {id: content_header_id});
@@ -182,7 +183,7 @@ Tooltip.prototype.createHeader = function (container, content, option){
     //header.append(search_box);
     //header.append(search_btn);
 
-    if(option && !option.hide_show_remove_button){
+    if(this.option && !this.option.hide_show_remove_button){
         let close_btn = $(`<button id="${close_btn_id}">${remove_button()}</button>`);
         header.append(close_btn);
 
@@ -204,15 +205,14 @@ Tooltip.prototype.createHeader = function (container, content, option){
 /**
  * Set tooltip element position on web page in a context of user configuration/environment.
  * @param {jQuery} container - jQuery instance of a div of direct descendant of tooltip's wrapper element.
- * @param {Object}option - Contains configuration to specify tooltip's position on a web page, which may derive from addon's preference page.
  * @property {boolean} show_near_selection - Whether tooltip should appear near the text selection.
  * @property {string} position - "top-left", "bottom-right" and like so on.
  * @param {boolean=false} isPrepare - Indicates whether position being set is for loading animation.
  */
-Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
+Tooltip.prototype.setPosition = function (container, isPrepare=false){
     let style = {};
 
-    if(isTextSelected() && option.show_near_selection){
+    if(isTextSelected() && this.option.show_near_selection){
         const location_of_selection = getSelectionLocation();
         style["position"] = "absolute";
         style["top"] = location_of_selection.bottom + 10 + window.scrollY;
@@ -226,12 +226,12 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
          * like 'top-left', 'bottom-right', 'top-right', 'bottom-left'.
          */
         const set_position_by_location_string = function () {
-            if (!option.position || option.position === "center") {
+            if (!this.option.position || this.option.position === "center") {
                 style["top"] = $(window).height() / 2 - container.height() / 2;
                 style["left"] = $(window).width() / 2 - container.width() / 2;
             }
             else {
-                switch (option.position) {
+                switch (this.option.position) {
                     case "top-left":
                         style["top"] = 0;
                         style["left"] = 0;
@@ -252,11 +252,11 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
             }
         };
 
-        if (option.use_last_position && option.last_position) {
+        if (this.option.use_last_position && this.option.last_position) {
             // Ignore right/bottom position value since its intervene with width/height.
             ["top", /*"right", "bottom",*/ "left"].forEach(function (el, i, arr) {
-                if (option.last_position[el] >= 0) {
-                    style[el] = option.last_position[el] + "px";
+                if (this.option.last_position[el] >= 0) {
+                    style[el] = this.option.last_position[el] + "px";
                 }
             });
 
@@ -278,7 +278,7 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
             backgroundColor: "#f6f6f6"
         };
 
-        if(!(isTextSelected() && option.show_near_selection)){
+        if(!(isTextSelected() && this.option.show_near_selection)){
             additional_style["top"] = ($(window).height() / 2 - 24) + "px";
             additional_style["left"] = ($(window).width() / 2 - 24) + "px";
         }
@@ -310,22 +310,21 @@ Tooltip.prototype.setPosition = function (container, option, isPrepare=false){
 /**
  * Set tooltip element width on web page in a context of user configuration/environment.
  * @param {jQuery} container - jQuery instance of a div of direct descendant of tooltip's wrapper element.
- * @param {Object}option - Contains configuration to specify tooltip's position on a web page, which may derive from addon's preference page.
  * @property {boolean} show_near_selection - Whether tooltip should appear near the text selection.
  * @property {Object} last_size - Contains width/height in each of last_size.width, last_size.height
  * @param {boolean=false} isPrepare - Indicates whether position being set is for loading animation.
  */
-Tooltip.prototype.setSize = function (container, option, isPrepare=false){
+Tooltip.prototype.setSize = function (container, isPrepare=false){
     let style = {};
 
-    const isSelectionAutoSizingEnabled = isTextSelected() && option.show_near_selection && option.auto_sizing_panel_for_selection;
-    if(option.use_last_size && option.last_size && !isSelectionAutoSizingEnabled){
+    const isSelectionAutoSizingEnabled = isTextSelected() && this.option.show_near_selection && this.option.auto_sizing_panel_for_selection;
+    if(this.option.use_last_size && this.option.last_size && !isSelectionAutoSizingEnabled){
         // Set previous width
         let window_width = $(window).width();
-        if (min_width <= option.last_size["width"] && option.last_size["width"] <= window_width) {
-            style["width"] = option.last_size["width"] + "px";
+        if (min_width <= this.option.last_size["width"] && this.option.last_size["width"] <= window_width) {
+            style["width"] = this.option.last_size["width"] + "px";
         }
-        else if (option.last_size["width"] > window_width) {
+        else if (this.option.last_size["width"] > window_width) {
             style["width"] = window_width + "px";
         }
         else {
@@ -334,10 +333,10 @@ Tooltip.prototype.setSize = function (container, option, isPrepare=false){
 
         // Set previous height
         let window_height = $(window).height();
-        if (min_height <= option.last_size["height"] && option.last_size["height"] <= window_height) {
-            style["height"] = option.last_size["height"] + "px";
+        if (min_height <= this.option.last_size["height"] && this.option.last_size["height"] <= window_height) {
+            style["height"] = this.option.last_size["height"] + "px";
         }
-        else if (option.last_size["height"] > window_height) {
+        else if (this.option.last_size["height"] > window_height) {
             style["height"] = window_height + "px";
         }
         else {
@@ -361,11 +360,10 @@ Tooltip.prototype.setSize = function (container, option, isPrepare=false){
 /**
  * Show loading animation on tooltip.
  * Loading will be end when actual search result html data arrives from addon.
- * @param {Object} option - Indicating where to set tooltip in window.
  * @property {boolean} show_near_selection - Whether tooltip should appear near the text selection.
  * @property {string} position - "top-left", "bottom-right" and like so on.
  */
-Tooltip.prototype.prepare = function(option){
+Tooltip.prototype.prepare = function(){
     $(`#${style_id}`).remove();
 
     let wrapper = $(`#${wrapper_tag_id}`);
@@ -382,8 +380,8 @@ Tooltip.prototype.prepare = function(option){
     container.append(loading_gif());
     wrapper.append(container);
 
-    this.setPosition(container, option, true);
-    this.setSize(container, option, true);
+    this.setPosition(container, true);
+    this.setSize(container, true);
 
     container.draggable();
 };
@@ -402,11 +400,11 @@ Tooltip.prototype.suggest = function(search_keyword){
         wrapper.appendTo("body");
     }
 
-    // Add default style
+    // Apply default style
     this.initStyle();
 
     let container = $("<div>", {id: suggest_container_tag_id});
-    let button = $(`<button>英太郎で検索</button>`, {id: suggest_btn_id});
+    let button = $(`<button id="${suggest_btn_id}">英太郎で検索</button>`);
 
     container.append(button);
     container.append("<div class='triangle'></div>");
@@ -432,7 +430,7 @@ Tooltip.prototype.suggest = function(search_keyword){
     });
 
     // When outside of button is clicked, hide container
-    $(document).on('mouseup', function(e){
+    $(document).on(`mouseup.${event_ns}`, function(e){
         if(button.length > 0 && !button.is(e.target) && button.has(e.target).length === 0){
             button.remove();
             container.hide();
@@ -443,12 +441,11 @@ Tooltip.prototype.suggest = function(search_keyword){
 /**
  * Open up tooltip with search result
  * @param {string} html - Search result html.
- * @param {Object} option - Indicating where to set tooltip in window.
  * @property {boolean} show_near_selection - Whether tooltip should appear near the text selection.
  * @property {string} position - "top-left", "bottom-right" and like so on.
  */
-Tooltip.prototype.open = function(html, option){
-    this.initialize(option);
+Tooltip.prototype.open = function(html){
+    this.initialize();
 
     let wrapper = $("#" + wrapper_tag_id);
     let container = $("#" + container_tag_id);
@@ -456,8 +453,8 @@ Tooltip.prototype.open = function(html, option){
 
     content.empty();
 
-    if(option.fontSize){
-        this.fontSize = option.fontSize + "px";
+    if(this.option.fontSize){
+        this.fontSize = this.option.fontSize + "px";
         content.css("font-size", this.fontSize);
         $(`#${fontsize_input_id}`).val(parseInt(this.fontSize));
     }
@@ -475,17 +472,17 @@ Tooltip.prototype.open = function(html, option){
     content.prepend(html);
 
     // Set panel position with regarding to user configuration
-    this.setPosition(container, option, false);
+    this.setPosition(container, false);
 
     // Set panel size with regarding to user configuration
-    this.setSize(container, option, false);
+    this.setSize(container, false);
 
     // Trim content width/height if they are over their maximum values.
-    trimContent(content, isTextSelected() && option.show_near_selection);
+    trimContent(content, isTextSelected() && this.option.show_near_selection);
 
     // Set dismissible if user configures to do so
-    if(option.dismiss_when_outside_clicked){
-        $(document).on('mouseup', function(e){
+    if(this.option.dismiss_when_outside_clicked){
+        $(document).on(`mouseup.${event_ns}`, function(e){
             if(!container.is(e.target) && container.has(e.target).length === 0){
                 if(container.is(":visible")){
                     container.hide();
@@ -517,6 +514,26 @@ Tooltip.prototype.setFontSize = function(size){
         content.css("font-size", this.fontSize);
         $(`#${fontsize_input_id}`).val(parseInt(this.fontSize));
     }
+};
+
+/**
+ * Set flag whether to show search button for text selection.
+ * @param {boolean} show - True if it should show search button when text selection is made.
+ */
+Tooltip.prototype.toggleSearchButton = function(show){
+    if(!this.option){
+        return;
+    }
+
+    this.option.show_search_button_for_selection = show;
+};
+
+/**
+ * Set option
+ * @param {Object} o - An object containing option values
+ */
+Tooltip.prototype.setOption = function(o){
+    this.option = o;
 };
 
 /**
@@ -593,6 +610,55 @@ function sendMessage(type, data){
     self.port.emit(type, JSON.stringify(data));
 }
 
+/**
+ * Enable search button popup when text selection is made.
+ * If it is already in DOM, show it out.
+ * @param tooltip
+ */
+function enableShowButtonForSelection(tooltip){
+    $(document).ready(() => {
+        $(document).off(`.${event_ns}`); // Clear past event handlers
+        $(document).off(`.${event_ns_for_suggest_btn}`); // Clear past event handlers
+        $(document).on(`mouseup.${event_ns_for_suggest_btn}`, (e) => {
+            if
+            (
+                // When text selection is not made, do nothing.
+            !isTextSelected()
+            // When configured not to show button, do nothing
+            || (tooltip.option && !tooltip.option.show_search_button_for_selection)
+            // When event is raised by clicking suggest button, do nothing
+            || $(`#${suggest_btn_id}`).is(e.target)
+            // When panel is clicked, do nothing
+            || $(`#${wrapper_tag_id}`).has(e.target).length > 0
+            ){ return; }
+
+            tooltip.suggest(getSelectedText());
+        });
+    });
+}
+
+/**
+ * Disable search button popup for text selection.
+ * If it is already in DOM, then hide it from page.
+ */
+function disableShowButtonForSelection(){
+    $(document).ready(() => {
+        $(document).off(`.${event_ns}`);
+        $(document).off(`.${event_ns_for_suggest_btn}`);
+
+        const suggest_btn = $(`#${suggest_btn_id}`);
+        if(suggest_btn.length > 0){
+            suggest_btn.remove();
+        }
+
+        const suggest_container = $(`#${suggest_container_tag_id}`);
+        if(suggest_container.length > 0){
+            suggest_container.remove();
+        }
+    });
+}
+
+
 
 // Instantiate Tooltip instance
 let tooltip = new Tooltip();
@@ -605,42 +671,43 @@ self.port.on("ping", function(){});
 // If this preparation is not defined, addon user won't know whether search request itself is not invoked or
 // searching takes time.
 self.port.on("prepare", function(msg){
-    let data = JSON.parse(msg);
-    let option = data.option;
+    const data = JSON.parse(msg);
+    const option = data.option;
 
-    tooltip.prepare(option);
+    tooltip.setOption(option);
+    tooltip.prepare();
 });
 
 // When `open` message arrive from addon, immediately show up tooltip with search result html.
 self.port.on("open", function(msg){
-    let data = JSON.parse(msg);
+    const data = JSON.parse(msg);
 
-    tooltip.open(data.html, data.option);
+    tooltip.setOption(data.option);
+    tooltip.open(data.html);
 });
 
-// Set font size request by addon
+// Set font size requested by addon
 self.port.on("set_font_size", function(msg){
-    let fontSize = JSON.parse(msg).size + "px";
+    const fontSize = JSON.parse(msg).size + "px";
 
     tooltip.setFontSize(fontSize);
 });
 
-// Process for immediate search for selection
-$(document).ready(function(){
-    //
-    // Just after text is selected, popup search button near selection.
-    //
-    $(document).on("mouseup", function(e){
-        if
-        (
-            // When text selection is not made, do nothing.
-            !isTextSelected()
-            // When event is raised by clicking suggest button, do nothing
-            || $(`#${suggest_btn_id}`).is(e.target)
-            // When panel is clicked, do nothing
-            || $(`#${wrapper_tag_id}`).has(e.target).length > 0
-        ){ return; }
+// Toggle search button appearance requested by addon
+self.port.on("set_button_appearance", function(msg){
+    const show = JSON.parse(msg)["show_search_button_for_selection"];
 
-        tooltip.suggest(getSelectedText());
-    });
+    if(show){
+        enableShowButtonForSelection(tooltip);
+    }
+    else{
+        disableShowButtonForSelection();
+    }
+});
+
+// Set option requested from addon
+self.port.on("set_option", function(msg){
+    const option = JSON.parse(msg);
+
+    tooltip.setOption(option);
 });

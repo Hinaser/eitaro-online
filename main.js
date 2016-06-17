@@ -103,6 +103,10 @@ let context_menu_item = cm.Item(context_menu_option);
  */
 db.open(db_default_name(prefs));
 prefs.init(frame, frame_url, sidebar, tooltip, db);
+// It is a bad design but tooltip.init() must be placed after prefs.init().
+// `tooltip.init` requires `prefs` instance variable. This var is set by `tooltip.setPrefs`.
+// `tooltip.setPrefs` is executed in `prefs.init` because of dependency complexity.
+tooltip.init(prefs);
 
 // Variable to manage opened tab. Once a tab is opened by this script,
 // the tab will be re-used to display information. So we need to track which tab is opened by this script.

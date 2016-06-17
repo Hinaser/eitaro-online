@@ -3991,5 +3991,5 @@ a {
 
 a:hover, a:active {
     color: #3af;
-    text-decoration: underline;
+    text-decoration: underline !important;
 }
