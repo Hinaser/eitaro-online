@@ -117,7 +117,7 @@
     },
     {
       "name": "show_search_button_for_selection",
-      "title": "テキスト選択時に検索ボタンを表示する",
+      "title": "テキスト選択時に検索ボタンを表示する(※タブのリロードが必要です)",
       "type": "bool",
       "value": true
     },
