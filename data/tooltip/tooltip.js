@@ -82,14 +82,14 @@ Tooltip.prototype.initialize = function (){
 
     container.draggable({
         handle: "header",
-        stop: function(event, ui){
+        stop: (event, ui) => {
             // When position:absolute, do not remember panel position since it is relative to document, not window.
             if(container.css("position") !== "fixed"){
                 return;
             }
 
             // Prevent container header to be out of window
-            ["top", "right", "bottom", "left"].forEach(function(el, i, arr){
+            ["top", "right", "bottom", "left"].forEach((el, i, arr) => {
                 if(parseInt(container.css(el)) < 0){
                     container.css(el, "0px");
                 }
@@ -118,7 +118,7 @@ Tooltip.prototype.initialize = function (){
     });
     container.resizable({
         handles: "n, e, s, w, se",
-        stop: function(event, ui){
+        stop: (event, ui) => {
             const window_height = $(window).height();
             const is_fixed_panel_too_tall = (container.css("position") === "fixed" && container.height() > window_height);
             if(is_fixed_panel_too_tall){
@@ -225,7 +225,7 @@ Tooltip.prototype.setPosition = function (container, isPrepare=false){
          * set position/width/height according to position string
          * like 'top-left', 'bottom-right', 'top-right', 'bottom-left'.
          */
-        const set_position_by_location_string = function () {
+        const set_position_by_location_string = () => {
             if (!this.option.position || this.option.position === "center") {
                 style["top"] = $(window).height() / 2 - container.height() / 2;
                 style["left"] = $(window).width() / 2 - container.width() / 2;
@@ -254,7 +254,7 @@ Tooltip.prototype.setPosition = function (container, isPrepare=false){
 
         if (this.option.use_last_position && this.option.last_position) {
             // Ignore right/bottom position value since its intervene with width/height.
-            ["top", /*"right", "bottom",*/ "left"].forEach(function (el, i, arr) {
+            ["top", /*"right", "bottom",*/ "left"].forEach((el, i, arr) => {
                 if (this.option.last_position[el] >= 0) {
                     style[el] = this.option.last_position[el] + "px";
                 }
@@ -289,7 +289,7 @@ Tooltip.prototype.setPosition = function (container, isPrepare=false){
     // Correct position if it is off the window
     // Prevent container header to be too bottom where header cannot be draggable.
     if(style["position"] === "fixed"){
-        ["top", "right", "bottom", "left"].forEach(function(el, i, arr){
+        ["top", "right", "bottom", "left"].forEach((el, i, arr) => {
             if(parseInt(style[el]) < 0){
                 style[el] = "0px";
             }
