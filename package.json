@@ -12,6 +12,9 @@
   "keywords": [
     "jetpack"
   ],
+  "permissions": {
+    "multiprocess": true
+  },
   "preferences": [
     {
       "name": "save_search_history",
