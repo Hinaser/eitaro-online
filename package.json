@@ -110,7 +110,7 @@
       "name": "dismiss_panel_when_outside_area_is_clicked",
       "title": "パネル外をクリックした時にパネルを消すようにする",
       "type": "bool",
-      "value": true
+      "value": false
     },
     {
       "name": "hide_show_panel_remove_button",
