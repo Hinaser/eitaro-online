@@ -1,0 +1,28 @@
+body {
+    font-size: 12px;
+}
+
+header {
+    padding: 10px;
+}
+
+span#title {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#content {
+    padding: 0 20px 20px 20px;
+}
+
+.tab-content {
+    padding: 10px;
+}
+
+.nav-tabs > .active > a, .nav-tabs > .active > a:hover {
+    outline:none;
+}
+
+#content .form-group label {
+    font-weight: normal;
+}

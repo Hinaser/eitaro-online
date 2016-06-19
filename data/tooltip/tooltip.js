@@ -196,7 +196,7 @@ Tooltip.prototype.createHeader = function (container, content){
     header.append(setting_btn);
 
     setting_btn.on("click", function(e){
-        alert("すいません、まだここの処理作ってません。。");
+        self.port.emit("config",  null);
     });
 
     return header;

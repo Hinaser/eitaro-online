@@ -35,6 +35,7 @@ const prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIP
 const Util = require("lib/util");
 const Sidebar = require("lib/sidebar");
 const Tooltip = require("lib/tooltip");
+const ConfigPanel = require("lib/configpanel");
 const Prefs = require("lib/prefs");
 const Database = require("lib/db");
 
@@ -92,7 +93,8 @@ let context_menu_option = {
 let prefs = new Prefs();
 let db = new Database();
 let sidebar = new Sidebar(sidebar_default_title, db, html_default_sanitizer);
-let tooltip = new Tooltip(html_default_sanitizer, search);
+let tooltip = new Tooltip(html_default_sanitizer, search, config);
+let configPanel = new ConfigPanel();
 let frame = new Frame(frame_option);
 let toolbar =Toolbar(toolbar_option(frame, prefs));
 let getFocus = Hotkey(hotkey_option(frame, frame_url));
@@ -104,6 +106,7 @@ let context_menu_item = cm.Item(context_menu_option);
 db.open(db_default_name(prefs));
 prefs.init(frame, frame_url, sidebar, tooltip, db);
 tooltip.init(prefs, db);
+configPanel.init(prefs);
 
 // Variable to manage opened tab. Once a tab is opened by this script,
 // the tab will be re-used to display information. So we need to track which tab is opened by this script.
@@ -170,7 +173,7 @@ function search(search_keyword){
  * Open configuration tab
  */
 function config() {
-    tabs.open("about:addons");
+    configPanel.show();
 }
 
 /**
