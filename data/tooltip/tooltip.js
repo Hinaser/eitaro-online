@@ -471,6 +471,28 @@ Tooltip.prototype.open = function(html){
     // For additional sanitizing process, please see lib/tooltip.js.
     content.prepend(html);
 
+    // When anchor in the html is clicked, request its url and show it on the panel.
+    content.find("a").on("click", function(e) {
+        e.preventDefault();
+
+        const href = $(this).attr("href");
+        if(!href){
+            return;
+        }
+
+        /**
+         * @todo When the href is fragment identifier, only scroll and not makes page jump.
+         * // If the href points to the same page, scroll to the point and stop.
+         * const current_href = window.location.href;
+         *
+         * let fragID = href.split("#");
+         * if(fragID.length > 1 && fragID[0] == current_href){
+         * }
+        */
+
+        self.port.emit("requestURL", href);
+    });
+
     // Set panel position with regarding to user configuration
     this.setPosition(container, false);
 

@@ -19,24 +19,24 @@
 /*
  LOAD FIREFOX SDKs
  */
-let { Frame } = require("sdk/ui/frame");
-let { Toolbar} = require("sdk/ui/toolbar");
-let { Hotkey } = require("sdk/hotkeys");
-let { Request } = require("sdk/request");
-let { Cc, Ci } = require("chrome");
-let cm = require("sdk/context-menu");
-let tabs = require("sdk/tabs");
-let { getTabForId, getTabContentWindow } = require ("sdk/tabs/utils");
-let prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
+const { Frame } = require("sdk/ui/frame");
+const { Toolbar} = require("sdk/ui/toolbar");
+const { Hotkey } = require("sdk/hotkeys");
+const { Request } = require("sdk/request");
+const { Cc, Ci } = require("chrome");
+const cm = require("sdk/context-menu");
+const tabs = require("sdk/tabs");
+const { getTabForId, getTabContentWindow } = require ("sdk/tabs/utils");
+const prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
 
 /*
  LOAD USER LIBRARIES
  */
-let Util = require("lib/util");
-let Sidebar = require("lib/sidebar");
-let Tooltip = require("lib/tooltip");
-let Prefs = require("lib/prefs");
-let Database = require("lib/db");
+const Util = require("lib/util");
+const Sidebar = require("lib/sidebar");
+const Tooltip = require("lib/tooltip");
+const Prefs = require("lib/prefs");
+const Database = require("lib/db");
 
 /*
  SET PARAMETERS FOR USER DEFINED CLASSES
@@ -103,7 +103,7 @@ let context_menu_item = cm.Item(context_menu_option);
  */
 db.open(db_default_name(prefs));
 prefs.init(frame, frame_url, sidebar, tooltip, db);
-tooltip.init(prefs);
+tooltip.init(prefs, db);
 
 // Variable to manage opened tab. Once a tab is opened by this script,
 // the tab will be re-used to display information. So we need to track which tab is opened by this script.
