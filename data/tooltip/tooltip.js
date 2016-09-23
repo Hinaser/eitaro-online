@@ -17,6 +17,8 @@ const close_btn_id = "eitaro-online-close-btn";
 const suggest_btn_id = "eitaro-online-suggest-btn";
 const event_ns = "eitaro-online-ns";
 const event_ns_for_suggest_btn = "eitaro-online-ns-suggest";
+const header_label = "英太郎ONLINE";
+const suggest_btn_label = "英太郎で検索";
 
 // Minimum width/height of tooltip
 let min_width = 150;
@@ -76,7 +78,7 @@ Tooltip.prototype.initialize = function (){
     // Apply default style
     this.initStyle();
 
-    let container = $("<div>", {id: container_tag_id});
+    let container = $("<iframe>", {id: container_tag_id});
     let content = $("<div>", {id: content_tag_id});
     let header = this.createHeader(container, content);
 
@@ -161,9 +163,8 @@ Tooltip.prototype.initialize = function (){
         height: "calc(100% - 11px)"
     });
 
-    header.appendTo(container);
-    content.appendTo(container);
-    container.appendTo(wrapper);
+    wrapper.append(container);
+    container.contents().find("body").append(header).append(content);
 };
 
 /**
@@ -176,7 +177,7 @@ Tooltip.prototype.createHeader = function (container, content){
     const that = this;
 
     let header = $("<header>", {id: content_header_id});
-    header.append("<span class='title'>英太郎ONLINE</span>");
+    header.append(`<span class='title'>${header_label}</span>`);
 
     //let search_box = $("<input>", {type: "text", placeholder: "検索したいキーワード"});
     //let search_btn = $("<button>検索</button>");
@@ -375,10 +376,10 @@ Tooltip.prototype.prepare = function(){
         wrapper.appendTo("body");
     }
 
-    let container = $("<div>", {id: container_tag_id});
+    let container = $("<iframe>", {id: container_tag_id});
 
-    container.append(loading_gif());
     wrapper.append(container);
+    container.contents().find('body').append(loading_gif());
 
     this.setPosition(container, true);
     this.setSize(container, true);
@@ -404,7 +405,7 @@ Tooltip.prototype.suggest = function(search_keyword){
     this.initStyle();
 
     let container = $("<div>", {id: suggest_container_tag_id});
-    let button = $(`<button id="${suggest_btn_id}">英太郎で検索</button>`);
+    let button = $(`<button id="${suggest_btn_id}">${suggest_btn_label}</button>`);
 
     container.append(button);
     container.append("<div class='triangle'></div>");
@@ -449,7 +450,7 @@ Tooltip.prototype.open = function(html){
 
     let wrapper = $("#" + wrapper_tag_id);
     let container = $("#" + container_tag_id);
-    let content = $("#" + content_tag_id);
+    let content = container.contents().find("#" + content_tag_id);
 
     content.empty();
 
