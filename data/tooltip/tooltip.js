@@ -78,7 +78,7 @@ Tooltip.prototype.initialize = function (){
     // Apply default style
     this.initStyle();
 
-    let container = $("<iframe>", {id: container_tag_id});
+    let container = $("<div>", {id: container_tag_id});
     let content = $("<div>", {id: content_tag_id});
     let header = this.createHeader(container, content);
 
@@ -163,8 +163,9 @@ Tooltip.prototype.initialize = function (){
         height: "calc(100% - 11px)"
     });
 
-    wrapper.append(container);
-    container.contents().find("body").append(header).append(content);
+    header.appendTo(container);
+    content.appendTo(container);
+    container.appendTo(wrapper);
 };
 
 /**
@@ -376,10 +377,10 @@ Tooltip.prototype.prepare = function(){
         wrapper.appendTo("body");
     }
 
-    let container = $("<iframe>", {id: container_tag_id});
+    let container = $("<div>", {id: container_tag_id});
 
+    container.append(loading_gif());
     wrapper.append(container);
-    container.contents().find('body').append(loading_gif());
 
     this.setPosition(container, true);
     this.setSize(container, true);
@@ -450,7 +451,7 @@ Tooltip.prototype.open = function(html){
 
     let wrapper = $("#" + wrapper_tag_id);
     let container = $("#" + container_tag_id);
-    let content = container.contents().find("#" + content_tag_id);
+    let content = $("#" + content_tag_id);
 
     content.empty();
 
